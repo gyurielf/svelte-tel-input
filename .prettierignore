@@ -5,6 +5,5 @@ dist
 node_modules
 coverage
 package
-.gitlab-ci.yml
 CHANGELOG.md
-.github
+# .github
