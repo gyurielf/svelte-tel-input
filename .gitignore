@@ -2,7 +2,7 @@
 .DS_Store
 .npm
 .npmrc
-node_modules
+/node_modules
 /.svelte-kit
 /build
 /functions
