@@ -1,0 +1,9 @@
+{
+    "$schema": "https://cdn.jsdelivr.net/npm/@changesets/config@1.6.3/schema.json",
+    "changelog": ["./changelog-github-custom.cjs", { "repo": "gyurielf/svelte-tel-input" }],
+    "commit": false,
+    "linked": [],
+    "access": "public",
+    "baseBranch": "main",
+    "updateInternalDependencies": "patch"
+}
