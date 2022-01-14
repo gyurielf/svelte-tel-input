@@ -7,3 +7,4 @@ coverage
 package
 .gitlab-ci.yml
 CHANGELOG.md
+.github
