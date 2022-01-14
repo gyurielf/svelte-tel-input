@@ -2,7 +2,6 @@
 
 ## Requirements
 
-The only thing you need is Svelte itself.
 ```
 $ npm install --save libphonenumber-js
 ```
