@@ -21,8 +21,11 @@ jobs:
               with:
                   node-version: 16.x
 
-            - name: Install Dependencies
-              run: npm
+            - name: Install dependencies
+              run: npm install --frozen-lockfile
+
+            - name: Build
+              run: npm run build
 
             - name: Create Release Pull Request or Publish to npm
               id: changesets
