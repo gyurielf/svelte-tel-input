@@ -24,8 +24,12 @@ jobs:
             - name: Install dependencies
               run: npm install --frozen-lockfile
 
-            - name: Build
-              run: npm run build
+            - name: Packaging
+              run: |
+                  npm run package
+                  ls -l package
+                  cd package
+              # npm publish
 
             - name: Create Release Pull Request or Publish to npm
               id: changesets
