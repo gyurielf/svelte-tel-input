@@ -1,0 +1,9 @@
+.svelte-kit
+static
+build
+dist
+node_modules
+coverage
+package
+.gitlab-ci.yml
+CHANGELOG.md

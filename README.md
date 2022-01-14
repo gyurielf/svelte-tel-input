@@ -1,2 +1,3 @@
 # svelte-tel-input
-Intl tel input svelte implementation.
+
+svelte-tel-input
