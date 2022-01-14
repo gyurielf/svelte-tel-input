@@ -1,0 +1,14 @@
+.idea
+.DS_Store
+.npm
+.npmrc
+node_modules
+/.svelte-kit
+/build
+/functions
+storybook-static
+yarn-error.log
+coverage
+.vscode
+/package
+/src/lib/exportGen.sh

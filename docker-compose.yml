@@ -1,0 +1,18 @@
+version: '3.9'
+services:
+    node:
+        image: 'node:16.13.1'
+        container_name: ui-kit
+        working_dir: /home/node/app
+        command: 'sh -c "npm i && npm run prepare && npm run dev -- --host"'
+        user: node
+        tty: true
+        ports:
+            # Server
+            - '3000:3000'
+            # Vite
+            - '24678:24678'
+            # Storybook
+            - '6006:6006'
+        volumes:
+            - ./:/home/node/app
