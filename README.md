@@ -1,6 +1,6 @@
 # Svelte Tel Input
 
-lets test 2
+Under development!
 
 ## Requirements
 
