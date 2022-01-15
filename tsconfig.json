@@ -4,7 +4,7 @@
         "moduleResolution": "node",
         "module": "ES2020",
         "lib": ["ES2020", "DOM"],
-        "target": "ES2020",
+        "target": "ES2019",
         "importsNotUsedAsValues": "error",
         "isolatedModules": true,
         "resolveJsonModule": true,
@@ -21,6 +21,12 @@
         "types": ["jest"],
         "strict": true
     },
-    "include": ["src/**/*.d.ts", "src/**/*.js", "src/**/*.ts", "src/**/*.svelte"],
+    "include": [
+        "src/**/*.d.ts",
+        "src/**/*.js",
+        "src/**/*.ts",
+        "src/**/*.svelte",
+        "scripts/**/*.ts"
+    ],
     "exclude": ["node_modules/*", "static/*", "src/index.js"]
 }

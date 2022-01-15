@@ -6,4 +6,5 @@ node_modules
 coverage
 package
 CHANGELOG.md
+.changeset
 # .github
