@@ -1,5 +1,11 @@
 # svelte-tel-input
 
+## 0.3.0
+
+### Minor Changes
+
+- fix: ci modifications ([#22](https://github.com/gyurielf/svelte-tel-input/pull/22))
+
 ## 0.2.0
 
 ### Minor Changes
