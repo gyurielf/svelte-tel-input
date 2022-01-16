@@ -24,23 +24,26 @@ jobs:
             - name: Install dependencies
               run: npm install --frozen-lockfile
 
+            - name: Packaging
+              run: |
+                  npm run package
+
             - name: Creating .npmrc
               run: |
-                  cat << EOF > "$HOME/.npmrc"
+                  ls -l package
+                  cd package
+                  cat << EOF > ".npmrc"
                     //registry.npmjs.org/:_authToken=$NPM_TOKEN
                   EOF
               env:
                   NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-            - name: Packaging
-              run: |
-                  npm run package
-                  ls -l package
-                  cd package
-
             - name: Create Release Pull Request or Publish to npm
               id: changesets
               uses: changesets/action@v1
+              run: |
+                  ls -l package
+                  cd package
               with:
                   # This expects you to have a script called release which does a build for your packages and calls changeset publish
                   publish: npm run release
