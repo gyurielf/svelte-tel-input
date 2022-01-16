@@ -25,7 +25,7 @@
         "prettier:fix": "prettier --write --plugin-search-dir=. .",
         "prepare": "husky install",
         "preview": "svelte-kit preview",
-        "release": "npm publish",
+        "release": "npx changeset publish",
         "svelte-check": "svelte-check --ignore 'dist,build,coverage,.svelte-kit,package' --threshold warning --fail-on-warnings",
         "test": "jest",
         "test:watch": "jest --watch",
