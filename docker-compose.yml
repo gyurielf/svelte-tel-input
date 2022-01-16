@@ -12,7 +12,5 @@ services:
             - '3000:3000'
             # Vite
             - '24678:24678'
-            # Storybook
-            - '6006:6006'
         volumes:
             - ./:/home/node/app

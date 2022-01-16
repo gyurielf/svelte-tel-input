@@ -1,4 +1,4 @@
-import type { ChangelogFunctions } from '@changesets/types';
+import type { ChangelogFunctions } from '@changesets/types/dist/declarations/src/index';
 import { config } from 'dotenv';
 import { getInfo, getInfoFromPullRequest } from '@changesets/get-github-info';
 

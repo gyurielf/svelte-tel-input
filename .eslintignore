@@ -7,5 +7,4 @@ coverage
 .svelte-kit
 static
 build
-.storybook
 /package
