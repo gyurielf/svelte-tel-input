@@ -24,12 +24,6 @@ jobs:
             - name: Install dependencies
               run: npm install --frozen-lockfile
 
-            - name: Packaging
-              run: |
-                  npm run package
-                  ls -l package
-                  cd package
-
             - name: Creating .npmrc
               run: |
                   cat << EOF > "$HOME/.npmrc"
@@ -37,6 +31,12 @@ jobs:
                   EOF
               env:
                   NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+            - name: Packaging
+              run: |
+                  npm run package
+                  ls -l package
+                  cd package
 
             - name: Create Release Pull Request or Publish to npm
               id: changesets
