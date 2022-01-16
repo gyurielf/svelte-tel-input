@@ -27,9 +27,8 @@ jobs:
             - name: Packaging
               run: |
                   npm run package
-              # ls -l package
-              # cd package
-              # npm publish
+                  ls -l package
+                  cd package
 
             - name: Creating .npmrc
               run: |
