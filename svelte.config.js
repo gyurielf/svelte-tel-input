@@ -18,13 +18,7 @@ export default {
                 return mm.all(filepath, ['!**/_*.scss', '!**/*.test.*']);
             },
             files: (filepath) => {
-                return mm.all(filepath, [
-                    '!**/.*',
-                    '!**/*.test.*',
-                    '!**/*.stories.*',
-                    '!**/Storybook/Style.svelte',
-                    '!**/*.sh'
-                ]);
+                return mm.all(filepath, ['!**/.*', '!**/*.test.*', '!**/*.sh']);
             }
         },
         adapter: staticAdapter(),

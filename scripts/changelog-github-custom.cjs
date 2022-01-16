@@ -1,9 +1,3 @@
-// taken from https://raw.githubusercontent.com/sveltejs/vite-plugin-svelte/master/scripts/changelog-github-custom.js
-// based on https://github.com/atlassian/changesets/blob/main/packages/changelog-github/src/index.ts
-// modifications to improve readability:
-// - removed thanks notes. We're thanking contributors in the PRs or acknowledge their work in different ways
-// - moved issue links to end of first line
-
 const { config } = require('dotenv');
 const { getInfo, getInfoFromPullRequest } = require('@changesets/get-github-info');
 

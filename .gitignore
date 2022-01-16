@@ -6,7 +6,6 @@
 /.svelte-kit
 /build
 /functions
-storybook-static
 yarn-error.log
 coverage
 .vscode
