@@ -22,6 +22,7 @@
     },
     "scripts": {
         "build": "svelte-kit build",
+        "changeset:version": "changeset version && npm i --lockfile-only",
         "dev": "svelte-kit dev",
         "eslint": "eslint --ext .js,.ts,.svelte .",
         "eslint:fix": "eslint --fix",
@@ -37,8 +38,7 @@
         "svelte-check": "svelte-check --ignore 'dist,build,coverage,.svelte-kit,package' --threshold warning --fail-on-warnings",
         "test": "jest",
         "test:watch": "jest --watch",
-        "ts": "tsc --noEmit",
-        "changeset:version": "changeset version && npm i --lockfile-only"
+        "ts": "tsc --noEmit"
     },
     "dependencies": {
         "libphonenumber-js": "^1.9.44"
