@@ -2,10 +2,10 @@
 
 Under development!
 
-## Requirements
+## Dependencies
 
 ```
-$ npm install --save libphonenumber-js
+$ [libphonenumber-js](https://gitlab.com/catamphetamine/libphonenumber-js)
 ```
 
 ## Installation
