@@ -22,7 +22,7 @@ jobs:
                   node-version: 16.x
 
             - name: Install dependencies
-              run: npm install --frozen-lockfile
+              run: npm install --frozen-lockfile --prefer-offline --ignore-scripts
 
             - name: Packaging
               run: |
@@ -30,9 +30,7 @@ jobs:
 
             - name: Creating .npmrc
               run: |
-                  ls -l package
-                  cd package
-                  cat << EOF > ".npmrc"
+                  cat << EOF > "$HOME/package/.npmrc"
                     //registry.npmjs.org/:_authToken=$NPM_TOKEN
                   EOF
               env:

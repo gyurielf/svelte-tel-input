@@ -13,11 +13,11 @@ export const booleanStore = (initial: boolean) => {
 };
 
 // StatefulSwap (transition)
-export const statefulSwap = (initialState: any) => {
+export const statefulSwap = (initialState: boolean | null) => {
     const transitionState = writable(initialState);
     let nextState = initialState;
 
-    const transitionTo = (newState: any) => {
+    const transitionTo = (newState: boolean | null) => {
         if (nextState === newState) return;
         nextState = newState;
         transitionState.set(null);

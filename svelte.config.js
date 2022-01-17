@@ -12,6 +12,7 @@ export default {
     kit: {
         target: '#svelte',
         package: {
+            dir: './packages/svelte-tel-input',
             // TODO create a single .JS file export.
             exports: (filepath) => {
                 if (filepath.endsWith('.d.ts')) return false;
