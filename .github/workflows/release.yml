@@ -27,6 +27,7 @@ jobs:
             - name: Packaging
               run: |
                   npm run package
+                  ls -l package
 
             - name: Creating .npmrc
               run: |
@@ -34,7 +35,7 @@ jobs:
                     //registry.npmjs.org/:_authToken=$NPM_TOKEN
                   EOF
                   ls package
-                  cp .npmrc package
+                  cp $HOME/.npmrc package
               env:
                   NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
