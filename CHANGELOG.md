@@ -1,5 +1,13 @@
 # svelte-tel-input
 
+## 0.3.2
+
+### Patch Changes
+
+- feat: add MIT license ([#29](https://github.com/gyurielf/svelte-tel-input/pull/29))
+
+* fix: fix readme deps ([#29](https://github.com/gyurielf/svelte-tel-input/pull/29))
+
 ## 0.3.1
 
 ### Patch Changes
