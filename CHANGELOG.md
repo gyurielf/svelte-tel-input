@@ -1,5 +1,11 @@
 # svelte-tel-input
 
+## 0.3.1
+
+### Patch Changes
+
+- fix: lets check with different folder structure ([#25](https://github.com/gyurielf/svelte-tel-input/pull/25))
+
 ## 0.3.0
 
 ### Minor Changes
