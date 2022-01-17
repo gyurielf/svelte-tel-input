@@ -9,5 +9,5 @@
 yarn-error.log
 coverage
 .vscode
-/package
+packages
 /src/lib/exportGen.sh

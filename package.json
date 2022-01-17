@@ -7,6 +7,14 @@
         "url": "git+https://github.com/gyurielf/svelte-tel-input.git"
     },
     "homepage": "https://github.com/gyurielf/svelte-tel-input#readme",
+    "keywords": [
+        "svelte",
+        "tel input",
+        "phone",
+        "phone input",
+        "intl",
+        "intl tel input"
+    ],
     "engines": {
         "npm": ">= 7",
         "yarn": "please-use-npm",
@@ -26,7 +34,7 @@
         "prepare": "husky install",
         "preview": "svelte-kit preview",
         "release": "npx changeset publish",
-        "svelte-check": "svelte-check --ignore 'dist,build,coverage,.svelte-kit,package' --threshold warning --fail-on-warnings",
+        "svelte-check": "svelte-check --ignore 'dist,build,coverage,.svelte-kit,packages, package' --threshold warning --fail-on-warnings",
         "test": "jest",
         "test:watch": "jest --watch",
         "ts": "tsc --noEmit",
