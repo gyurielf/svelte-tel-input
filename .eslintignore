@@ -7,4 +7,4 @@ coverage
 .svelte-kit
 static
 build
-packages
+package

@@ -34,7 +34,7 @@
         "prepare": "husky install",
         "preview": "svelte-kit preview",
         "release": "npx changeset publish",
-        "svelte-check": "svelte-check --ignore 'dist,build,coverage,.svelte-kit,packages, package' --threshold warning --fail-on-warnings",
+        "svelte-check": "svelte-check --ignore 'dist,build,coverage,.svelte-kit,package' --threshold warning --fail-on-warnings",
         "test": "jest",
         "test:watch": "jest --watch",
         "ts": "tsc --noEmit",

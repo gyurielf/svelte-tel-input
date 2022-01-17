@@ -1,6 +1,6 @@
 {
     "compilerOptions": {
-        "outDir": "packages",
+        "outDir": "package",
         "moduleResolution": "node",
         "module": "ES2020",
         "lib": ["ES2020", "DOM"],
