@@ -30,7 +30,7 @@ jobs:
 
             - name: Creating .npmrc
               run: |
-                  cat << EOF > "$HOME/package/.npmrc"
+                  cat << EOF > "$HOME/.npmrc"
                     //registry.npmjs.org/:_authToken=$NPM_TOKEN
                   EOF
               env:
