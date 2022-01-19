@@ -1,5 +1,25 @@
 # svelte-tel-input
 
+## 0.4.0
+
+### Minor Changes
+
+- fix: rework ci
+
+### Patch Changes
+
+- fix: minor ci fix ([#34](https://github.com/gyurielf/svelte-tel-input/pull/34))
+
+* fix: fix ci again ([#35](https://github.com/gyurielf/svelte-tel-input/pull/35))
+
+- fix: last ci fix for today ([#36](https://github.com/gyurielf/svelte-tel-input/pull/36))
+
+* fix: ci fixxx ([#33](https://github.com/gyurielf/svelte-tel-input/pull/33))
+
+- something 1 ([#37](https://github.com/gyurielf/svelte-tel-input/pull/37))
+
+* fix: ci extend 321 ([#32](https://github.com/gyurielf/svelte-tel-input/pull/32))
+
 ## 0.3.2
 
 ### Patch Changes
