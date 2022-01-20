@@ -1,6 +1,8 @@
 # Svelte Tel Input
 
-<ins>## Under heavy development!</ins>
+## Under heavy development!
+
+<ins>Do not use it before 1.0, it won't works properly!</ins>
 
 ## Installation
 

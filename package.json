@@ -159,5 +159,5 @@
     },
     "svelte": ".",
     "type": "module",
-    "license": "UNLICENSED"
+    "license": "MIT"
 }
