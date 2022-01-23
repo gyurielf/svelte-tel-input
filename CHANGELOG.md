@@ -1,5 +1,15 @@
 # svelte-tel-input
 
+## 0.5.0
+
+### Minor Changes
+
+- feat: prepare github pages deployment ([#43](https://github.com/gyurielf/svelte-tel-input/pull/43))
+
+* feat: implement selects and input ([#43](https://github.com/gyurielf/svelte-tel-input/pull/43))
+
+- feat: basic stores created ([#43](https://github.com/gyurielf/svelte-tel-input/pull/43))
+
 ## 0.4.2
 
 ### Patch Changes
