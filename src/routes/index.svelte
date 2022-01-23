@@ -1,8 +1,7 @@
 <script context="module" lang="ts">
-    import SvelteTelInput from '$lib/components/Input/SvelteTelInput.svelte';
-    import CountrySelect from '$lib/components/Select/CountrySelect.svelte';
-
-    export const prerender = true;
+    import TelCountrySelectExample from '$lib/components/examples/TelRegionSelect.test.svelte';
+    import TelInputExample from '$lib/components/examples/TelInput.test.svelte';
+    import TelTypeSelectExample from '$lib/components/examples/TelTypeSelect.test.svelte';
 </script>
 
 <svelte:head>
@@ -13,9 +12,19 @@
     <div class="text-gray-200">
         <div>
             <h1 class="text-2xl my-4">SVELTE-TEL-INPUT</h1>
-            <CountrySelect />
-            <div>
-                <SvelteTelInput />
+            <div class="grid">
+                <div>
+                    <p>Country select:</p>
+                    <TelCountrySelectExample />
+                </div>
+                <div>
+                    <p>Type Select:</p>
+                    <TelTypeSelectExample />
+                </div>
+                <div>
+                    <p>Tel input:</p>
+                    <TelInputExample />
+                </div>
             </div>
         </div>
     </div>
