@@ -1,6 +1,7 @@
 import preprocess from 'svelte-preprocess';
 import staticAdapter from '@sveltejs/adapter-static';
 import mm from 'micromatch';
+const dev = process.env.NODE_ENV === 'development';
 
 /** @type {import('@sveltejs/kit').Config} */
 export default {
@@ -21,6 +22,10 @@ export default {
                 return mm.all(filepath, ['!**/.*', '!**/*.test.*', '!**/*.sh']);
             }
         },
+        paths: {
+            base: dev ? '' : '/svelte-tel-input'
+        },
+        appDir: 'internal',
         adapter: staticAdapter(),
         amp: false,
         trailingSlash: 'never'

@@ -17,7 +17,7 @@
     ],
     "engines": {
         "npm": ">= 7",
-        "yarn": "please-use-npm",
+        "yarn": ">=2",
         "node": ">= 16"
     },
     "scripts": {
@@ -26,6 +26,7 @@
         "dev": "svelte-kit dev",
         "eslint": "eslint --ext .js,.ts,.svelte .",
         "eslint:fix": "eslint --fix",
+        "generate:exports": "bash ./src/lib/exportGen.sh",
         "lint": "npm run prettier:check && npm run eslint && npm run ts && npm run svelte-check",
         "lint:fix": "npm run eslint:fix && npm run prettier:fix",
         "package": "svelte-kit package",
@@ -35,7 +36,7 @@
         "prepare": "husky install",
         "preview": "svelte-kit preview",
         "release": "npx changeset publish",
-        "release2": "cd package && npm publish",
+        "release:package": "cd package && npm publish",
         "svelte-check": "svelte-check --ignore 'dist,build,coverage,.svelte-kit,package' --threshold warning --fail-on-warnings",
         "test": "jest",
         "test:watch": "jest --watch",
@@ -45,13 +46,13 @@
         "libphonenumber-js": "^1.9.44"
     },
     "devDependencies": {
-        "@babel/core": "^7.16.10",
+        "@babel/core": "^7.16.12",
         "@babel/preset-env": "^7.16.11",
         "@changesets/cli": "^2.19.0",
         "@changesets/get-github-info": "^0.5.0",
         "@changesets/types": "^4.0.2",
         "@sveltejs/adapter-static": "^1.0.0-next.26",
-        "@sveltejs/kit": "^1.0.0-next.239",
+        "@sveltejs/kit": "^1.0.0-next.240",
         "@testing-library/jest-dom": "^5.16.1",
         "@testing-library/svelte": "^3.0.3",
         "@types/jest": "^27.4.0",
@@ -61,7 +62,7 @@
         "babel-jest": "^27.4.6",
         "babel-loader": "^8.2.3",
         "commitizen": "^4.2.4",
-        "cssnano": "^5.0.15",
+        "cssnano": "^5.0.16",
         "dotenv": "^14.2.0",
         "eslint": "^8.7.0",
         "eslint-config-prettier": "^8.3.0",

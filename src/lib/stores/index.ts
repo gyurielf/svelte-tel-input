@@ -1,4 +1,6 @@
 import { writable } from 'svelte/store';
+import type { Writable } from 'svelte/store';
+import type { SelectType } from '$lib/models/types/Select.type';
 
 // Modal
 export const booleanStore = (initial: boolean) => {
@@ -33,3 +35,11 @@ export const statefulSwap = (initialState: boolean | null) => {
         onOutro
     };
 };
+
+// SELECTS
+export const selectedCountryStore: Writable<string> = writable();
+export const selectedRegionStore: Writable<string> = writable();
+export const selectedTelTypeStore: Writable<SelectType> = writable();
+
+// INPUT
+export const enteredTelInputStore: Writable<string> = writable();
