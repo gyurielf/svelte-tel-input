@@ -11,7 +11,6 @@ export default {
         })
     ],
     kit: {
-        target: '#svelte',
         package: {
             // TODO create a single .JS file export.
             exports: (filepath) => {
