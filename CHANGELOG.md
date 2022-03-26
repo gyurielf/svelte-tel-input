@@ -1,5 +1,11 @@
 # svelte-tel-input
 
+## 0.6.0
+
+### Minor Changes
+
+- feat: example page preparations & extend functionality (part 1) ([#50](https://github.com/gyurielf/svelte-tel-input/pull/50))
+
 ## 0.5.1
 
 ### Patch Changes
