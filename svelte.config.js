@@ -11,6 +11,9 @@ export default {
         })
     ],
     kit: {
+        appDir: 'internal',
+        adapter: staticAdapter(),
+        amp: false,
         package: {
             // TODO create a single .JS file export.
             exports: (filepath) => {
@@ -24,9 +27,9 @@ export default {
         paths: {
             base: dev ? '' : '/svelte-tel-input'
         },
-        appDir: 'internal',
-        adapter: staticAdapter(),
-        amp: false,
+        prerender: {
+            default: true
+        },
         trailingSlash: 'never'
     }
 };
