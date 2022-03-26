@@ -8,6 +8,6 @@
 <TelInput
     bind:enteredTelInput={phoneNumber}
     class="px-4 py-1 text-gray-900 focus:outline-none rounded-sm {isVlaid
-        ? 'border-2 border-red-600'
-        : 'border-none'}"
+        ? ' border-none border-0'
+        : 'border-2 border-red-600'}"
 />

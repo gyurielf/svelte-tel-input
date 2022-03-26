@@ -26,7 +26,7 @@
 </script>
 
 <!-- Whis way you can build your own country select component. You can both style and add your own logic. -->
-<TelTypeSelect bind:selectedTelType class="text-gray-800">
+<TelTypeSelect bind:selectedTelType class="text-gray-800 rounded-sm">
     <svelte:fragment slot="options">
         <option value="" selected={true} hidden={true}>Choose here</option>
         {#each telTypes as telType (telType.id)}
