@@ -16,7 +16,7 @@ yarn add svelte-tel-input
 npm install --save svelte-tel-input
 ```
 
-## Dependencies
+## Dependencies (small)
 
 [libphonenumber-js](https://gitlab.com/catamphetamine/libphonenumber-js)
 
