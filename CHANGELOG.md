@@ -1,5 +1,11 @@
 # svelte-tel-input
 
+## 0.6.2
+
+### Patch Changes
+
+- Update readme & update packages ([#54](https://github.com/gyurielf/svelte-tel-input/pull/54))
+
 ## 0.6.1
 
 ### Patch Changes
