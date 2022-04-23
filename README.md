@@ -4,6 +4,8 @@
 
 <ins>Do not use it before 1.0, it won't works properly!</ins>
 
+Lightweight phone input standardization.
+
 ## Installation
 
 Svelte Tel Input is distributed via [npm](https://www.npmjs.com/package/svelte-tel-input).
@@ -16,7 +18,7 @@ yarn add svelte-tel-input
 npm install --save svelte-tel-input
 ```
 
-## Dependencies (small)
+## Dependencies
 
 [libphonenumber-js](https://gitlab.com/catamphetamine/libphonenumber-js)
 
