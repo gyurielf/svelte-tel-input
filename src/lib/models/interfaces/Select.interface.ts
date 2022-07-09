@@ -1,5 +1,5 @@
 export interface SelectObject {
-    id?: string | number;
-    label: string;
-    value: string | number;
+	id?: string | number;
+	label: string;
+	value: string | number;
 }

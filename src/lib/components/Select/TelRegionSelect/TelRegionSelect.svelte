@@ -1,12 +1,12 @@
 <script lang="ts">
-    let selectedTelRegion: string;
+	let selectedTelRegion: string;
 </script>
 
 <select
-    name="region_select"
-    class={$$props.class}
-    bind:value={selectedTelRegion}
-    on:change={() => console.log(selectedTelRegion)}
+	name="region_select"
+	class={$$props.class}
+	bind:value={selectedTelRegion}
+	on:change={() => console.log(selectedTelRegion)}
 >
-    <slot name="options" />
+	<slot name="options" />
 </select>
