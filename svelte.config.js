@@ -5,31 +5,30 @@ const dev = process.env.NODE_ENV === 'development';
 
 /** @type {import('@sveltejs/kit').Config} */
 export default {
-    preprocess: [
-        preprocess({
-            postcss: true
-        })
-    ],
-    kit: {
-        appDir: 'internal',
-        adapter: staticAdapter(),
-        amp: false,
-        package: {
-            // TODO create a single .JS file export.
-            exports: (filepath) => {
-                if (filepath.endsWith('.d.ts')) return false;
-                return mm.all(filepath, ['!**/_*.scss', '!**/*.test.*']);
-            },
-            files: (filepath) => {
-                return mm.all(filepath, ['!**/.*', '!**/*.test.*', '!**/*.sh']);
-            }
-        },
-        paths: {
-            base: dev ? '' : '/svelte-tel-input'
-        },
-        prerender: {
-            default: true
-        },
-        trailingSlash: 'never'
-    }
+	preprocess: [
+		preprocess({
+			postcss: true
+		})
+	],
+	kit: {
+		appDir: 'internal',
+		adapter: staticAdapter(),
+		package: {
+			// TODO create a single .JS file export.
+			exports: (filepath) => {
+				if (filepath.endsWith('.d.ts')) return false;
+				return mm.all(filepath, ['!**/_*.scss', '!**/*.test.*']);
+			},
+			files: (filepath) => {
+				return mm.all(filepath, ['!**/.*', '!**/*.test.*', '!**/*.sh']);
+			}
+		},
+		paths: {
+			base: dev ? '' : '/svelte-tel-input'
+		},
+		prerender: {
+			default: true
+		},
+		trailingSlash: 'always'
+	}
 };

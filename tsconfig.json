@@ -1,34 +1,16 @@
 {
-    "extends": "./.svelte-kit/tsconfig.json",
-    "compilerOptions": {
-        "outDir": "package",
-        "moduleResolution": "node",
-        "module": "ES2020",
-        "lib": ["ES2020", "DOM"],
-        "target": "ES2019",
-        "importsNotUsedAsValues": "error",
-        "isolatedModules": true,
-        "resolveJsonModule": true,
-        "sourceMap": true,
-        "esModuleInterop": true,
-        "skipLibCheck": true,
-        "forceConsistentCasingInFileNames": true,
-        "baseUrl": ".",
-        "allowJs": true,
-        "checkJs": true,
-        "paths": {
-            "$lib": ["src/lib"],
-            "$lib/*": ["src/lib/*"]
-        },
-        "types": ["jest"],
-        "strict": true
-    },
-    "include": [
-        "src/**/*.d.ts",
-        "src/**/*.js",
-        "src/**/*.ts",
-        "src/**/*.svelte",
-        "scripts/**/*.ts"
-    ],
-    "exclude": ["node_modules/*", "static/*", "src/index.js"]
+	"extends": "./.svelte-kit/tsconfig.json",
+	"compilerOptions": {
+		"outDir": "package",
+		"allowJs": true,
+		"checkJs": true,
+		"esModuleInterop": true,
+		"forceConsistentCasingInFileNames": true,
+		"resolveJsonModule": true,
+		"skipLibCheck": true,
+		"sourceMap": true,
+		"strict": true,
+		"types": ["jest"]
+	},
+	"exclude": ["node_modules/*", "static/*", "src/index.js"]
 }
