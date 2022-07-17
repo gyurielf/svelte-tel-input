@@ -1,5 +1,11 @@
 # svelte-tel-input
 
+## 0.6.4
+
+### Patch Changes
+
+- chore: update to vite 3 ([#58](https://github.com/gyurielf/svelte-tel-input/pull/58))
+
 ## 0.6.3
 
 ### Patch Changes
