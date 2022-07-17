@@ -20,7 +20,7 @@ export default {
 				return mm.all(filepath, ['!**/_*.scss', '!**/*.test.*']);
 			},
 			files: (filepath) => {
-				return mm.all(filepath, ['!**/.*', '!**/*.test.*', '!**/*.sh']);
+				return mm.all(filepath, ['!**/.*', '!**/*.test.*', '!**/*.sh', '!**/env.*']);
 			}
 		},
 		paths: {
