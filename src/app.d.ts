@@ -8,6 +8,10 @@ declare namespace App {
 		userid: string;
 	}
 
+	interface ImportMetaEnv {
+		VITE_ENV_MODE: 'dev' | 'prod';
+	}
+
 	// interface Platform {}
 
 	// interface Session {}
