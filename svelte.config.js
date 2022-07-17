@@ -12,15 +12,17 @@ export default {
 	],
 	kit: {
 		appDir: 'internal',
-		adapter: staticAdapter(),
+		adapter: staticAdapter({
+			pages: 'docs',
+			assets: 'docs'
+		}),
 		package: {
-			// TODO create a single .JS file export.
 			exports: (filepath) => {
 				if (filepath.endsWith('.d.ts')) return false;
 				return mm.all(filepath, ['!**/_*.scss', '!**/*.test.*']);
 			},
 			files: (filepath) => {
-				return mm.all(filepath, ['!**/.*', '!**/*.test.*', '!**/*.sh']);
+				return mm.all(filepath, ['!**/.*', '!**/*.test.*', '!**/*.sh', '!**/env.*']);
 			}
 		},
 		paths: {

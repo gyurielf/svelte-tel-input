@@ -1,9 +1,5 @@
-<script context="module" lang="ts">
-</script>
-
 <script lang="ts">
 	import allCountry from '$lib/assets/allCountry';
-
 	import TelCountrySelectExample from '$lib/components/examples/TelCountrySelect.test.svelte';
 	import TelInputExample from '$lib/components/examples/TelInput.test.svelte';
 	import TelTypeSelectExample from '$lib/components/examples/TelTypeSelect.test.svelte';
@@ -11,7 +7,7 @@
 </script>
 
 <svelte:head>
-	<title>svelte-tel-input</title>
+	<title>Svelte Tel Input</title>
 </svelte:head>
 
 <div class="container mx-auto text-gray-200">
