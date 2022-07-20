@@ -32,7 +32,7 @@
 		</div>
 		<div class="grid grid-cols-2">
 			<div
-				class="validation-table grid grid-cols-2 mt-5 border rounded-sm border-gray-100 p-3"
+				class="validation-table grid grid-cols-2 mt-5 border rounded-sm border-gray-100 p-3 font-mono"
 			>
 				<div class="grid grid-cols-2">
 					<div>
