@@ -1,7 +1,6 @@
 import preprocess from 'svelte-preprocess';
 import staticAdapter from '@sveltejs/adapter-static';
 import mm from 'micromatch';
-const dev = process.env.NODE_ENV === 'development';
 
 /** @type {import('@sveltejs/kit').Config} */
 export default {
@@ -11,11 +10,7 @@ export default {
 		})
 	],
 	kit: {
-		appDir: 'internal',
-		adapter: staticAdapter({
-			pages: 'docs',
-			assets: 'docs'
-		}),
+		adapter: staticAdapter(),
 		package: {
 			exports: (filepath) => {
 				if (filepath.endsWith('.d.ts')) return false;
@@ -25,13 +20,7 @@ export default {
 				return mm.all(filepath, ['!**/.*', '!**/*.test.*', '!**/*.sh', '!**/env.*']);
 			}
 		},
-		paths: {
-			base: dev ? '' : '/svelte-tel-input'
-		},
 		prerender: {
-			crawl: true,
-			enabled: true,
-			onError: 'continue',
 			default: true
 		},
 		trailingSlash: 'always'
