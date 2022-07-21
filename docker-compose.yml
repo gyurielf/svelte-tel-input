@@ -4,7 +4,7 @@ services:
         image: 'node:16.14'
         container_name: svelte-tel-input
         working_dir: /home/node/app
-        command: 'sh -c "npm i && npm run prepare && npm run dev -- --host"'
+        command: 'sh -c "npm i && npm run prepare:husky && npm run dev -- --host"'
         user: node
         tty: true
         ports:

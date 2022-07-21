@@ -1,9 +1,7 @@
 <script lang="ts">
 	import { normalizedCountries } from '$lib/assets';
-	import TelCountrySelectExample from '$lib/components/examples/TelCountrySelect.test.svelte';
-	import TelInputExample from '$lib/components/examples/TelInput.test.svelte';
-	import TelTypeSelectExample from '$lib/components/examples/TelTypeSelect.test.svelte';
 	import Select from '$lib/components/Select/Select.svelte';
+	import Usage from '$lib/views/Usage.svelte';
 
 	const jsonPrettyParser = (node: HTMLElement) => {
 		node.innerHTML = `<code>${JSON.stringify(examplePayload, null, 2)}</code>`;
@@ -34,18 +32,7 @@
 		<div class="grid grid-cols-2">
 			<div class="grid gap-4">
 				<h1 class="text-2xl my-2">SVELTE-TEL-INPUT</h1>
-				<div>
-					<p>Country select:</p>
-					<TelCountrySelectExample />
-				</div>
-				<div>
-					<p>Type Select:</p>
-					<TelTypeSelectExample />
-				</div>
-				<div>
-					<p>Tel input:</p>
-					<TelInputExample />
-				</div>
+				<Usage />
 			</div>
 			<Select items={normalizedCountries} />
 		</div>
