@@ -1,13 +1,17 @@
 <script lang="ts">
+	import type { SelectType } from '$lib/models/types/Select.type';
 	import type { TelSelectObject } from '$lib/models/interfaces/Select.interface';
 	import { onMount } from 'svelte';
 	import TelRegionSelect from '$lib/components/Select/TelRegionSelect/TelRegionSelect.svelte';
 	import CountrySelect from '$lib/components/Select/TelCountrySelect/TelCountrySelect.svelte';
+	import TelTypeSelect from '$lib/components/Select/TelTypeSelect/TelTypeSelect.svelte';
+	import TelTypeSelectOption from '$lib/components/Select/TelTypeSelect/TelTypeSelectOption.svelte';
 	import TelInput from '$lib/components/Input/TelInput.svelte';
 	import { getCountries } from 'libphonenumber-js';
 	import { getCurrentCountry } from '$lib/utils/helpers';
 	// Assets
 	import { rawRegions } from '$lib/assets/regions';
+	import { telTypes } from '$lib/assets/telTypes';
 
 	// Tel input
 	let enteredTelInput: string;
@@ -21,6 +25,10 @@
 	let dataIsValid = {
 		enteredTelInput: true
 	};
+
+	// TODO >> sort and order option for telTypes.
+
+	let selectedTelType: SelectType | null = null;
 
 	onMount(async () => {
 		// Get current country on initialization
@@ -47,6 +55,15 @@
 		{/each}
 	</svelte:fragment>
 </TelRegionSelect>
+
+<TelTypeSelect bind:selectedTelType class="text-gray-800 rounded-sm">
+	<svelte:fragment slot="options">
+		<option value="" selected={true} hidden={true}>Choose here</option>
+		{#each telTypes as telType (telType.id)}
+			<TelTypeSelectOption class="text-red-500" typeOption={telType} />
+		{/each}
+	</svelte:fragment>
+</TelTypeSelect>
 
 <TelInput
 	bind:enteredTelInput

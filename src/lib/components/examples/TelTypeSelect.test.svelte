@@ -1,24 +1,8 @@
 <script lang="ts">
 	import TelTypeSelect from '$lib/components/Select/TelTypeSelect/TelTypeSelect.svelte';
 	import TelTypeSelectOption from '../Select/TelTypeSelect/TelTypeSelectOption.svelte';
-	import { capitalize } from '$lib/utils/helpers';
 	import type { SelectType } from '$lib/models/types/Select.type';
-
-	const telTypes = [
-		'PREMIUM_RATE',
-		'TOLL_FREE',
-		'SHARED_COST',
-		'VOIP',
-		'PERSONAL_NUMBER',
-		'PAGER',
-		'UAN',
-		'VOICEMAIL',
-		'FIXED_LINE_OR_MOBILE',
-		'FIXED_LINE',
-		'MOBILE'
-	].map((el) => {
-		return { id: el, value: el, label: capitalize(el.split('_').join(' ')) };
-	});
+	import { telTypes } from '$lib/assets';
 
 	// TODO >> sort and order option for telTypes.
 

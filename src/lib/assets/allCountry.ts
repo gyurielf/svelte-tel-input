@@ -313,7 +313,7 @@ const allCountries = [
 	['Åland Islands', 'ax', '358', 1, ['18']]
 ];
 
-const restructuredCountries = allCountries.map((country): Country => {
+export const normalizedCountries = allCountries.map((country): Country => {
 	return {
 		name: country[0] as string,
 		iso2: country[1] as string,
@@ -322,5 +322,3 @@ const restructuredCountries = allCountries.map((country): Country => {
 		areaCodes: country[4] || null
 	};
 });
-
-export default restructuredCountries;

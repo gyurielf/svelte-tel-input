@@ -1,5 +1,5 @@
 <script lang="ts">
-	import allCountry from '$lib/assets/allCountry';
+	import { normalizedCountries } from '$lib/assets';
 	import TelCountrySelectExample from '$lib/components/examples/TelCountrySelect.test.svelte';
 	import TelInputExample from '$lib/components/examples/TelInput.test.svelte';
 	import TelTypeSelectExample from '$lib/components/examples/TelTypeSelect.test.svelte';
@@ -47,7 +47,7 @@
 					<TelInputExample />
 				</div>
 			</div>
-			<Select items={allCountry} />
+			<Select items={normalizedCountries} />
 		</div>
 		<div class="grid grid-cols-2">
 			<div
