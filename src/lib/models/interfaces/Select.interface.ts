@@ -1,5 +1,5 @@
-export interface SelectObject {
-	id?: string | number;
+export interface TelSelectObject {
+	id: string;
 	label: string;
 	value: string | number;
 }

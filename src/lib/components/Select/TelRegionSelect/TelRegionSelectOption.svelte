@@ -1,6 +1,6 @@
 <script lang="ts">
-	import type { SelectObject } from '$lib/models/interfaces/Select.interface';
-	export let regionOption: SelectObject;
+	import type { TelSelectObject } from '$lib/models/interfaces/Select.interface';
+	export let regionOption: TelSelectObject;
 </script>
 
 <option class={$$props.class} value={regionOption.value}>{regionOption.label}</option>

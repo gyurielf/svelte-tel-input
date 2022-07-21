@@ -2,7 +2,7 @@
 	import { selectedTelTypeStore } from '$lib/stores';
 	import type { SelectType } from '$lib/models/types/Select.type';
 
-	export let selectedTelType: SelectType;
+	export let selectedTelType: SelectType | null = null;
 
 	const setSelectedCountry = (value: SelectType) => {
 		selectedTelType = value;

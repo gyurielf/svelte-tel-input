@@ -6,8 +6,8 @@
 		searchInput: false,
 		flags: true
 	};
-
 	export let items: Country[];
+	export let clickOutside = true;
 
 	let isOpen = false;
 	let enteredSearch: string;
@@ -21,9 +21,15 @@
 		e?.preventDefault();
 		isOpen = false;
 	};
+	const handleClickOutside = (e?: Event) => {
+		e?.preventDefault();
+		if (clickOutside) {
+			closeSelect(e);
+		}
+	};
 </script>
 
-<div class="select cursor-pointer" use:clickOutsideAction={closeSelect}>
+<div class="select cursor-pointer" use:clickOutsideAction={handleClickOutside}>
 	<div on:click={() => toggleSelect()}>CHOOSE</div>
 	{#if isOpen}
 		<ul class="border border-gray-900 max-h-40 w-fit overflow-y-scroll">

@@ -4,6 +4,25 @@
 	import TelInputExample from '$lib/components/examples/TelInput.test.svelte';
 	import TelTypeSelectExample from '$lib/components/examples/TelTypeSelect.test.svelte';
 	import Select from '$lib/components/Select/Select.svelte';
+
+	const jsonPrettyParser = (node: HTMLElement) => {
+		node.innerHTML = `<code>${JSON.stringify(examplePayload, null, 2)}</code>`;
+	};
+
+	let examplePayload = {
+		countryCode: 'HU',
+		isValid: true,
+		phoneNumber: '201231212',
+		countryCallingCode: '36',
+		formattedNumber: '+36201231212',
+		nationalNumber: '201231212',
+		formatInternational: '+36 20 123 1212',
+		formatNational: '06 20 123 1212',
+		uri: 'tel:+36201231212',
+		e164: '+36201231212'
+	};
+
+	$: exampleEntries = Object.entries(examplePayload);
 </script>
 
 <svelte:head>
@@ -37,38 +56,20 @@
 				<div class="grid grid-cols-2">
 					<div>
 						<h3 class="text-lg font-semibold">Key</h3>
-						<div>countryCode</div>
-						<div>isValid</div>
-						<div>phoneNumber</div>
-						<div>countryCallingCode</div>
-						<div>formattedNumber</div>
-						<div>nationalNumber</div>
-						<div>type</div>
-						<div>formatInternational</div>
-						<div>formatNational</div>
-						<div>uri</div>
-						<div>e164</div>
+						{#each exampleEntries as [key, _]}
+							<div>{key}</div>
+						{/each}
 					</div>
 					<div>
 						<h3 class="text-lg font-semibold">Value</h3>
-						<div>HU</div>
-						<div>true</div>
-						<div>201231212</div>
-						<div>36</div>
-						<div>+36201231212</div>
-						<div>+201231212</div>
-						<div>_</div>
-						<div>+36 20 123 1212</div>
-						<div>06 20 123 1212</div>
-						<div>tel:+36201231212</div>
-						<div>+36201231212</div>
+						{#each exampleEntries as [_, value]}
+							<div>{value}</div>
+						{/each}
 					</div>
 				</div>
 				<div class="grid">
 					<h3 class="text-lg font-semibold">Payload</h3>
-					<code>
-						{`{ "countryCode": "HU", "isValid": true, "phoneNumber": "201231212", "countryCallingCode": "36", "formattedNumber": "+36201231212", "nationalNumber": "201231212", "formatInternational": "+36 20 123 1212", "formatNational": "06 20 123 1212", "uri": "tel:+36201231212", "e164": "+36201231212" }`}
-					</code>
+					<pre lang="no-highlight" class="whitespace-pre-wrap " use:jsonPrettyParser />
 				</div>
 			</div>
 		</div>

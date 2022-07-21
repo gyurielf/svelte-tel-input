@@ -3,12 +3,16 @@ export const capitalize = (str: string) => {
 };
 
 export const getCurrentCountry = async () => {
-	const response = await (await fetch('https://ip2c.org/s')).text();
-	const result = (response || '').toString();
+	try {
+		const response = await (await fetch('https://ip2c.org/s')).text();
+		const result = (response || '').toString();
 
-	if (!result || result[0] !== '1') {
+		if (!result || result[0] !== '1') {
+			throw new Error('Unable to fetch the country');
+		}
+
+		return result.substring(2, 4);
+	} catch (error) {
 		throw new Error('Unable to fetch the country');
 	}
-
-	return result.substring(2, 4);
 };

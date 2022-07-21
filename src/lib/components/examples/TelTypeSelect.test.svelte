@@ -22,7 +22,7 @@
 
 	// TODO >> sort and order option for telTypes.
 
-	let selectedTelType: SelectType;
+	export let selectedTelType: SelectType | null = null;
 </script>
 
 <!-- Whis way you can build your own country select component. You can both style and add your own logic. -->

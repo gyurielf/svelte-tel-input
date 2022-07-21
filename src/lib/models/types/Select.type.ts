@@ -1,3 +1,3 @@
-import type { SelectObject } from '../interfaces/Select.interface';
+import type { TelSelectObject } from '../interfaces/Select.interface';
 
-export type SelectType = SelectObject | (string | number);
+export type SelectType = TelSelectObject | (string | number);
