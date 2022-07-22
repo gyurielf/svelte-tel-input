@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { selectedTelTypeStore } from '$lib/stores';
-	import type { SelectType } from '$lib/models/types/Select.type';
+	import type { SelectType } from '$lib/types/Select.type';
 
 	export let selectedTelType: SelectType | null = null;
 

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import TelRegionSelect from '../Select/TelRegionSelect/TelRegionSelect.svelte';
 	import { rawRegions } from '$lib/assets/regions';
-	import type { TelSelectObject } from '$lib/models/interfaces/Select.interface';
+	import type { TelSelectObject } from '$lib/types/interfaces/Select.interface';
 
 	export let selectedTelRegion: TelSelectObject;
 </script>

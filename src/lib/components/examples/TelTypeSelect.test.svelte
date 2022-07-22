@@ -1,7 +1,7 @@
 <script lang="ts">
 	import TelTypeSelect from '$lib/components/Select/TelTypeSelect/TelTypeSelect.svelte';
 	import TelTypeSelectOption from '../Select/TelTypeSelect/TelTypeSelectOption.svelte';
-	import type { SelectType } from '$lib/models/types/Select.type';
+	import type { SelectType } from '$lib/types/Select.type';
 	import { telTypes } from '$lib/assets';
 
 	// TODO >> sort and order option for telTypes.

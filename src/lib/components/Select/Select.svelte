@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { Country } from '$lib/models/interfaces/Country.interface';
+	import type { Country } from '$lib/types/interfaces/Country.interface';
 	import { clickOutsideAction } from '$lib/utils/directives/clickOutsideAction';
 
 	export let selectOptions = {
@@ -50,6 +50,3 @@
 		</ul>
 	{/if}
 </div>
-
-<style lang="postcss">
-</style>

@@ -2,25 +2,48 @@
 	import { normalizedCountries } from '$lib/assets';
 	import Select from '$lib/components/Select/Select.svelte';
 	import Usage from '$lib/views/Usage.svelte';
+	import type { PhoneNumber } from 'libphonenumber-js';
 
 	const jsonPrettyParser = (node: HTMLElement) => {
-		node.innerHTML = `<code>${JSON.stringify(examplePayload, null, 2)}</code>`;
+		node.innerHTML = `<code>${JSON.stringify(normalizeData(exampleData), null, 2)}</code>`;
 	};
 
-	let examplePayload = {
-		countryCode: 'HU',
-		isValid: true,
-		phoneNumber: '201231212',
-		countryCallingCode: '36',
-		formattedNumber: '+36201231212',
-		nationalNumber: '201231212',
-		formatInternational: '+36 20 123 1212',
-		formatNational: '06 20 123 1212',
-		uri: 'tel:+36201231212',
-		e164: '+36201231212'
+	// let examplePayload = {
+	// 	countryCode: 'HU',
+	// 	isValid: true,
+	// 	phoneNumber: '201231212',
+	// 	countryCallingCode: '36',
+	// 	formattedNumber: '+36201231212',
+	// 	nationalNumber: '201231212',
+	// 	formatInternational: '+36 20 123 1212',
+	// 	formatNational: '06 20 123 1212',
+	// 	uri: 'tel:+36201231212',
+	// 	e164: '+36201231212'
+	// };
+	// $: exampleEntries = Object.entries(examplePayload);
+
+	let exampleData: PhoneNumber;
+
+	const normalizeData = (data: PhoneNumber): Record<string, any> => {
+		if (data && data !== null) {
+			return {
+				countryCode: data.country,
+				isValid: data.isValid(),
+				phoneNumber: data.number,
+				countryCallingCode: data.countryCallingCode,
+				formattedNumber: data.formatInternational(),
+				nationalNumber: data.nationalNumber,
+				formatInternational: data.formatInternational(),
+				formatNational: data.formatNational(),
+				uri: data.getURI(),
+				e164: data.number
+			};
+		} else {
+			return {};
+		}
 	};
 
-	$: exampleEntries = Object.entries(examplePayload);
+	$: exampleDataEntries = (exampleData && Object.entries(normalizeData(exampleData))) || [];
 </script>
 
 <svelte:head>
@@ -32,7 +55,7 @@
 		<div class="grid grid-cols-2">
 			<div class="grid gap-4">
 				<h1 class="text-2xl my-2">SVELTE-TEL-INPUT</h1>
-				<Usage />
+				<Usage bind:data={exampleData} />
 			</div>
 			<Select items={normalizedCountries} />
 		</div>
@@ -43,13 +66,13 @@
 				<div class="grid grid-cols-2">
 					<div>
 						<h3 class="text-lg font-semibold">Key</h3>
-						{#each exampleEntries as [key, _]}
+						{#each exampleDataEntries as [key, _]}
 							<div>{key}</div>
 						{/each}
 					</div>
 					<div>
 						<h3 class="text-lg font-semibold">Value</h3>
-						{#each exampleEntries as [_, value]}
+						{#each exampleDataEntries as [_, value]}
 							<div>{value}</div>
 						{/each}
 					</div>
