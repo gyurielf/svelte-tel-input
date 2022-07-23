@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { selectedCountryStore } from '$lib/stores';
 
-	export let selectedCountry: string;
+	export let selectedCountry: string | null;
 
 	const setSelectedCountry = (value: string) => {
 		selectedCountry = value;

@@ -1,4 +1,4 @@
-import type { DynamicSvelteComponent } from '../models/types/DynamicSvelteComponent.type';
+import type { DynamicSvelteComponent } from '../types/DynamicSvelteComponent.type';
 
 export const isDynamicComponent = (item: unknown): item is DynamicSvelteComponent => {
 	return (

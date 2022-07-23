@@ -16,7 +16,7 @@
 // ['north-america', 'south-america', 'central-america', 'carribean',
 //  'eu-union', 'ex-ussr', 'ex-yugos', 'baltic', 'middle-east', 'north-africa']
 
-const rawTerritories = [
+export const rawRegions = [
 	['American Samoa', ['oceania'], 'as', '1684'],
 	['Anguilla', ['america', 'carribean'], 'ai', '1264'],
 	['Bermuda', ['america', 'north-america'], 'bm', '1441'],
@@ -42,5 +42,3 @@ const rawTerritories = [
 	['U.S. Virgin Islands', ['america', 'carribean'], 'vi', '1340'],
 	['Wallis and Futuna', ['oceania'], 'wf', '681']
 ];
-
-export default rawTerritories;

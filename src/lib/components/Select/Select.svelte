@@ -1,13 +1,13 @@
 <script lang="ts">
-	import type { Country } from '$lib/models/interfaces/Country.interface';
+	import type { Country } from '$lib/types/interfaces/Country.interface';
 	import { clickOutsideAction } from '$lib/utils/directives/clickOutsideAction';
 
 	export let selectOptions = {
 		searchInput: false,
 		flags: true
 	};
-
 	export let items: Country[];
+	export let clickOutside = true;
 
 	let isOpen = false;
 	let enteredSearch: string;
@@ -21,9 +21,15 @@
 		e?.preventDefault();
 		isOpen = false;
 	};
+	const handleClickOutside = (e?: Event) => {
+		e?.preventDefault();
+		if (clickOutside) {
+			closeSelect(e);
+		}
+	};
 </script>
 
-<div class="select cursor-pointer" use:clickOutsideAction={closeSelect}>
+<div class="select cursor-pointer" use:clickOutsideAction={handleClickOutside}>
 	<div on:click={() => toggleSelect()}>CHOOSE</div>
 	{#if isOpen}
 		<ul class="border border-gray-900 max-h-40 w-fit overflow-y-scroll">
@@ -44,6 +50,3 @@
 		</ul>
 	{/if}
 </div>
-
-<style lang="postcss">
-</style>

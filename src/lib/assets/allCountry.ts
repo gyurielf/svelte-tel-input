@@ -15,7 +15,8 @@
 //    Area codes
 // ]
 
-import type { Country } from '$lib/models/interfaces/Country.interface';
+import type { Country } from '$lib/types/interfaces/Country.interface';
+import type { CountryCode } from 'libphonenumber-js';
 
 const allCountries = [
 	['Afghanistan (‫افغانستان‬‎)', 'af', '93'],
@@ -313,14 +314,12 @@ const allCountries = [
 	['Åland Islands', 'ax', '358', 1, ['18']]
 ];
 
-const restructuredCountries = allCountries.map((country): Country => {
+export const normalizedCountries = allCountries.map((country): Country => {
 	return {
 		name: country[0] as string,
-		iso2: country[1] as string,
+		iso2: (country[1] as string).toUpperCase() as CountryCode,
 		dialCode: country[2] as string,
 		priority: country[3] || 0,
 		areaCodes: country[4] || null
 	};
 });
-
-export default restructuredCountries;

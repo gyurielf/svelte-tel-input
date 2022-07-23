@@ -1,9 +1,29 @@
 <script lang="ts">
-	import allCountry from '$lib/assets/allCountry';
-	import TelCountrySelectExample from '$lib/components/examples/TelCountrySelect.test.svelte';
-	import TelInputExample from '$lib/components/examples/TelInput.test.svelte';
-	import TelTypeSelectExample from '$lib/components/examples/TelTypeSelect.test.svelte';
+	import { normalizedCountries } from '$lib/assets';
 	import Select from '$lib/components/Select/Select.svelte';
+	import { normalizePhoneInput } from '$lib/utils/helpers';
+	import Usage from '$lib/views/Usage.svelte';
+	import type { PhoneNumber } from 'libphonenumber-js';
+
+	const jsonPrettyParser = (node: HTMLElement, normalizer: Record<string, any>) => {
+		return {
+			update() {
+				node.innerHTML = `<code>${JSON.stringify(
+					normalizePhoneInput(exampleData),
+					null,
+					2
+				)}</code>`;
+			},
+			destroy() {
+				node.innerHTML = '';
+			}
+		};
+	};
+
+	let exampleData: PhoneNumber;
+
+	$: myData = exampleData ? normalizePhoneInput(exampleData) : {};
+	$: exampleDataEntries = (exampleData && Object.entries(normalizePhoneInput(exampleData))) || [];
 </script>
 
 <svelte:head>
@@ -15,20 +35,9 @@
 		<div class="grid grid-cols-2">
 			<div class="grid gap-4">
 				<h1 class="text-2xl my-2">SVELTE-TEL-INPUT</h1>
-				<div>
-					<p>Country select:</p>
-					<TelCountrySelectExample />
-				</div>
-				<div>
-					<p>Type Select:</p>
-					<TelTypeSelectExample />
-				</div>
-				<div>
-					<p>Tel input:</p>
-					<TelInputExample />
-				</div>
+				<Usage bind:data={exampleData} />
 			</div>
-			<Select items={allCountry} />
+			<Select items={normalizedCountries} />
 		</div>
 		<div class="grid grid-cols-2">
 			<div
@@ -37,38 +46,24 @@
 				<div class="grid grid-cols-2">
 					<div>
 						<h3 class="text-lg font-semibold">Key</h3>
-						<div>countryCode</div>
-						<div>isValid</div>
-						<div>phoneNumber</div>
-						<div>countryCallingCode</div>
-						<div>formattedNumber</div>
-						<div>nationalNumber</div>
-						<div>type</div>
-						<div>formatInternational</div>
-						<div>formatNational</div>
-						<div>uri</div>
-						<div>e164</div>
+						{#each exampleDataEntries as [key, _]}
+							<div>{key}</div>
+						{/each}
 					</div>
 					<div>
 						<h3 class="text-lg font-semibold">Value</h3>
-						<div>HU</div>
-						<div>true</div>
-						<div>201231212</div>
-						<div>36</div>
-						<div>+36201231212</div>
-						<div>+201231212</div>
-						<div>_</div>
-						<div>+36 20 123 1212</div>
-						<div>06 20 123 1212</div>
-						<div>tel:+36201231212</div>
-						<div>+36201231212</div>
+						{#each exampleDataEntries as [_, value]}
+							<div>{value}</div>
+						{/each}
 					</div>
 				</div>
 				<div class="grid">
 					<h3 class="text-lg font-semibold">Payload</h3>
-					<code>
-						{`{ "countryCode": "HU", "isValid": true, "phoneNumber": "201231212", "countryCallingCode": "36", "formattedNumber": "+36201231212", "nationalNumber": "201231212", "formatInternational": "+36 20 123 1212", "formatNational": "06 20 123 1212", "uri": "tel:+36201231212", "e164": "+36201231212" }`}
-					</code>
+					<pre
+						lang="no-highlight"
+						class="whitespace-pre-wrap "
+						use:jsonPrettyParser={myData}
+					/>
 				</div>
 			</div>
 		</div>

@@ -1,9 +1,9 @@
 <script lang="ts">
 	import TelRegionSelect from '../Select/TelRegionSelect/TelRegionSelect.svelte';
-	import rawRegions from '$lib/assets/regions';
-	import type { SelectObject } from '$lib/models/interfaces/Select.interface';
+	import { rawRegions } from '$lib/assets/regions';
+	import type { TelSelectObject } from '$lib/types/interfaces/Select.interface';
 
-	let selectedTelRegion: SelectObject;
+	export let selectedTelRegion: TelSelectObject;
 </script>
 
 <!-- Whis way you can build your own country select component. You can both style and add your own logic. -->

@@ -1,6 +1,6 @@
 import { writable } from 'svelte/store';
 import type { Writable } from 'svelte/store';
-import type { SelectType } from '$lib/models/types/Select.type';
+import type { SelectType } from '$lib/types';
 
 // Modal
 export const booleanStore = (initial: boolean) => {
