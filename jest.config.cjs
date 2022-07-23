@@ -1,3 +1,4 @@
+/** @type {import('ts-jest/dist/types').InitialOptionsTsJest} */
 module.exports = {
 	verbose: true,
 	collectCoverage: true,
@@ -17,5 +18,6 @@ module.exports = {
 	moduleNameMapper: {
 		'\\$lib/(.*)': '<rootDir>/src/lib/$1'
 	},
-	transformIgnorePatterns: ['node_modules/(?!(focus-svelte)/)']
+	transformIgnorePatterns: ['node_modules/(?!(focus-svelte)/)'],
+	testPathIgnorePatterns: ['/scripts/']
 };
