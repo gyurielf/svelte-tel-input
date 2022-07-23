@@ -49,9 +49,9 @@
 	"devDependencies": {
 		"@babel/core": "^7.18.9",
 		"@babel/preset-env": "^7.18.9",
-		"@changesets/cli": "^2.23.2",
+		"@changesets/cli": "^2.24.0",
 		"@changesets/get-github-info": "^0.5.1",
-		"@changesets/types": "^5.0.0",
+		"@changesets/types": "^5.1.0",
 		"@sveltejs/adapter-static": "^1.0.0-next.38",
 		"@sveltejs/kit": "^1.0.0-next.388",
 		"@testing-library/jest-dom": "^5.16.4",

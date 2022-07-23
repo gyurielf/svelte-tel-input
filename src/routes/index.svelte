@@ -20,40 +20,7 @@
 		};
 	};
 
-	// let examplePayload = {
-	// 	countryCode: 'HU',
-	// 	isValid: true,
-	// 	phoneNumber: '201231212',
-	// 	countryCallingCode: '36',
-	// 	formattedNumber: '+36201231212',
-	// 	nationalNumber: '201231212',
-	// 	formatInternational: '+36 20 123 1212',
-	// 	formatNational: '06 20 123 1212',
-	// 	uri: 'tel:+36201231212',
-	// 	e164: '+36201231212'
-	// };
-	// $: exampleEntries = Object.entries(examplePayload);
-
 	let exampleData: PhoneNumber;
-
-	// const normalizeData = (data: PhoneNumber): Record<string, any> => {
-	// 	if (data) {
-	// 		return {
-	// 			countryCode: data.country,
-	// 			isValid: data.isValid(),
-	// 			phoneNumber: data.number,
-	// 			countryCallingCode: data.countryCallingCode,
-	// 			formattedNumber: data.formatInternational(),
-	// 			nationalNumber: data.nationalNumber,
-	// 			formatInternational: data.formatInternational(),
-	// 			formatNational: data.formatNational(),
-	// 			uri: data.getURI(),
-	// 			e164: data.number
-	// 		};
-	// 	} else {
-	// 		throw new Error('No data provided');
-	// 	}
-	// };
 
 	$: myData = exampleData ? normalizePhoneInput(exampleData) : {};
 	$: exampleDataEntries = (exampleData && Object.entries(normalizePhoneInput(exampleData))) || [];
