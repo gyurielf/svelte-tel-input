@@ -1,5 +1,11 @@
 # svelte-tel-input
 
+## 0.7.0
+
+### Minor Changes
+
+- feat: example page payload feature, parsing improvements" ([#68](https://github.com/gyurielf/svelte-tel-input/pull/68))
+
 ## 0.6.5
 
 ### Patch Changes
