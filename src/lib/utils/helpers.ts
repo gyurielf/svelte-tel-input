@@ -19,23 +19,21 @@ export const getCurrentCountry = async () => {
 	}
 };
 
-export const normalizePhoneInput = (
-	input: PhoneNumber | null
-): Record<string, number | boolean | string | null> => {
-	if (input && input !== null) {
-		return {
-			countryCode: input.country || null,
-			isValid: input.isValid(),
-			phoneNumber: input.number,
-			countryCallingCode: input.countryCallingCode,
-			formattedNumber: input.formatInternational(),
-			nationalNumber: input.nationalNumber,
-			formatInternational: input.formatInternational(),
-			formatNational: input.formatNational(),
-			uri: input.getURI(),
-			e164: input.number
-		};
-	} else {
-		throw new Error('No data provided');
-	}
+export const normalizePhoneInput = (input: PhoneNumber | null) => {
+	const resultObject = {
+		countryCode: input ? input.country : null,
+		isValid: input ? input.isValid() : false,
+		phoneNumber: input ? input.number : null,
+		countryCallingCode: input ? input.countryCallingCode : null,
+		formattedNumber: input ? input.formatInternational() : null,
+		nationalNumber: input ? input.nationalNumber : null,
+		formatInternational: input ? input.formatInternational() : null,
+		formatNational: input ? input.formatNational() : null,
+		uri: input ? input.getURI() : null,
+		e164: input ? input.number : null
+	};
+	const filteredResult = Object.fromEntries(
+		Object.entries(resultObject).filter(([key, value]) => value !== null)
+	);
+	return filteredResult;
 };

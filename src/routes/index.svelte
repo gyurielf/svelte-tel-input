@@ -1,11 +1,23 @@
 <script lang="ts">
 	import { normalizedCountries } from '$lib/assets';
 	import Select from '$lib/components/Select/Select.svelte';
+	import { normalizePhoneInput } from '$lib/utils/helpers';
 	import Usage from '$lib/views/Usage.svelte';
 	import type { PhoneNumber } from 'libphonenumber-js';
 
-	const jsonPrettyParser = (node: HTMLElement) => {
-		node.innerHTML = `<code>${JSON.stringify(normalizeData(exampleData), null, 2)}</code>`;
+	const jsonPrettyParser = (node: HTMLElement, normalizer: Record<string, any>) => {
+		return {
+			update() {
+				node.innerHTML = `<code>${JSON.stringify(
+					normalizePhoneInput(exampleData),
+					null,
+					2
+				)}</code>`;
+			},
+			destroy() {
+				node.innerHTML = '';
+			}
+		};
 	};
 
 	// let examplePayload = {
@@ -24,26 +36,27 @@
 
 	let exampleData: PhoneNumber;
 
-	const normalizeData = (data: PhoneNumber): Record<string, any> => {
-		if (data && data !== null) {
-			return {
-				countryCode: data.country,
-				isValid: data.isValid(),
-				phoneNumber: data.number,
-				countryCallingCode: data.countryCallingCode,
-				formattedNumber: data.formatInternational(),
-				nationalNumber: data.nationalNumber,
-				formatInternational: data.formatInternational(),
-				formatNational: data.formatNational(),
-				uri: data.getURI(),
-				e164: data.number
-			};
-		} else {
-			return {};
-		}
-	};
+	// const normalizeData = (data: PhoneNumber): Record<string, any> => {
+	// 	if (data) {
+	// 		return {
+	// 			countryCode: data.country,
+	// 			isValid: data.isValid(),
+	// 			phoneNumber: data.number,
+	// 			countryCallingCode: data.countryCallingCode,
+	// 			formattedNumber: data.formatInternational(),
+	// 			nationalNumber: data.nationalNumber,
+	// 			formatInternational: data.formatInternational(),
+	// 			formatNational: data.formatNational(),
+	// 			uri: data.getURI(),
+	// 			e164: data.number
+	// 		};
+	// 	} else {
+	// 		throw new Error('No data provided');
+	// 	}
+	// };
 
-	$: exampleDataEntries = (exampleData && Object.entries(normalizeData(exampleData))) || [];
+	$: myData = exampleData ? normalizePhoneInput(exampleData) : {};
+	$: exampleDataEntries = (exampleData && Object.entries(normalizePhoneInput(exampleData))) || [];
 </script>
 
 <svelte:head>
@@ -79,7 +92,11 @@
 				</div>
 				<div class="grid">
 					<h3 class="text-lg font-semibold">Payload</h3>
-					<pre lang="no-highlight" class="whitespace-pre-wrap " use:jsonPrettyParser />
+					<pre
+						lang="no-highlight"
+						class="whitespace-pre-wrap "
+						use:jsonPrettyParser={myData}
+					/>
 				</div>
 			</div>
 		</div>

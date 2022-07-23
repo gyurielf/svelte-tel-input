@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { enteredTelInputStore } from '$lib/stores';
+	import { PhoneInputParseError } from '$lib/types';
 	import {
 		parsePhoneNumberWithError,
 		ParseError,
@@ -10,6 +11,7 @@
 	export let defaultCountry: CountryCode | null = null;
 	export let phoneInput: string | null = null;
 	export let parsedPhoneInput: PhoneNumber | null = null;
+	export let error: PhoneInputParseError | null = null;
 
 	const handleInput = (event: Event) => {
 		const inputVal = (event.target as HTMLInputElement).value;
@@ -18,10 +20,13 @@
 
 		try {
 			parsedPhoneInput = parsePhoneNumberWithError(inputVal, defaultCountry || undefined);
-		} catch (error) {
-			if (error instanceof ParseError) {
+			error = null;
+		} catch (err) {
+			if (err instanceof ParseError) {
 				// Not a phone number, non-existent country, etc.
-				console.log(error.message);
+				parsedPhoneInput = null;
+				console.log(err.message);
+				error = PhoneInputParseError[err.message as keyof typeof PhoneInputParseError];
 			} else {
 				throw error;
 			}
