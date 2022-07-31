@@ -107,7 +107,7 @@
 					<span class="mr-3">{item.label}</span>
 				</li>
 			{:else}
-				<div>List is on the way..</div>
+				<div>List of items is on the way..</div>
 			{/each}
 		</ul>
 	{/if}

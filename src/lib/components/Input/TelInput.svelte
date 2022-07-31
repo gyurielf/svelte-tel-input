@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { watcher } from '$lib/stores';
 	import { PhoneNumberParseError } from '$lib/types';
 	import type { NormalizedPhoneNumber } from '$lib/types/interfaces/Phone.interface';
 	import { normalizePhoneInput } from '$lib/utils/helpers';
@@ -14,10 +15,10 @@
 	const handleInput = (event: Event) => {
 		const inputVal = (event.target as HTMLInputElement).value;
 		rawPhoneInput = inputVal;
-		handleParsePhoneNumber(inputVal, defaultCountry);
+		handleParsePhoneNumber(defaultCountry, inputVal);
 	};
 
-	const handleParsePhoneNumber = (input: string, country: CountryCode | null) => {
+	const handleParsePhoneNumber = (country: CountryCode | null, input: string) => {
 		try {
 			parsedPhoneInput = normalizePhoneInput(
 				parsePhoneNumberWithError(input, country || undefined)
@@ -35,8 +36,11 @@
 		}
 	};
 
-	$: if (defaultCountry !== null && rawPhoneInput !== null)
-		handleParsePhoneNumber(rawPhoneInput, defaultCountry);
+	const watchFunction = () => {
+		if (rawPhoneInput !== null) handleParsePhoneNumber(defaultCountry, rawPhoneInput);
+	};
+	const countryChangeWatch = watcher(null, watchFunction);
+	$: $countryChangeWatch = defaultCountry;
 </script>
 
 <input {id} {name} class={$$props.class} {disabled} type="tel" on:input={handleInput} />

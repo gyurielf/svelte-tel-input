@@ -35,6 +35,22 @@ export const statefulSwap = (initialState: boolean | null) => {
 	};
 };
 
+export const watcher = (
+	initialValue: string | null,
+	watchFunction: (oldVal: string | null, newVal: string | null) => void
+) => {
+	const { subscribe, update } = writable(initialValue);
+	return {
+		subscribe,
+		set: (value: string | null) => {
+			update((oldvalue) => {
+				watchFunction(oldvalue, value);
+				return value;
+			});
+		}
+	};
+};
+
 // SELECTS
 export const selectedCountryStore: Writable<string> = writable();
 
