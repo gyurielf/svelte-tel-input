@@ -1,5 +1,4 @@
 <script lang="ts">
-	import type { NormalizedPhoneNumber } from '$lib/types/interfaces/Phone.interface';
 	import Usage from '$lib/views/Usage.svelte';
 </script>
 

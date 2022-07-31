@@ -1,9 +1,9 @@
 <script lang="ts">
-	import type { Country, DispatchSelectEvents, TelSelectObject } from '$lib/types';
+	import type { Country, DispatchSelectEvents } from '$lib/types';
 	import { createEventDispatcher } from 'svelte';
 	import { normalizedCountries } from '$lib/assets';
 	import { clickOutsideAction } from '$lib/utils/directives/clickOutsideAction';
-	import { TelInput } from '$lib';
+	import TelInput from '$lib/components/Input/TelInput.svelte';
 	import { isSelected } from '$lib/utils/helpers';
 	import ExamplePayload from '../utils/ExamplePayload.svelte';
 	import type { NormalizedPhoneNumber } from '$lib/types/interfaces/Phone.interface';
@@ -45,8 +45,9 @@
 					.sort((a, b) => (a.label < b.label ? -1 : 1))
 			: normalizedCountries;
 
-	const handleSelect = (val: Country) => {
+	const handleSelect = (val: Country, e?: Event) => {
 		if (disabled) return;
+		e?.preventDefault();
 		if (typeof selected === 'object' && typeof val === 'object' && selected?.id && val?.id) {
 			if (typeof selected === 'object' && typeof val === 'object' && selected.id !== val.id) {
 				selected = val;
@@ -138,7 +139,7 @@
 								? 'bg-gray-600 dark:text-white'
 								: 'dark:hover:text-white dark:text-gray-400'}"
 							on:click={(e) => {
-								handleSelect(country);
+								handleSelect(country, e);
 							}}
 						>
 							<div class="inline-flex items-center text-left">

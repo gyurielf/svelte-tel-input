@@ -3,6 +3,7 @@
 	const dispatch = createEventDispatcher();
 
 	const setSelected = (e?: Event) => {
+		e?.preventDefault();
 		dispatch('selectedItem');
 	};
 </script>

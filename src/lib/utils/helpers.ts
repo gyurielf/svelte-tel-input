@@ -32,7 +32,7 @@ export const normalizePhoneInput = (input: PhoneNumber) => {
 			formatNational: input ? input.formatNational() : null,
 			uri: input ? input.getURI() : null,
 			e164: input ? input.number : null
-		}).filter(([key, value]) => value !== null)
+		}).filter(([, value]) => value !== null)
 	);
 	return filteredResult;
 };
@@ -68,7 +68,7 @@ export const isSelected = <
 	}
 };
 
-export const jsonPrettyParser = (node: HTMLElement, data: Record<string, any>) => {
+export const jsonPrettyParser = (node: HTMLElement, data: Record<string, unknown>) => {
 	node.innerHTML = `<code>${JSON.stringify(data, null, 2)}</code>`;
 	return {
 		destroy: () => {

@@ -1,24 +1,19 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import TelInput from '$lib/components/Input/TelInput.svelte';
-	import { getCountries } from 'libphonenumber-js';
 	import { getCurrentCountry } from '$lib/utils/helpers';
 	// Assets
 	import type { NormalizedPhoneNumber } from '$lib/types/interfaces/Phone.interface';
-	import type { Country, TelSelectObject } from '$lib/types';
-	import { Select } from '$lib';
+	import type { Country } from '$lib/types';
 	import { normalizedCountries } from '$lib/assets';
 	import ExamplePayload from '$lib/components/utils/ExamplePayload.svelte';
+	import Select from '$lib/components/Select/Select.svelte';
 
 	// Tel input
 	let rawPhoneInput: string;
 
 	// Countries
-	const countries = getCountries();
 	let selectedCountry: Country | null = null;
-
-	// TODO >> sort and order option for telTypes.
-	let selectedTelType: TelSelectObject | null = null;
 
 	// Validity of inputs
 	let dataIsValid = {
@@ -36,15 +31,6 @@
 </script>
 
 <Select items={normalizedCountries} bind:selected={selectedCountry} />
-
-<!-- <TelTypeSelect bind:selectedTelType class="text-gray-800 rounded-sm">
-	<svelte:fragment slot="options">
-		<option value="" selected={true} hidden={true}>Choose here</option>
-		{#each telTypes as telType (telType.id)}
-			<TelTypeSelectOption class="text-red-500" typeOption={telType} />
-		{/each}
-	</svelte:fragment>
-</TelTypeSelect> -->
 
 <TelInput
 	defaultCountry={selectedCountry?.iso2}
