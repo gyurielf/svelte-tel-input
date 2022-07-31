@@ -11,8 +11,6 @@
 		const currentCountry = await getCurrentCountry();
 		if (currentCountry.length === 2) selectedCountry = currentCountry;
 	});
-
-	$: console.log(selectedCountry);
 </script>
 
 <!-- Whis way you can build your own country select component. You can both style and add your own logic. -->

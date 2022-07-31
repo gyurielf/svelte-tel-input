@@ -316,6 +316,8 @@ const allCountries = [
 
 export const normalizedCountries = allCountries.map((country): Country => {
 	return {
+		id: (country[1] as string).toUpperCase(),
+		label: `${country[0] as string} +${country[2] as string}`,
 		name: country[0] as string,
 		iso2: (country[1] as string).toUpperCase() as CountryCode,
 		dialCode: country[2] as string,

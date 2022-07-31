@@ -14,10 +14,23 @@ export default {
 		package: {
 			exports: (filepath) => {
 				if (filepath.endsWith('.d.ts')) return false;
-				return mm.all(filepath, ['!**/_*.scss', '!**/*.test.*']);
+				return mm.all(filepath, [
+					'!**/_*.scss',
+					'!**/*.test.*',
+					'!**/components/utils/*',
+					'!**/views/*',
+					'!**/examples/*'
+				]);
 			},
 			files: (filepath) => {
-				return mm.all(filepath, ['!**/.*', '!**/*.test.*', '!**/*.sh', '!**/env.*']);
+				return mm.all(filepath, [
+					'!**/.*',
+					'!**/*.test.*',
+					'!**/*.sh',
+					'!**/env.*',
+					'!**/views/*',
+					'!**/examples/*'
+				]);
 			}
 		},
 		prerender: {

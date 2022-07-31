@@ -19,21 +19,60 @@ export const getCurrentCountry = async () => {
 	}
 };
 
-export const normalizePhoneInput = (input: PhoneNumber | null) => {
-	const resultObject = {
-		countryCode: input ? input.country : null,
-		isValid: input ? input.isValid() : false,
-		phoneNumber: input ? input.number : null,
-		countryCallingCode: input ? input.countryCallingCode : null,
-		formattedNumber: input ? input.formatInternational() : null,
-		nationalNumber: input ? input.nationalNumber : null,
-		formatInternational: input ? input.formatInternational() : null,
-		formatNational: input ? input.formatNational() : null,
-		uri: input ? input.getURI() : null,
-		e164: input ? input.number : null
-	};
+export const normalizePhoneInput = (input: PhoneNumber) => {
 	const filteredResult = Object.fromEntries(
-		Object.entries(resultObject).filter(([key, value]) => value !== null)
+		Object.entries({
+			countryCode: input ? input.country : null,
+			isValid: input ? input.isValid() : false,
+			phoneNumber: input ? input.number : null,
+			countryCallingCode: input ? input.countryCallingCode : null,
+			formattedNumber: input ? input.formatInternational() : null,
+			nationalNumber: input ? input.nationalNumber : null,
+			formatInternational: input ? input.formatInternational() : null,
+			formatNational: input ? input.formatNational() : null,
+			uri: input ? input.getURI() : null,
+			e164: input ? input.number : null
+		}).filter(([key, value]) => value !== null)
 	);
 	return filteredResult;
+};
+
+export const isSelected = <
+	T extends {
+		id: string;
+	}
+>(
+	itemToSelect: T,
+	selectedItem: T | undefined | null
+): boolean => {
+	if (!selectedItem || selectedItem === null) {
+		return false;
+	}
+	if (
+		typeof selectedItem === 'object' &&
+		typeof itemToSelect === 'object' &&
+		selectedItem !== null &&
+		itemToSelect !== null
+	) {
+		if (
+			typeof selectedItem === 'object' &&
+			typeof itemToSelect === 'object' &&
+			selectedItem.id === itemToSelect.id
+		) {
+			return true;
+		} else {
+			return false;
+		}
+	} else {
+		return false;
+	}
+};
+
+export const jsonPrettyParser = (node: HTMLElement, data: Record<string, any>) => {
+	node.innerHTML = `<code>${JSON.stringify(data, null, 2)}</code>`;
+	return {
+		destroy: () => {
+			node.remove();
+		}
+	};
 };
