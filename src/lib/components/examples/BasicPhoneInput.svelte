@@ -25,7 +25,7 @@
 	onMount(async () => {
 		// Get current country on initialization by GeoIp
 		const currentCountry = await getCurrentCountry();
-		if (currentCountry.length === 2)
+		if (currentCountry && currentCountry.length === 2)
 			selectedCountry = normalizedCountries.find((el) => el.id === currentCountry) || null;
 	});
 </script>

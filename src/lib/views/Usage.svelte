@@ -3,7 +3,7 @@
 	import BasicPhoneInput from '$lib/components/examples/BasicPhoneInput.svelte';
 </script>
 
-<BasicPhoneInput />
+<!-- <BasicPhoneInput /> -->
 
 <hr class="my-4" />
 

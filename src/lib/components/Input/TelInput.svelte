@@ -5,15 +5,24 @@
 	import { normalizePhoneInput } from '$lib/utils/helpers';
 	import { parsePhoneNumberWithError, ParseError, type CountryCode } from 'libphonenumber-js';
 
+	import { onMount } from 'svelte';
+
 	export let defaultCountry: CountryCode | null = null;
 	export let rawPhoneInput: string | null = null;
-	export let parsedPhoneInput: NormalizedPhoneNumber | null = null;
+	export let parsedPhoneInput: Partial<NormalizedPhoneNumber> | null = null;
 	export let disabled = false;
 	export let id: string | null = null;
 	export let name: string | null = null;
 
+	onMount(() => {
+		if (parsedPhoneInput !== null) {
+			rawPhoneInput = parsedPhoneInput.nationalNumber as string;
+			handleParsePhoneNumber(defaultCountry, parsedPhoneInput.phoneNumber as string);
+		}
+	});
+
 	const handleInput = (event: Event) => {
-		const inputVal = (event.target as HTMLInputElement).value;
+		const inputVal = (event.target as HTMLInputElement).value.trim();
 		rawPhoneInput = inputVal;
 		handleParsePhoneNumber(defaultCountry, inputVal);
 	};
@@ -43,4 +52,12 @@
 	$: $countryChangeWatch = defaultCountry;
 </script>
 
-<input {id} {name} class={$$props.class} {disabled} type="tel" on:input={handleInput} />
+<input
+	{id}
+	{name}
+	class={$$props.class}
+	{disabled}
+	value={parsedPhoneInput?.formatOriginal ?? rawPhoneInput ?? ''}
+	type="tel"
+	on:input={handleInput}
+/>

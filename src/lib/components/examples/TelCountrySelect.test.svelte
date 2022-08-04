@@ -9,7 +9,7 @@
 
 	onMount(async () => {
 		const currentCountry = await getCurrentCountry();
-		if (currentCountry.length === 2) selectedCountry = currentCountry;
+		if (currentCountry && currentCountry.length === 2) selectedCountry = currentCountry;
 	});
 </script>
 
