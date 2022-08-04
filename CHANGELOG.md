@@ -1,5 +1,11 @@
 # svelte-tel-input
 
+## 0.9.0
+
+### Minor Changes
+
+- feat: masking/formatting and parsing extends ([#72](https://github.com/gyurielf/svelte-tel-input/pull/72))
+
 ## 0.8.0
 
 ### Minor Changes
