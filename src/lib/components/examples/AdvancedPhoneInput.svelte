@@ -9,13 +9,34 @@
 	import type { NormalizedPhoneNumber } from '$lib/types/interfaces/Phone.interface';
 
 	export let searchText = '';
-	export let selected: Country | null = null;
+	export let selected: Country | null = {
+		id: 'HU',
+		label: 'Hungary (Magyarország) +36',
+		name: 'Hungary (Magyarország)',
+		iso2: 'HU',
+		dialCode: '36',
+		priority: 0,
+		areaCodes: null
+	};
+
 	export let clickOutside = true;
 	export let closeOnClick = true;
 	export let disabled = false;
 	let isOpen = false;
 
-	let parsedPhoneInput: NormalizedPhoneNumber;
+	let parsedPhoneInput: NormalizedPhoneNumber = {
+		countryCode: 'HU',
+		isValid: true,
+		phoneNumber: '+36203435150',
+		countryCallingCode: '36',
+		formattedNumber: '+36 20 343 5150',
+		formatOriginal: '20 343 5150',
+		nationalNumber: '203435150',
+		formatInternational: '+36 20 343 5150',
+		formatNational: '06 20 343 5150',
+		uri: 'tel:+36203435150',
+		e164: '+36203435150'
+	};
 
 	const toggleDropDown = (e: Event) => {
 		e.preventDefault();
@@ -157,6 +178,7 @@
 	{/if}
 
 	<TelInput
+		id="tel-input"
 		defaultCountry={selected?.iso2}
 		bind:parsedPhoneInput
 		class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-r-lg border-l-gray-100 dark:border-l-gray-700 border-l-2 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"

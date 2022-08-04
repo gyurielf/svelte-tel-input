@@ -1,4 +1,6 @@
-import type { PhoneNumber } from 'libphonenumber-js';
+import type { Country } from '$lib/types';
+import type { NormalizedPhoneNumber } from '$lib/types/interfaces/Phone.interface';
+import type { CountryCode, PhoneNumber } from 'libphonenumber-js';
 
 export const capitalize = (str: string) => {
 	return (str && str[0].toUpperCase() + str.slice(1).toLowerCase()) || '';
@@ -10,12 +12,14 @@ export const getCurrentCountry = async () => {
 		const result = (response || '').toString();
 
 		if (!result || result[0] !== '1') {
-			throw new Error('Unable to fetch the country');
+			console.warn('Unable to fetch the country');
+			return;
 		}
 
 		return result.substring(2, 4);
 	} catch (error) {
-		throw new Error('Unable to fetch the country');
+		console.warn('Unable to fetch the country');
+		return;
 	}
 };
 
@@ -29,6 +33,12 @@ export const normalizePhoneInput = (input: PhoneNumber) => {
 			formattedNumber: input ? input.formatInternational() : null,
 			nationalNumber: input ? input.nationalNumber : null,
 			formatInternational: input ? input.formatInternational() : null,
+			formatOriginal: input
+				? input
+						.formatInternational()
+						.slice(input.countryCallingCode.length + 1)
+						.trim()
+				: null,
 			formatNational: input ? input.formatNational() : null,
 			uri: input ? input.getURI() : null,
 			e164: input ? input.number : null
@@ -68,7 +78,7 @@ export const isSelected = <
 	}
 };
 
-export const jsonPrettyParser = (node: HTMLElement, data: Record<string, unknown>) => {
+export const jsonPrettyParser = (node: HTMLElement, data: NormalizedPhoneNumber) => {
 	node.innerHTML = `<code>${JSON.stringify(data, null, 2)}</code>`;
 	return {
 		destroy: () => {
