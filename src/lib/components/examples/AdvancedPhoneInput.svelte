@@ -5,7 +5,6 @@
 	import { clickOutsideAction } from '$lib/utils/directives/clickOutsideAction';
 	import TelInput from '$lib/components/Input/TelInput.svelte';
 	import { isSelected } from '$lib/utils/helpers';
-	import ExamplePayload from '../utils/ExamplePayload.svelte';
 	import type { NormalizedPhoneNumber } from '$lib/types/interfaces/Phone.interface';
 
 	export let searchText = '';
@@ -18,25 +17,25 @@
 		priority: 0,
 		areaCodes: null
 	};
-
 	export let clickOutside = true;
 	export let closeOnClick = true;
 	export let disabled = false;
-	let isOpen = false;
-
-	let parsedPhoneInput: NormalizedPhoneNumber = {
+	export let parsedPhoneInput: NormalizedPhoneNumber | null = {
 		countryCode: 'HU',
 		isValid: true,
-		phoneNumber: '+36203435150',
+		phoneNumber: '+36301234567',
 		countryCallingCode: '36',
-		formattedNumber: '+36 20 343 5150',
-		formatOriginal: '20 343 5150',
-		nationalNumber: '203435150',
-		formatInternational: '+36 20 343 5150',
-		formatNational: '06 20 343 5150',
-		uri: 'tel:+36203435150',
-		e164: '+36203435150'
+		formattedNumber: '+36 30 123 4567',
+		nationalNumber: '301234567',
+		formatInternational: '+36 30 123 4567',
+		formatOriginal: '30 123 4567',
+		formatNational: '06 30 123 4567',
+		uri: 'tel:+36301234567',
+		e164: '+36301234567'
 	};
+	let isOpen = false;
+
+	$: isValid = parsedPhoneInput?.isValid ?? false;
 
 	const toggleDropDown = (e: Event) => {
 		e.preventDefault();
@@ -98,11 +97,16 @@
 	};
 </script>
 
-<div class="flex" use:clickOutsideAction={closeOnClickOutside}>
+<div
+	class="flex rounded-lg {isValid
+		? ``
+		: ` ring-pink-500 dark:ring-pink-500 ring-1 focus-within:ring-offset-1 focus-within:ring-offset-pink-500/50 focus-within:ring-2`}"
+	use:clickOutsideAction={closeOnClickOutside}
+>
 	<button
 		id="states-button"
 		data-dropdown-toggle="dropdown-states"
-		class="flex-shrink-0 z-10 inline-flex items-center py-2.5 px-4 text-sm font-medium text-center text-gray-500 bg-gray-100 border border-gray-300 rounded-l-lg hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-700 dark:text-white dark:border-gray-600"
+		class="flex-shrink-0 overflow-hidden z-10 inline-flex items-center py-2.5 px-4 text-sm font-medium text-center text-gray-500 bg-gray-100 border border-gray-300 rounded-l-lg hover:bg-gray-200 focus:outline-none dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-white dark:border-gray-600"
 		type="button"
 		on:click={toggleDropDown}
 	>
@@ -181,8 +185,10 @@
 		id="tel-input"
 		defaultCountry={selected?.iso2}
 		bind:parsedPhoneInput
-		class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-r-lg border-l-gray-100 dark:border-l-gray-700 border-l-2 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
+		class="border border-gray-300 border-l-gray-100 dark:border-l-gray-700 dark:border-gray-600 {isValid
+			? `bg-gray-50 dark:bg-gray-700 
+            dark:placeholder-gray-400 dark:text-white text-gray-900`
+			: `dark:bg-gray-700`} text-sm rounded-r-lg block w-full p-2.5 
+           focus:outline-none"
 	/>
 </div>
-
-<ExamplePayload bind:exampleData={parsedPhoneInput} />

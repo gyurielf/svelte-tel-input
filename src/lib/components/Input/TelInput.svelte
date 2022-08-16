@@ -2,7 +2,7 @@
 	import { watcher } from '$lib/stores';
 	import { PhoneNumberParseError } from '$lib/types';
 	import type { NormalizedPhoneNumber } from '$lib/types/interfaces/Phone.interface';
-	import { normalizePhoneInput } from '$lib/utils/helpers';
+	import { isNumber, normalizePhoneInput } from '$lib/utils/helpers';
 	import { parsePhoneNumberWithError, ParseError, type CountryCode } from 'libphonenumber-js';
 
 	import { onMount } from 'svelte';
@@ -22,7 +22,7 @@
 	});
 
 	const handleInput = (event: Event) => {
-		const inputVal = (event.target as HTMLInputElement).value.trim();
+		const inputVal = (event.target as HTMLInputElement).value.replace(/\s/g, '');
 		rawPhoneInput = inputVal;
 		handleParsePhoneNumber(defaultCountry, inputVal);
 	};
@@ -55,9 +55,10 @@
 <input
 	{id}
 	{name}
-	class={$$props.class}
 	{disabled}
 	value={parsedPhoneInput?.formatOriginal ?? rawPhoneInput ?? ''}
 	type="tel"
+	class={$$props.class}
+	{...$$restProps}
 	on:input={handleInput}
 />

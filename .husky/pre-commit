@@ -1,4 +1,4 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
-docker-compose run --rm node sh -c '[ ! -d ./node_modules ] && npm install ; npm run lint'
+docker run -u node --rm -v $PWD/.npmrc:/home/node/app/.npmrc -v $PWD/:/home/node/app -w /home/node/app node:16.14 sh -c '[ ! -d ./node_modules ] && npm install ; npm run lint'

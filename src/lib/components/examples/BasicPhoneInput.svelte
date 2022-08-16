@@ -6,7 +6,6 @@
 	import type { NormalizedPhoneNumber } from '$lib/types/interfaces/Phone.interface';
 	import type { Country } from '$lib/types';
 	import { normalizedCountries } from '$lib/assets';
-	import ExamplePayload from '$lib/components/utils/ExamplePayload.svelte';
 	import Select from '$lib/components/Select/Select.svelte';
 
 	// Tel input
@@ -40,4 +39,3 @@
 		? ' border-none border-0'
 		: 'border-2 border-red-600'}"
 />
-<ExamplePayload bind:exampleData={parsedPhoneInput} />
