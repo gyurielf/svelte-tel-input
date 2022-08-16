@@ -1,10 +1,15 @@
 <script lang="ts">
-	import CustomizedTelInput from '$lib/components/examples/AdvancedPhoneInput.svelte';
-	import BasicPhoneInput from '$lib/components/examples/BasicPhoneInput.svelte';
+	import AdvancedPhoneInput from '$lib/components/examples/AdvancedPhoneInput.svelte';
+	import PayloadBlock from '$lib/components/utils/PayloadBlock.svelte';
+	import type { NormalizedPhoneNumber } from '$lib/types/interfaces/Phone.interface';
+
+	let exampleData: NormalizedPhoneNumber | null;
 </script>
 
-<!-- <BasicPhoneInput /> -->
+<div class="my-10">
+	<!-- Phone Input -->
+	<AdvancedPhoneInput bind:parsedPhoneInput={exampleData} />
 
-<hr class="my-4" />
-
-<CustomizedTelInput />
+	<!-- Payload Block -->
+	<PayloadBlock bind:exampleData />
+</div>

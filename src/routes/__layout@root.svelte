@@ -1,12 +1,14 @@
 <script lang="ts">
+	import TheFooter from '$lib/views/TheFooter.svelte';
+	import TheHeader from '$lib/views/TheHeader.svelte';
 	import '../app.css';
 	import '../lib/styles/flags.css';
 </script>
 
-<header />
+<TheHeader />
 
-<main>
+<main class="mx-auto w-full flex flex-row min-h-full container pt-20 z-20">
 	<slot />
 </main>
 
-<footer />
+<TheFooter />

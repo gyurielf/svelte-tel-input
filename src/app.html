@@ -1,13 +1,35 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en">
 	<head>
 		<meta charset="utf-8" />
 		<link rel="icon" href="%sveltekit.assets%/favicon.ico" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<script>
+			try {
+				// Find theme key in LocalStorage, if not exist, then set it dark if the user's default system theme is dark.
+				if (!('theme' in localStorage)) {
+					localStorage.setItem(
+						'theme',
+						window.matchMedia('(prefers-color-scheme: dark)').matches
+							? JSON.stringify('dark')
+							: null
+					);
+				}
+
+				const initialTheme = JSON.parse(localStorage.getItem('theme'));
+				if (initialTheme !== null) {
+					document.querySelector('html').classList.add(initialTheme);
+				}
+			} catch (e) {
+				console.error(e);
+			}
+		</script>
 		%sveltekit.head%
 	</head>
 
-	<body class="bg-gray-800">
+	<body
+		class="dark:bg-gradient-to-br from-gray-800 to-neutral-800 bg-no-repeat h-full min-h-screen"
+	>
 		<div id="svelte">%sveltekit.body%</div>
 	</body>
 </html>

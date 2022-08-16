@@ -1,6 +1,5 @@
-import type { Country } from '$lib/types';
 import type { NormalizedPhoneNumber } from '$lib/types/interfaces/Phone.interface';
-import type { CountryCode, PhoneNumber } from 'libphonenumber-js';
+import type { PhoneNumber } from 'libphonenumber-js';
 
 export const capitalize = (str: string) => {
 	return (str && str[0].toUpperCase() + str.slice(1).toLowerCase()) || '';
@@ -21,6 +20,10 @@ export const getCurrentCountry = async () => {
 		console.warn('Unable to fetch the country');
 		return;
 	}
+};
+
+export const isNumber = (value: number) => {
+	return typeof value === 'number' && isFinite(value);
 };
 
 export const normalizePhoneInput = (input: PhoneNumber) => {
@@ -78,8 +81,8 @@ export const isSelected = <
 	}
 };
 
-export const jsonPrettyParser = (node: HTMLElement, data: NormalizedPhoneNumber) => {
-	node.innerHTML = `<code>${JSON.stringify(data, null, 2)}</code>`;
+export const jsonPrettyParser = (node: HTMLElement, data: NormalizedPhoneNumber | null) => {
+	data !== null && (node.innerHTML = `<code>${JSON.stringify(data, null, 2)}</code>`);
 	return {
 		destroy: () => {
 			node.remove();
