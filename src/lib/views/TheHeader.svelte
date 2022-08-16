@@ -76,7 +76,7 @@
 												<li class="mt-4 first:mt-0 lg:mt-0">
 													<a
 														class="p-1 border-b hover:border-b-2 border-brand text-gray-inverse"
-														href="#"
+														href="https://github.com/gyurielf/svelte-tel-input"
 													>
 														Documentation
 													</a>
