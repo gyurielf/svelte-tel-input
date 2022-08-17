@@ -1,5 +1,11 @@
 # svelte-tel-input
 
+## 0.10.0
+
+### Minor Changes
+
+- refactor: components and views ([#74](https://github.com/gyurielf/svelte-tel-input/pull/74))
+
 ## 0.9.0
 
 ### Minor Changes
