@@ -37,7 +37,7 @@
 		"preview": "vite preview",
 		"release": "npx changeset publish",
 		"release:package": "cd package && npm publish",
-		"svelte-check": "svelte-check --use-new-transformation --ignore 'dist,build,coverage,.svelte-kit,package' --threshold warning --fail-on-warnings",
+		"svelte-check": "svelte-kit sync && svelte-check --use-new-transformation --ignore 'dist,build,coverage,.svelte-kit,package' --threshold warning --fail-on-warnings",
 		"test": "jest",
 		"test:watch": "jest --watch",
 		"ts": "tsc --noEmit"
@@ -51,7 +51,7 @@
 		"@changesets/cli": "^2.24.3",
 		"@changesets/get-github-info": "^0.5.1",
 		"@changesets/types": "^5.1.0",
-		"@macfja/svelte-persistent-store": "^1.3.0",
+		"@macfja/svelte-persistent-store": "^1.2.0",
 		"@sveltejs/adapter-static": "^1.0.0-next.39",
 		"@sveltejs/kit": "^1.0.0-next.428",
 		"@sveltejs/package": "^1.0.0-next.1",
