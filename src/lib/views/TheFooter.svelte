@@ -1,6 +1,6 @@
 <footer class="fixed bottom-0 left-0 bg-indigo-800 w-screen">
 	<div class="mx-auto container">
-		<div class="flex dark:text-white">
+		<div class="flex text-white">
 			<a
 				class="relative flex items-center text-gray-soft hover:text-gray-inverse border-0 rounded-md p-2"
 				href="https://github.com/gyurielf/svelte-tel-input"

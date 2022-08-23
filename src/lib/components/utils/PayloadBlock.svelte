@@ -7,7 +7,9 @@
 	$: exampleDataEntries = (exampleData && Object.entries(exampleData)) || [];
 </script>
 
-<div class="validation-table grid grid-cols-2 mt-5 border rounded-sm border-gray-100 p-3 font-mono">
+<div
+	class="validation-table grid grid-cols-2 mt-5 border rounded-md border-gray-400 dark:border-gray-400 p-3 font-mono"
+>
 	<div class="grid grid-cols-2">
 		<div>
 			<h3 class="text-lg font-semibold">Key</h3>

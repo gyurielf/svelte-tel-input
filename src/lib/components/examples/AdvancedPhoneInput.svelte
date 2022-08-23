@@ -17,6 +17,7 @@
 		priority: 0,
 		areaCodes: null
 	};
+
 	export let clickOutside = true;
 	export let closeOnClick = true;
 	export let disabled = false;
