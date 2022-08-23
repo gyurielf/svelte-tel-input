@@ -29,7 +29,7 @@
 		"generate:exports": "bash ./src/lib/exportGen.sh",
 		"lint": "npm run prettier:check && npm run eslint && npm run ts && npm run svelte-check",
 		"lint:fix": "npm run eslint:fix && npm run prettier:fix",
-		"package": "svelte-package",
+		"package": "svelte-kit sync && svelte-package",
 		"prettier": "prettier",
 		"prettier:check": "prettier --check --plugin-search-dir=. .",
 		"prettier:fix": "prettier --write --plugin-search-dir=. .",
