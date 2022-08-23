@@ -4,20 +4,20 @@
 
 <header>
 	<div
-		class="fixed top-0 z-30 w-full flex-none transform-gpu transition-transform duration-150 ease-out bg-transparent backdrop-blur dark:bg-transparent translate-y-0 border-b border-b-gray-50"
+		class="fixed top-0 z-30 w-full flex-none transform-gpu transition-transform duration-150 ease-out bg-transparent backdrop-blur dark:bg-transparent translate-y-0 border-b border-b-gray-400 dark:border-b-gray-50"
 	>
 		<div
 			class="flex w-full flex-col items-center justify-center mx-auto container p-[1.25rem_0] h-[5rem]"
 		>
 			<div class="flex w-full items-center">
-				<h1 class="dark:text-gray-300 text-2xl">SVELTE-TEL-INPUT</h1>
+				<h1 class="text-2xl">SVELTE-TEL-INPUT</h1>
 				<div class="flex-1" />
 				<div class="lg:hidden -mr-2 flex items-center">
 					<div class="relative inline-block text-left not-prose">
 						<button
 							id="popover-button-1"
 							type="button"
-							class="inline-flex w-full justify-center rounded-md p-2 text-lg font-medium text-gray-200 hover:text-gray-400"
+							class="inline-flex w-full justify-center rounded-md p-2 text-lg font-medium hover:text-gray-400"
 							aria-controls="popover-1"
 							aria-expanded="false"
 							aria-haspopup="true"
@@ -126,7 +126,7 @@
 					</div>
 				</div>
 				<div class="lg:flex lg:items-center hidden">
-					<div class="hidden lg:flex items-center text-gray-300">
+					<div class="hidden lg:flex items-center">
 						<div class="socials svelte-cif352">
 							<a
 								class="relative flex items-center text-gray-soft hover:text-gray-inverse border-0 rounded-md p-2"
