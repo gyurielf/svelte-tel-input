@@ -1,5 +1,11 @@
 # svelte-tel-input
 
+## 0.11.0
+
+### Minor Changes
+
+- feat: dark mode, example page enhancemet ([#76](https://github.com/gyurielf/svelte-tel-input/pull/76))
+
 ## 0.10.0
 
 ### Minor Changes
