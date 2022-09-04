@@ -11,9 +11,6 @@ export default {
 	],
 	kit: {
 		adapter: staticAdapter(),
-		prerender: {
-			default: true
-		},
 		trailingSlash: 'always'
 	},
 	package: {
