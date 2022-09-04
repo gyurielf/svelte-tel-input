@@ -16,13 +16,14 @@ export default {
 	package: {
 		exports: (filepath) => {
 			if (filepath.endsWith('.d.ts')) return false;
-			return mm.all(filepath, [
-				'!**/_*.scss',
-				'!**/*.test.*',
-				'!**/components/utils/*',
-				'!**/views/*',
-				'!**/examples/*'
-			]);
+			if (filepath === 'index.ts' || filepath === 'index.js') return true;
+			// return mm.all(filepath, [
+			// 	'!**/_*.scss',
+			// 	'!**/*.test.*',
+			// 	'!**/components/utils/*',
+			// 	'!**/views/*',
+			// 	'!**/examples/*'
+			// ]);
 		},
 		files: (filepath) => {
 			return mm.all(filepath, [
@@ -31,7 +32,12 @@ export default {
 				'!**/*.sh',
 				'!**/env.*',
 				'!**/views/*',
-				'!**/examples/*'
+				'!**/examples/*',
+				'!**/utils/simulator.ts',
+				'!**/utils/typeCheck.ts',
+				'!**/components/utils/*',
+				'!**/components/Select/*',
+				'!**/components/examples/*'
 			]);
 		}
 	}
