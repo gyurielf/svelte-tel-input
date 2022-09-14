@@ -1,157 +1,163 @@
 # svelte-tel-input
 
+## 0.11.1
+
+### Patch Changes
+
+-   Update readme and prepare to 1.0 ([#79](https://github.com/gyurielf/svelte-tel-input/pull/79))
+
 ## 0.11.0
 
 ### Minor Changes
 
-- feat: dark mode, example page enhancemet ([#76](https://github.com/gyurielf/svelte-tel-input/pull/76))
+-   feat: dark mode, example page enhancemet ([#76](https://github.com/gyurielf/svelte-tel-input/pull/76))
 
 ## 0.10.0
 
 ### Minor Changes
 
-- refactor: components and views ([#74](https://github.com/gyurielf/svelte-tel-input/pull/74))
+-   refactor: components and views ([#74](https://github.com/gyurielf/svelte-tel-input/pull/74))
 
 ## 0.9.0
 
 ### Minor Changes
 
-- feat: masking/formatting and parsing extends ([#72](https://github.com/gyurielf/svelte-tel-input/pull/72))
+-   feat: masking/formatting and parsing extends ([#72](https://github.com/gyurielf/svelte-tel-input/pull/72))
 
 ## 0.8.0
 
 ### Minor Changes
 
-- feat: example improvements, extend functionality ([#70](https://github.com/gyurielf/svelte-tel-input/pull/70))
+-   feat: example improvements, extend functionality ([#70](https://github.com/gyurielf/svelte-tel-input/pull/70))
 
 ## 0.7.0
 
 ### Minor Changes
 
-- feat: example page payload feature, parsing improvements" ([#68](https://github.com/gyurielf/svelte-tel-input/pull/68))
+-   feat: example page payload feature, parsing improvements" ([#68](https://github.com/gyurielf/svelte-tel-input/pull/68))
 
 ## 0.6.5
 
 ### Patch Changes
 
-- fix: add changeset ([#61](https://github.com/gyurielf/svelte-tel-input/pull/61))
+-   fix: add changeset ([#61](https://github.com/gyurielf/svelte-tel-input/pull/61))
 
 ## 0.6.4
 
 ### Patch Changes
 
-- chore: update to vite 3 ([#58](https://github.com/gyurielf/svelte-tel-input/pull/58))
+-   chore: update to vite 3 ([#58](https://github.com/gyurielf/svelte-tel-input/pull/58))
 
 ## 0.6.3
 
 ### Patch Changes
 
-- update dependencies ([#56](https://github.com/gyurielf/svelte-tel-input/pull/56))
+-   update dependencies ([#56](https://github.com/gyurielf/svelte-tel-input/pull/56))
 
 ## 0.6.2
 
 ### Patch Changes
 
-- Update readme & update packages ([#54](https://github.com/gyurielf/svelte-tel-input/pull/54))
+-   Update readme & update packages ([#54](https://github.com/gyurielf/svelte-tel-input/pull/54))
 
 ## 0.6.1
 
 ### Patch Changes
 
-- Readme update ([#52](https://github.com/gyurielf/svelte-tel-input/pull/52))
+-   Readme update ([#52](https://github.com/gyurielf/svelte-tel-input/pull/52))
 
 ## 0.6.0
 
 ### Minor Changes
 
-- feat: example page preparations & extend functionality (part 1) ([#50](https://github.com/gyurielf/svelte-tel-input/pull/50))
+-   feat: example page preparations & extend functionality (part 1) ([#50](https://github.com/gyurielf/svelte-tel-input/pull/50))
 
 ## 0.5.1
 
 ### Patch Changes
 
-- chore: update packages and resolve breaking changes ([#46](https://github.com/gyurielf/svelte-tel-input/pull/46))
+-   chore: update packages and resolve breaking changes ([#46](https://github.com/gyurielf/svelte-tel-input/pull/46))
 
 ## 0.5.0
 
 ### Minor Changes
 
-- feat: prepare github pages deployment ([#43](https://github.com/gyurielf/svelte-tel-input/pull/43))
+-   feat: prepare github pages deployment ([#43](https://github.com/gyurielf/svelte-tel-input/pull/43))
 
-* feat: implement selects and input ([#43](https://github.com/gyurielf/svelte-tel-input/pull/43))
+*   feat: implement selects and input ([#43](https://github.com/gyurielf/svelte-tel-input/pull/43))
 
-- feat: basic stores created ([#43](https://github.com/gyurielf/svelte-tel-input/pull/43))
+-   feat: basic stores created ([#43](https://github.com/gyurielf/svelte-tel-input/pull/43))
 
 ## 0.4.2
 
 ### Patch Changes
 
-- fix: fix readme ([#41](https://github.com/gyurielf/svelte-tel-input/pull/41))
+-   fix: fix readme ([#41](https://github.com/gyurielf/svelte-tel-input/pull/41))
 
 ## 0.4.1
 
 ### Patch Changes
 
-- fix: readme fix ([#39](https://github.com/gyurielf/svelte-tel-input/pull/39))
+-   fix: readme fix ([#39](https://github.com/gyurielf/svelte-tel-input/pull/39))
 
 ## 0.4.0
 
 ### Minor Changes
 
-- fix: rework ci
+-   fix: rework ci
 
 ### Patch Changes
 
-- fix: minor ci fix ([#34](https://github.com/gyurielf/svelte-tel-input/pull/34))
+-   fix: minor ci fix ([#34](https://github.com/gyurielf/svelte-tel-input/pull/34))
 
-* fix: fix ci again ([#35](https://github.com/gyurielf/svelte-tel-input/pull/35))
+*   fix: fix ci again ([#35](https://github.com/gyurielf/svelte-tel-input/pull/35))
 
-- fix: last ci fix for today ([#36](https://github.com/gyurielf/svelte-tel-input/pull/36))
+-   fix: last ci fix for today ([#36](https://github.com/gyurielf/svelte-tel-input/pull/36))
 
-* fix: ci fixxx ([#33](https://github.com/gyurielf/svelte-tel-input/pull/33))
+*   fix: ci fixxx ([#33](https://github.com/gyurielf/svelte-tel-input/pull/33))
 
-- something 1 ([#37](https://github.com/gyurielf/svelte-tel-input/pull/37))
+-   something 1 ([#37](https://github.com/gyurielf/svelte-tel-input/pull/37))
 
-* fix: ci extend 321 ([#32](https://github.com/gyurielf/svelte-tel-input/pull/32))
+*   fix: ci extend 321 ([#32](https://github.com/gyurielf/svelte-tel-input/pull/32))
 
 ## 0.3.2
 
 ### Patch Changes
 
-- feat: add MIT license ([#29](https://github.com/gyurielf/svelte-tel-input/pull/29))
+-   feat: add MIT license ([#29](https://github.com/gyurielf/svelte-tel-input/pull/29))
 
-* fix: fix readme deps ([#29](https://github.com/gyurielf/svelte-tel-input/pull/29))
+*   fix: fix readme deps ([#29](https://github.com/gyurielf/svelte-tel-input/pull/29))
 
 ## 0.3.1
 
 ### Patch Changes
 
-- fix: lets check with different folder structure ([#25](https://github.com/gyurielf/svelte-tel-input/pull/25))
+-   fix: lets check with different folder structure ([#25](https://github.com/gyurielf/svelte-tel-input/pull/25))
 
 ## 0.3.0
 
 ### Minor Changes
 
-- fix: ci modifications ([#22](https://github.com/gyurielf/svelte-tel-input/pull/22))
+-   fix: ci modifications ([#22](https://github.com/gyurielf/svelte-tel-input/pull/22))
 
 ## 0.2.0
 
 ### Minor Changes
 
-- remove unused packages, cleanup, fix ci ([#19](https://github.com/gyurielf/svelte-tel-input/pull/19))
+-   remove unused packages, cleanup, fix ci ([#19](https://github.com/gyurielf/svelte-tel-input/pull/19))
 
-* fix: another CI fix ([#20](https://github.com/gyurielf/svelte-tel-input/pull/20))
+*   fix: another CI fix ([#20](https://github.com/gyurielf/svelte-tel-input/pull/20))
 
 ## 0.1.0
 
 ### Minor Changes
 
-- test_1
+-   test_1
 
 ### Patch Changes
 
-- szo
+-   szo
 
-* test 2
+*   test 2
 
-- test3
+-   test3
