@@ -1,6 +1,5 @@
 export * from './enums';
 export * from './interfaces';
-export type { DynamicSvelteComponent } from './DynamicSvelteComponent.type';
 
 export type DispatchSelectEvents<T> = {
 	add: { option: T };

@@ -2,12 +2,12 @@
 	import { watcher } from '$lib/stores';
 	import { PhoneNumberParseError } from '$lib/types';
 	import type { NormalizedPhoneNumber } from '$lib/types/interfaces/Phone.interface';
-	import { isNumber, normalizePhoneInput } from '$lib/utils/helpers';
+	import { normalizePhoneInput } from '$lib/utils/helpers';
 	import { parsePhoneNumberWithError, ParseError, type CountryCode } from 'libphonenumber-js';
 
 	import { onMount } from 'svelte';
 
-	export let defaultCountry: CountryCode | null = null;
+	export let country: CountryCode | null = null;
 	export let rawPhoneInput: string | null = null;
 	export let parsedPhoneInput: Partial<NormalizedPhoneNumber> | null = null;
 	export let disabled = false;
@@ -17,14 +17,14 @@
 	onMount(() => {
 		if (parsedPhoneInput !== null) {
 			rawPhoneInput = parsedPhoneInput.nationalNumber as string;
-			handleParsePhoneNumber(defaultCountry, parsedPhoneInput.phoneNumber as string);
+			handleParsePhoneNumber(country, parsedPhoneInput.phoneNumber as string);
 		}
 	});
 
 	const handleInput = (event: Event) => {
 		const inputVal = (event.target as HTMLInputElement).value.replace(/\s/g, '');
 		rawPhoneInput = inputVal;
-		handleParsePhoneNumber(defaultCountry, inputVal);
+		handleParsePhoneNumber(country, inputVal);
 	};
 
 	const handleParsePhoneNumber = (country: CountryCode | null, input: string) => {
@@ -46,10 +46,10 @@
 	};
 
 	const watchFunction = () => {
-		if (rawPhoneInput !== null) handleParsePhoneNumber(defaultCountry, rawPhoneInput);
+		if (rawPhoneInput !== null) handleParsePhoneNumber(country, rawPhoneInput);
 	};
 	const countryChangeWatch = watcher(null, watchFunction);
-	$: $countryChangeWatch = defaultCountry;
+	$: $countryChangeWatch = country;
 </script>
 
 <input
