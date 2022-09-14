@@ -147,21 +147,24 @@
 			<ul
 				class="text-sm text-gray-700 dark:text-gray-200 max-h-48 overflow-y-auto"
 				aria-labelledby="countries-button"
+				role="listbox"
 			>
 				{#if true}
 					<input
+						aria-autocomplete="list"
 						type="text"
 						class="px-4 py-2 text-gray-900 focus:outline-none w-full sticky top-0"
 						bind:value={searchText}
 					/>
 				{/if}
 				{#each filteredItems as country (country.id)}
-					<li>
+					{@const isActive = isSelected(country, selected)}
+					<li role="option" aria-selected={isActive}>
 						<button
 							type="button"
 							class="inline-flex py-2 px-4 w-full text-sm hover:bg-gray-100 dark:hover:bg-gray-600 
                              active:bg-gray-800 dark:active:bg-gray-800 overflow-hidden
-                            {isSelected(country, selected)
+                            {isActive
 								? 'bg-gray-600 dark:text-white'
 								: 'dark:hover:text-white dark:text-gray-400'}"
 							on:click={(e) => {
@@ -184,7 +187,7 @@
 
 	<TelInput
 		id="tel-input"
-		defaultCountry={selected?.iso2}
+		country={selected?.iso2}
 		bind:parsedPhoneInput
 		class="border border-gray-300 border-l-gray-100 dark:border-l-gray-700 dark:border-gray-600 {isValid
 			? `bg-gray-50 dark:bg-gray-700 
