@@ -24,10 +24,10 @@ npm install --save svelte-tel-input
 
 ## Usage
 
-```typescript
+```html
 <script lang="ts">
     import { TelInput } from 'svelte-tel-input';
-    import type {CountryCode} from 'svelte-tel-input'
+    import type { CountryCode } from 'svelte-tel-input'
 
     // Any Country Code Alpha-2 (ISO 3166)
     let country: CountryCode = 'US'
