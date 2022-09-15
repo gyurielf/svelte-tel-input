@@ -2,11 +2,9 @@
 	import { onMount } from 'svelte';
 	import TelInput from '$lib/components/Input/TelInput.svelte';
 	import { getCurrentCountry } from '$lib/utils/helpers';
-	// Assets
 	import type { NormalizedPhoneNumber } from '$lib/types/interfaces/Phone.interface';
 	import type { Country } from '$lib/types';
 	import { normalizedCountries } from '$lib/assets';
-	import Select from '$lib/components/Select/Select.svelte';
 
 	// Tel input
 	let rawPhoneInput: string;
@@ -28,8 +26,6 @@
 			selectedCountry = normalizedCountries.find((el) => el.id === currentCountry) || null;
 	});
 </script>
-
-<Select items={normalizedCountries} bind:selected={selectedCountry} />
 
 <TelInput
 	defaultCountry={selectedCountry?.iso2}

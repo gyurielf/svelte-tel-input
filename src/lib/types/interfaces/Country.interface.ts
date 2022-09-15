@@ -1,5 +1,4 @@
-import type { CountryCode } from 'libphonenumber-js';
-
+import type { CountryCode } from '$lib/types/interfaces/Phone.interface';
 export interface Country {
 	id: string;
 	label: string;

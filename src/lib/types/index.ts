@@ -1,7 +1,7 @@
 export * from './enums';
 export * from './interfaces';
 
-export type DispatchSelectEvents<T> = {
+export type CountrySelectEvents<T> = {
 	add: { option: T };
 	remove: { option: T };
 	same: { option: T };

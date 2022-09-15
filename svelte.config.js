@@ -36,8 +36,9 @@ export default {
 				'!**/utils/simulator.ts',
 				'!**/utils/typeCheck.ts',
 				'!**/components/utils/*',
-				'!**/components/Select/*',
-				'!**/components/examples/*'
+				'!**/components/examples/*',
+				'!**/components/examples/*',
+				'!**/stores/DevExampleStores.ts'
 			]);
 		}
 	}

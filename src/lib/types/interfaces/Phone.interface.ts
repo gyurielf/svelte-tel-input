@@ -25,3 +25,5 @@ export interface NormalizedPhoneNumber {
 	e164: E164Number | null;
 	error?: string;
 }
+
+export type { CountryCallingCode, CountryCode, E164Number, NationalNumber };
