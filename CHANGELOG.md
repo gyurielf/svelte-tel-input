@@ -1,5 +1,11 @@
 # svelte-tel-input
 
+## 0.12.0
+
+### Minor Changes
+
+-   feat: Update exports to make the package as simple to use as possible. ([#85](https://github.com/gyurielf/svelte-tel-input/pull/85))
+
 ## 0.11.1
 
 ### Patch Changes
