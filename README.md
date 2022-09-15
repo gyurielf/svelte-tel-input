@@ -6,13 +6,7 @@
 
 > Lightweight svelte tel/phone input standardizer.
 
-## Under development!
-
-<ins>Do not use it before 1.0, it won't works properly!</ins>
-
-Lightweight phone input standardization.
-
----
+The package is in `BETA` stage, expect bugs.
 
 ## Installation
 
