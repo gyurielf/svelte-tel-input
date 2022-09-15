@@ -1,4 +1,4 @@
-import type { NormalizedPhoneNumber } from '$lib/types/interfaces/Phone.interface';
+import type { NormalizedTelNumber } from '$lib/types/interfaces/Phone.interface';
 import type { PhoneNumber } from 'libphonenumber-js';
 
 export const capitalize = (str: string) => {
@@ -26,7 +26,7 @@ export const isNumber = (value: number) => {
 	return typeof value === 'number' && isFinite(value);
 };
 
-export const normalizePhoneInput = (input: PhoneNumber) => {
+export const normalizeTelInput = (input: PhoneNumber) => {
 	const filteredResult = Object.fromEntries(
 		Object.entries({
 			countryCode: input ? input.country : null,
@@ -81,7 +81,7 @@ export const isSelected = <
 	}
 };
 
-export const jsonPrettyParser = (node: HTMLElement, data: NormalizedPhoneNumber | null) => {
+export const jsonPrettyParser = (node: HTMLElement, data: NormalizedTelNumber | null) => {
 	data !== null && (node.innerHTML = `<code>${JSON.stringify(data, null, 2)}</code>`);
 	return {
 		destroy: () => {

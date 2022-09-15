@@ -4,7 +4,7 @@
 	import { clickOutsideAction } from '$lib/utils/directives/clickOutsideAction';
 	import TelInput from '$lib/components/Input/TelInput.svelte';
 	import { isSelected } from '$lib/utils/helpers';
-	import type { NormalizedPhoneNumber, Country, CountrySelectEvents } from '$lib/types';
+	import type { NormalizedTelNumber, Country, CountrySelectEvents } from '$lib/types';
 
 	export let searchText = '';
 	export let selected: Country | null = {
@@ -20,7 +20,7 @@
 	export let clickOutside = true;
 	export let closeOnClick = true;
 	export let disabled = false;
-	export let parsedPhoneInput: NormalizedPhoneNumber | null = {
+	export let parsedTelInput: NormalizedTelNumber | null = {
 		countryCode: 'HU',
 		isValid: true,
 		phoneNumber: '+36301234567',
@@ -36,7 +36,7 @@
 
 	let isOpen = false;
 
-	$: isValid = parsedPhoneInput?.isValid ?? false;
+	$: isValid = parsedTelInput?.isValid ?? false;
 
 	const toggleDropDown = (e: Event) => {
 		e.preventDefault();
@@ -188,7 +188,7 @@
 	<TelInput
 		id="tel-input"
 		country={selected?.iso2}
-		bind:parsedPhoneInput
+		bind:parsedTelInput
 		class="border border-gray-300 border-l-gray-100 dark:border-l-gray-700 dark:border-gray-600 {isValid
 			? `bg-gray-50 dark:bg-gray-700 
             dark:placeholder-gray-400 dark:text-white text-gray-900`

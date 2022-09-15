@@ -11,7 +11,7 @@ export interface PhoneNumberError {
 	error: PhoneNumberParseError;
 }
 
-export interface NormalizedPhoneNumber {
+export interface NormalizedTelNumber {
 	countryCode?: CountryCode | null;
 	isValid: boolean;
 	phoneNumber: string | null;

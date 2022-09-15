@@ -4,7 +4,7 @@
 	import { clickOutsideAction } from '$lib/utils/directives/clickOutsideAction';
 	import TelInput from '$lib/components/Input/TelInput.svelte';
 	import { isSelected } from '$lib/utils/helpers';
-	import type { NormalizedPhoneNumber, Country, CountrySelectEvents } from '$lib/types';
+	import type { NormalizedTelNumber, Country, CountrySelectEvents } from '$lib/types';
 
 	export let searchText = '';
 	export let selected: Country | null = {
@@ -20,7 +20,7 @@
 	export let clickOutside = true;
 	export let closeOnClick = true;
 	export let disabled = false;
-	export let parsedPhoneInput: NormalizedPhoneNumber | null = {
+	export let parsedPhoneInput: NormalizedTelNumber | null = {
 		countryCode: 'HU',
 		isValid: true,
 		phoneNumber: '+36301234567',

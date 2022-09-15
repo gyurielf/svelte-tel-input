@@ -1,8 +1,8 @@
 <script lang="ts">
-	import type { NormalizedPhoneNumber } from '$lib/types/interfaces/Phone.interface';
+	import type { NormalizedTelNumber } from '$lib/types/interfaces/Phone.interface';
 	import { jsonPrettyParser } from '$lib/utils/helpers';
 
-	export let exampleData: NormalizedPhoneNumber | null;
+	export let exampleData: NormalizedTelNumber | null;
 
 	$: exampleDataEntries = (exampleData && Object.entries(exampleData)) || [];
 </script>

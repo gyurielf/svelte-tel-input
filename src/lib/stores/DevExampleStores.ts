@@ -1,9 +1,9 @@
 import { writable } from 'svelte/store';
 import { createLocalStorage, persist } from '@macfja/svelte-persistent-store';
 import type { PersistentStore } from '@macfja/svelte-persistent-store';
-import type { NormalizedPhoneNumber } from '$lib/types/interfaces/Phone.interface';
+import type { NormalizedTelNumber } from '$lib/types/interfaces/Phone.interface';
 
-export const exampleDataStore = writable<NormalizedPhoneNumber>();
+export const exampleDataStore = writable<NormalizedTelNumber>();
 
 // Theme
 export const theme: PersistentStore<string | null> = persist(
@@ -38,5 +38,5 @@ export const toggleTheme = (): void => {
 		classList.add(preferedTheme);
 	}
 
-	theme.update((theme) => (theme = preferedTheme));
+	theme.update((newTheme) => (newTheme = preferedTheme));
 };

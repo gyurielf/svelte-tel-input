@@ -2,7 +2,7 @@
 	import { onMount } from 'svelte';
 	import TelInput from '$lib/components/Input/TelInput.svelte';
 	import { getCurrentCountry } from '$lib/utils/helpers';
-	import type { NormalizedPhoneNumber } from '$lib/types/interfaces/Phone.interface';
+	import type { NormalizedTelNumber } from '$lib/types';
 	import type { Country } from '$lib/types';
 	import { normalizedCountries } from '$lib/assets';
 
@@ -17,7 +17,7 @@
 		enteredTelInput: true
 	};
 
-	let parsedPhoneInput: NormalizedPhoneNumber;
+	let parsedPhoneInput: NormalizedTelNumber;
 
 	onMount(async () => {
 		// Get current country on initialization by GeoIp
