@@ -11,7 +11,7 @@ export interface PhoneNumberError {
 	error: PhoneNumberParseError;
 }
 
-export interface NormalizedPhoneNumber {
+export interface NormalizedTelNumber {
 	countryCode?: CountryCode | null;
 	isValid: boolean;
 	phoneNumber: string | null;
@@ -25,3 +25,5 @@ export interface NormalizedPhoneNumber {
 	e164: E164Number | null;
 	error?: string;
 }
+
+export type { CountryCallingCode, CountryCode, E164Number, NationalNumber };

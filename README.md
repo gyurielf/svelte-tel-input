@@ -24,18 +24,20 @@ npm install --save svelte-tel-input
 
 ## Usage
 
+### Basic
+
 ```html
 <script lang="ts">
-    import { TelInput } from 'svelte-tel-input';
-    import type { CountryCode } from 'svelte-tel-input'
+	import { TelInput } from 'svelte-tel-input';
+	import type { NormalizedTelNumber, CountryCode } from 'svelte-tel-input/types';
 
-    // Any Country Code Alpha-2 (ISO 3166)
-    let country: CountryCode = 'US'
+	// Any Country Code Alpha-2 (ISO 3166)
+	let country: CountryCode = 'US';
 
-    let parsedPhoneInput: NormalizedPhoneNumber | null = null;
+	let parsedTelInput: NormalizedTelNumber | null = null;
 </script>
 
-<TelInput {country} bind:parsedPhoneInput class="any class passed down" />
+<TelInput {country} bind:parsedTelInput class="any class passed down" />
 ```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>

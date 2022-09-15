@@ -53,14 +53,14 @@
 		"@changesets/types": "^5.1.0",
 		"@macfja/svelte-persistent-store": "^2.1.0",
 		"@sveltejs/adapter-static": "^1.0.0-next.43",
-		"@sveltejs/kit": "^1.0.0-next.482",
+		"@sveltejs/kit": "^1.0.0-next.483",
 		"@sveltejs/package": "^1.0.0-next.3",
 		"@testing-library/jest-dom": "^5.16.5",
 		"@testing-library/svelte": "^3.2.1",
 		"@types/jest": "^29.0.2",
 		"@typescript-eslint/eslint-plugin": "^5.37.0",
 		"@typescript-eslint/parser": "^5.37.0",
-		"autoprefixer": "^10.4.10",
+		"autoprefixer": "^10.4.11",
 		"babel-jest": "^29.0.3",
 		"babel-loader": "^8.2.5",
 		"cssnano": "^5.1.13",
@@ -89,7 +89,7 @@
 		"tsconfig-paths-webpack-plugin": "^4.0.0",
 		"tslib": "^2.4.0",
 		"typescript": "^4.8.3",
-		"vite": "^3.1.0"
+		"vite": "^3.1.1"
 	},
 	"standard-version": {
 		"skip": {
