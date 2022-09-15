@@ -32,7 +32,7 @@ npm install --save svelte-tel-input
     // Any Country Code Alpha-2 (ISO 3166)
     let country: CountryCode = 'US'
 
-    let parsedTelInput: NormalizedPhoneNumber | null = null;
+    let parsedPhoneInput: NormalizedPhoneNumber | null = null;
 </script>
 
 <TelInput {country} bind:parsedPhoneInput class="any class passed down" />
