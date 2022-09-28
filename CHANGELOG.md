@@ -1,5 +1,11 @@
 # svelte-tel-input
 
+## 0.13.0
+
+### Minor Changes
+
+-   Simplify structure ([#91](https://github.com/gyurielf/svelte-tel-input/pull/91))
+
 ## 0.12.0
 
 ### Minor Changes
