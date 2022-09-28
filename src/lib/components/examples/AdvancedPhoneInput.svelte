@@ -4,7 +4,7 @@
 	import { clickOutsideAction } from '$lib/utils/directives/clickOutsideAction';
 	import TelInput from '$lib/components/Input/TelInput.svelte';
 	import { isSelected } from '$lib/utils/helpers';
-	import type { NormalizedTelNumber, Country, CountrySelectEvents } from '$lib/types';
+	import type { NormalizedTelNumber, Country, CountrySelectEvents } from '$lib/types.d';
 
 	export let searchText = '';
 	export let selected: Country | null = {

@@ -1,7 +1,7 @@
 import { writable } from 'svelte/store';
 import { createLocalStorage, persist } from '@macfja/svelte-persistent-store';
 import type { PersistentStore } from '@macfja/svelte-persistent-store';
-import type { NormalizedTelNumber } from '$lib/types/interfaces/Phone.interface';
+import type { NormalizedTelNumber } from '$lib/types.d';
 
 export const exampleDataStore = writable<NormalizedTelNumber>();
 
