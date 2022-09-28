@@ -1,4 +1,3 @@
-import type { NormalizedTelNumber } from '$lib/types/interfaces/Phone.interface';
 import type { PhoneNumber } from 'libphonenumber-js';
 
 export const capitalize = (str: string) => {
@@ -79,13 +78,4 @@ export const isSelected = <
 	} else {
 		return false;
 	}
-};
-
-export const jsonPrettyParser = (node: HTMLElement, data: NormalizedTelNumber | null) => {
-	data !== null && (node.innerHTML = `<code>${JSON.stringify(data, null, 2)}</code>`);
-	return {
-		destroy: () => {
-			node.remove();
-		}
-	};
 };

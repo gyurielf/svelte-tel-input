@@ -1,7 +1,8 @@
 <script lang="ts">
 	import { watcher } from '$lib/stores';
-	import { PhoneNumberParseError } from '$lib/types';
-	import type { NormalizedTelNumber } from '$lib/types/interfaces/Phone.interface';
+	import { PhoneNumberParseError, type NormalizedTelNumber } from '$lib/types.d';
+	// import { PhoneNumberParseError } from '$lib/types';
+	// import type { NormalizedTelNumber } from '$lib/types.d';
 	import { normalizeTelInput } from '$lib/utils/helpers';
 	import { parsePhoneNumberWithError, ParseError, type CountryCode } from 'libphonenumber-js';
 

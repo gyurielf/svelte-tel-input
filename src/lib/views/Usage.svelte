@@ -1,7 +1,7 @@
 <script lang="ts">
 	import AdvancedTelInput from '$lib/components/Input/AdvancedTelInput.svelte';
 	import PayloadBlock from '$lib/components/utils/PayloadBlock.svelte';
-	import type { NormalizedTelNumber } from '$lib/types/interfaces/Phone.interface';
+	import type { NormalizedTelNumber } from '$lib/types';
 
 	let exampleData: NormalizedTelNumber | null;
 </script>

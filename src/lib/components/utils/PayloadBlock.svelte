@@ -1,6 +1,6 @@
 <script lang="ts">
-	import type { NormalizedTelNumber } from '$lib/types/interfaces/Phone.interface';
-	import { jsonPrettyParser } from '$lib/utils/helpers';
+	import type { NormalizedTelNumber } from '$lib/types.d';
+	import { jsonPrettyParser } from '$lib/utils/examples/exampleHelpers';
 
 	export let exampleData: NormalizedTelNumber | null;
 

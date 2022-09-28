@@ -15,7 +15,7 @@
 //    Area codes
 // ]
 
-import type { Country } from '$lib/types/interfaces/Country.interface';
+import type { Country } from '$lib/types.d';
 import type { CountryCode } from 'libphonenumber-js';
 
 const allCountries = [

@@ -17,13 +17,6 @@ export default {
 		exports: (filepath) => {
 			if (filepath.endsWith('.d.ts')) return false;
 			if (filepath === 'index.ts' || filepath === 'index.js') return true;
-			// return mm.all(filepath, [
-			// 	'!**/_*.scss',
-			// 	'!**/*.test.*',
-			// 	'!**/components/utils/*',
-			// 	'!**/views/*',
-			// 	'!**/examples/*'
-			// ]);
 		},
 		files: (filepath) => {
 			return mm.all(filepath, [
@@ -33,8 +26,8 @@ export default {
 				'!**/env.*',
 				'!**/views/*',
 				'!**/examples/*',
-				'!**/utils/simulator.ts',
 				'!**/utils/typeCheck.ts',
+				'!**/utils/examples/*',
 				'!**/components/utils/*',
 				'!**/components/examples/*',
 				'!**/components/examples/*',
