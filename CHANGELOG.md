@@ -1,5 +1,11 @@
 # svelte-tel-input
 
+## 0.13.1
+
+### Patch Changes
+
+-   chore: simplify part one ([#94](https://github.com/gyurielf/svelte-tel-input/pull/94))
+
 ## 0.13.0
 
 ### Minor Changes
