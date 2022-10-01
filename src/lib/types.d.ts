@@ -1,6 +1,3 @@
-import type { CountryCode } from '$lib/types';
-
-import type { PhoneNumberParseError } from '$lib/types/enums';
 import type {
 	CountryCallingCode,
 	CountryCode,
