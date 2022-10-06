@@ -4,9 +4,9 @@
 	"version": "0.13.1",
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/gyurielf/svelte-tel-input.git"
+		"url": "git+https://github.com/magentinehealthcare/svelte-tel-input.git"
 	},
-	"homepage": "https://github.com/gyurielf/svelte-tel-input#readme",
+	"homepage": "https://github.com/magentinehealthcare/svelte-tel-input#readme",
 	"keywords": [
 		"svelte",
 		"tel input",
@@ -158,7 +158,9 @@
 			}
 		]
 	},
-	"svelte": ".",
 	"type": "module",
-	"license": "MIT"
+	"license": "MIT",
+	"publishConfig": {
+		"registry": "https://npm.pkg.github.com/magentinehealthcare"
+	}
 }
