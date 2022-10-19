@@ -1,4 +1,4 @@
-import type { PhoneNumber } from 'libphonenumber-js';
+import type { PhoneNumber } from '$lib/types';
 
 export const capitalize = (str: string) => {
 	return (str && str[0].toUpperCase() + str.slice(1).toLowerCase()) || '';

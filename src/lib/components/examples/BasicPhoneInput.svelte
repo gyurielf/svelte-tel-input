@@ -2,7 +2,7 @@
 	import { onMount } from 'svelte';
 	import TelInput from '$lib/components/Input/TelInput.svelte';
 	import { getCurrentCountry } from '$lib/utils/helpers';
-	import type { NormalizedTelNumber, Country } from '$lib/types.d';
+	import type { NormalizedTelNumber, Country } from '$lib/types';
 	import { normalizedCountries } from '$lib/assets';
 
 	// Tel input

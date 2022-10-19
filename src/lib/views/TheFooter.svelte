@@ -5,6 +5,7 @@
 				class="relative flex items-center text-gray-soft hover:text-gray-inverse border-0 rounded-md p-2"
 				href="https://github.com/gyurielf/svelte-tel-input"
 				target="_blank"
+				rel="noreferrer"
 			>
 				<svg
 					preserveAspectRatio="xMidYMid meet"

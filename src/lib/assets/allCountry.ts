@@ -15,8 +15,7 @@
 //    Area codes
 // ]
 
-import type { Country } from '$lib/types.d';
-import type { CountryCode } from 'libphonenumber-js';
+import type { Country, CountryCode } from '$lib/types';
 
 const allCountries = [
 	['Afghanistan (‫افغانستان‬‎)', 'af', '93'],
