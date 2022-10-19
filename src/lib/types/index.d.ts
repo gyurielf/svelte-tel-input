@@ -2,7 +2,8 @@ import type {
 	CountryCallingCode,
 	CountryCode,
 	E164Number,
-	NationalNumber
+	NationalNumber,
+	PhoneNumber
 } from 'libphonenumber-js';
 
 export interface Country {
@@ -46,7 +47,7 @@ export interface NormalizedTelNumber {
 	error?: string;
 }
 
-export type { CountryCallingCode, CountryCode, E164Number, NationalNumber };
+export type { CountryCallingCode, CountryCode, E164Number, NationalNumber, PhoneNumber };
 
 export enum PhoneNumberParseError {
 	NOT_A_NUMBER = 'NOT_A_NUMBER',

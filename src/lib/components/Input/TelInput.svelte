@@ -1,17 +1,15 @@
 <script lang="ts">
 	import { watcher } from '$lib/stores';
-	import { PhoneNumberParseError, type NormalizedTelNumber } from '$lib/types.d';
 	import { normalizeTelInput } from '$lib/utils/helpers';
-	import { parsePhoneNumberWithError, ParseError, type CountryCode } from 'libphonenumber-js';
-
+	import { parsePhoneNumberWithError, ParseError } from 'libphonenumber-js';
 	import { onMount } from 'svelte';
+
+	import { PhoneNumberParseError, type NormalizedTelNumber, type CountryCode } from '$lib/types';
 
 	export let country: CountryCode | null = null;
 	export let rawTelInput: string | null = null;
 	export let parsedTelInput: Partial<NormalizedTelNumber> | null = null;
 	export let disabled = false;
-	export let id: string | null = null;
-	export let name: string | null = null;
 
 	onMount(() => {
 		if (parsedTelInput !== null) {
@@ -52,8 +50,6 @@
 </script>
 
 <input
-	{id}
-	{name}
 	{disabled}
 	value={parsedTelInput?.formatOriginal ?? rawTelInput ?? ''}
 	type="tel"
