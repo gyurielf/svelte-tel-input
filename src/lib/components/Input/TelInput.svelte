@@ -3,8 +3,7 @@
 	import { normalizeTelInput } from '$lib/utils/helpers';
 	import { parsePhoneNumberWithError, ParseError } from 'libphonenumber-js';
 	import { onMount } from 'svelte';
-
-	import { PhoneNumberParseError, type NormalizedTelNumber, type CountryCode } from '$lib/types';
+	import type { NormalizedTelNumber, CountryCode } from '$lib/types';
 
 	export let country: CountryCode | null = null;
 	export let rawTelInput: string | null = null;
@@ -34,7 +33,7 @@
 				// Not a phone number, non-existent country, etc.
 				parsedTelInput = {
 					isValid: false,
-					error: PhoneNumberParseError[err.message as keyof typeof PhoneNumberParseError]
+					error: err.message
 				};
 			} else {
 				throw err;
