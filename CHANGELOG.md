@@ -1,5 +1,11 @@
 # svelte-tel-input
 
+## 0.14.0
+
+### Minor Changes
+
+-   Prevent circular import ([#98](https://github.com/gyurielf/svelte-tel-input/pull/98))
+
 ## 0.13.1
 
 ### Patch Changes
