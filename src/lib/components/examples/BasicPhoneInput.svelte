@@ -27,7 +27,7 @@
 </script>
 
 <TelInput
-	defaultCountry={selectedCountry?.iso2}
+	country={selectedCountry?.iso2}
 	bind:parsedPhoneInput
 	bind:rawPhoneInput
 	class="px-4 py-1 text-gray-900 focus:outline-none rounded-sm {dataIsValid.enteredTelInput
