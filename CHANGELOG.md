@@ -1,5 +1,11 @@
 # svelte-tel-input
 
+## 0.14.1
+
+### Patch Changes
+
+-   chore: export tests ([#100](https://github.com/gyurielf/svelte-tel-input/pull/100))
+
 ## 0.14.0
 
 ### Minor Changes
