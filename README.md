@@ -20,6 +20,8 @@ npm install --save svelte-tel-input
 
 ### Basic
 
+[REPL](https://stackblitz.com/edit/svelte-tel-input-repl?file=README.md) (StackBlitz)
+
 ```html
 <script lang="ts">
 	import { TelInput } from 'svelte-tel-input';
