@@ -6,7 +6,7 @@
 	import { normalizedCountries } from '$lib/assets';
 
 	// Tel input
-	let rawPhoneInput: string;
+	let initialValue: string;
 
 	// Countries
 	let selectedCountry: Country | null = null;
@@ -29,7 +29,7 @@
 <TelInput
 	country={selectedCountry?.iso2}
 	bind:parsedPhoneInput
-	bind:rawPhoneInput
+	bind:initialValue
 	class="px-4 py-1 text-gray-900 focus:outline-none rounded-sm {dataIsValid.enteredTelInput
 		? ' border-none border-0'
 		: 'border-2 border-red-600'}"

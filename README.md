@@ -24,7 +24,7 @@ npm install --save svelte-tel-input
 
 ```html
 <script lang="ts">
-	import { TelInput } from 'svelte-tel-input';
+	import TelInput from 'svelte-tel-input';
 	import type { NormalizedTelNumber, CountryCode } from 'svelte-tel-input/types';
 
 	// Any Country Code Alpha-2 (ISO 3166)
