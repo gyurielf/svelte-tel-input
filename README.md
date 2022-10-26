@@ -24,7 +24,7 @@ npm install --save svelte-tel-input
 
 ```html
 <script lang="ts">
-	import { TelInput } from 'svelte-tel-input';
+	import TelInput from 'svelte-tel-input';
 	import type { NormalizedTelNumber, CountryCode } from 'svelte-tel-input/types';
 
 	// Any Country Code Alpha-2 (ISO 3166)
@@ -72,7 +72,6 @@ npm install --save svelte-tel-input
 -   [ ] Improve A11Y
 -   [ ] Default country sould be optional. ( ip | browserLang |off )
 -   [ ] Simlify code and types
--   [ ] Multi-language Support
 
 See the [open issues](https://github.com/gyurielf/svelte-tel-input/issues) for a list of proposed features (and known issues).
 
