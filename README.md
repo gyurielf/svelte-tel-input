@@ -72,7 +72,6 @@ npm install --save svelte-tel-input
 -   [ ] Improve A11Y
 -   [ ] Default country sould be optional. ( ip | browserLang |off )
 -   [ ] Simlify code and types
--   [ ] Multi-language Support
 
 See the [open issues](https://github.com/gyurielf/svelte-tel-input/issues) for a list of proposed features (and known issues).
 
