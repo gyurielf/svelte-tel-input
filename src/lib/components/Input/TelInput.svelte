@@ -1,29 +1,18 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
+	import { createEventDispatcher, onMount } from 'svelte';
 	import { watcher } from '$lib/stores';
 	import { normalizeTelInput } from '$lib/utils/helpers';
-	import { parsePhoneNumberWithError, ParseError, AsYouType } from 'libphonenumber-js';
-	import type { NormalizedTelNumber, CountryCode, E164Number } from '$lib/types';
+	import { parsePhoneNumberWithError, ParseError } from 'libphonenumber-js';
+	import type { NormalizedTelNumber, CountryCode, E164Number, TelInputEvents } from '$lib/types';
 
-	export let country: CountryCode | null = null;
-	export let initialValue: E164Number | null = null;
+	const dispatch = createEventDispatcher<TelInputEvents>();
+	export let country: CountryCode | null;
+	export let value: E164Number | null = null;
 	export let parsedTelInput: Partial<NormalizedTelNumber> | null = null;
+	export let valid = true;
 	export let disabled = false;
 
-	let inputValue = initialValue || null;
-
-	onMount(() => {
-		if (initialValue && country) {
-			console.log('Unparsed with country');
-			handleParsePhoneNumber(initialValue, country);
-		} else if (initialValue) {
-			console.log('Unparsed');
-			handleParsePhoneNumber(initialValue);
-		} else if (parsedTelInput) {
-			handleParsePhoneNumber(parsedTelInput.phoneNumber as string, country);
-			console.log('Fully Parsed');
-		}
-	});
+	let inputValue = value;
 
 	const handleInput = (event: Event) => {
 		// const inputVal = (event.target as HTMLInputElement).value.replace(/[^\d\+]/g, '');
@@ -31,13 +20,34 @@
 		handleParsePhoneNumber(inputVal, country);
 	};
 
+	const updateCountry = (countryCode: CountryCode) => {
+		country = countryCode;
+	};
+
 	const handleParsePhoneNumber = (input: string, country: CountryCode | null = null) => {
 		try {
 			parsedTelInput = normalizeTelInput(
 				parsePhoneNumberWithError(input, country || undefined)
 			);
-			// inputValue = parsedTelInput?.formatInternational ?? input;
-			inputValue = parsedTelInput?.formatInternational ?? input;
+
+			if (
+				parsedTelInput?.countryCode &&
+				parsedTelInput?.isValid &&
+				parsedTelInput.countryCode !== country
+			) {
+				console.log(
+					'Should update country from ' + country + ' to ' + parsedTelInput.countryCode
+				);
+				updateCountry(parsedTelInput.countryCode);
+			}
+
+			valid = parsedTelInput.isValid ?? false;
+			// This will be inside input html element
+			inputValue = parsedTelInput?.formatOriginal ?? input;
+			value = parsedTelInput?.e164 ?? null;
+
+			dispatch('valid', valid);
+			dispatch('parseInput', parsedTelInput);
 		} catch (err) {
 			if (err instanceof ParseError) {
 				// Not a phone number, non-existent country, etc.
@@ -45,46 +55,52 @@
 					isValid: false,
 					error: err.message
 				};
+				dispatch('parseError', err.message);
 			} else {
 				throw err;
 			}
 		}
 	};
 
+	// Temporary disabled
 	const watchFunction = () => {
-		if (initialValue !== null) {
+		if (value !== null) {
 			console.log('WatchFN runz');
-			handleParsePhoneNumber(initialValue, country);
+			handleParsePhoneNumber(value, country);
 		}
 	};
 	const countryChangeWatch = watcher(null, watchFunction);
 
 	$: $countryChangeWatch = country;
 
-	const setInputValue = (
-		country: CountryCode | null,
-		parsedTelInput: Partial<NormalizedTelNumber> | null
-	) => {
-		if (country) {
-			return parsedTelInput?.formatOriginal ?? initialValue ?? '';
-		} else {
-			return parsedTelInput?.formatInternational ?? initialValue ?? '';
+	onMount(() => {
+		if (value && country) {
+			console.log('Unparsed with country');
+			handleParsePhoneNumber(value, country);
+		} else if (value) {
+			console.log('Unparsed');
+			handleParsePhoneNumber(value);
+		} else if (parsedTelInput) {
+			handleParsePhoneNumber(parsedTelInput.phoneNumber as string, country);
+			console.log('Fully Parsed');
 		}
-	};
+	});
 
-	// $: inputValue = setInputValue(country, parsedTelInput);
-	$: console.log(inputValue);
+	$: console.log('countryCheck inside telinput ' + country);
 </script>
 
 <input
-	{disabled}
-	value={inputValue}
-	type="tel"
 	class={$$props.class}
+	{disabled}
+	type="tel"
+	value={inputValue}
 	{...$$restProps}
-	on:input={handleInput}
 	on:blur
+	on:change
 	on:focus
-	on:keyup
+	on:input={handleInput}
+	on:input
 	on:keydown
+	on:keypress
+	on:keyup
 />

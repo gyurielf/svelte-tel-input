@@ -51,3 +51,16 @@ export type PhoneNumberParseError = 'NOT_A_NUMBER' | 'INVALID_COUNTRY' | 'TOO_SH
 export type PhoneType = 'FIXED_LINE' | 'MOBILE';
 
 export type { CountryCallingCode, CountryCode, E164Number, NationalNumber, PhoneNumber };
+
+export interface TelInputValidity {
+	value: boolean | null;
+	errorMessage?: string;
+}
+
+export type TelInputEvents = {
+	country: CountryCode | null;
+	parseError: string;
+	parseInput: Partial<NormalizedTelNumber> | null;
+	valid: boolean;
+	value: E164Number | null;
+};

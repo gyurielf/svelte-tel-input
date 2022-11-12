@@ -187,7 +187,7 @@
 
 	<TelInput
 		id="tel-input"
-		country={selected?.iso2}
+		country={selected?.iso2 || null}
 		bind:parsedTelInput
 		class="border border-gray-300 border-l-gray-100 dark:border-l-gray-700 dark:border-gray-600 {isValid
 			? `bg-gray-50 dark:bg-gray-700 

@@ -38,6 +38,15 @@ npm install --save svelte-tel-input
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
+## API
+
+The default export of the library is the main TelInput component. It has the following props:
+
+| Props    | Type                 | Default Value | Usage                                                                                    |
+| -------- | -------------------- | ------------- | ---------------------------------------------------------------------------------------- |
+| disabled | `boolean`            | `false`       | It's either block the parser and entering input                                          |
+| value    | `E164Number \| null` | `null`        | [E164](https://en.wikipedia.org/wiki/E.164) is the international format of phone numbers |
+
 ## Features
 
 -   Parse and validate phone number.
