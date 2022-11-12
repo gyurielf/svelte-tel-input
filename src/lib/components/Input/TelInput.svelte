@@ -26,10 +26,12 @@
 
 	const handleParsePhoneNumber = (input: string, country: CountryCode | null = null) => {
 		try {
+			console.log('parse');
 			parsedTelInput = normalizeTelInput(
 				parsePhoneNumberWithError(input, country || undefined)
 			);
 
+			// Update country if the parsed number is contains a proper country iso2
 			if (
 				parsedTelInput?.countryCode &&
 				parsedTelInput?.isValid &&
@@ -41,11 +43,17 @@
 				updateCountry(parsedTelInput.countryCode);
 			}
 
-			valid = parsedTelInput.isValid ?? false;
-			// This will be inside input html element
-			inputValue = parsedTelInput?.formatOriginal ?? input;
-			value = parsedTelInput?.e164 ?? null;
+			// It's need for refreshing html input value, if it is the same as the previouly parsed.
+			if (inputValue === parsedTelInput?.formatOriginal) {
+				inputValue = null;
+			}
 
+			inputValue = parsedTelInput?.formatOriginal ?? input;
+
+			value = parsedTelInput?.e164 ?? null;
+			valid = parsedTelInput.isValid ?? false;
+
+			console.log(inputValue);
 			dispatch('valid', valid);
 			dispatch('parseInput', parsedTelInput);
 		} catch (err) {
@@ -90,6 +98,7 @@
 </script>
 
 <input
+	id="kaka"
 	class={$$props.class}
 	{disabled}
 	type="tel"
