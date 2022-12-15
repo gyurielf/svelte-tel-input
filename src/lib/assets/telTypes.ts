@@ -1,5 +1,4 @@
 import { capitalize } from '$lib/utils/helpers';
-
 export const telTypes = [
 	'PREMIUM_RATE',
 	'TOLL_FREE',

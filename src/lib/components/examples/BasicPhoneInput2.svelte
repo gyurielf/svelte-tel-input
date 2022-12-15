@@ -81,7 +81,7 @@
 		}
 		selectedCountry = countryCode as CountryCode;
 	};
-	$: console.log(value);
+	// $: console.log(value);
 </script>
 
 <select

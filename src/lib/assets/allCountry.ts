@@ -288,6 +288,7 @@ const allCountries = [
 	['Tokelau', 'tk', '690'],
 	['Tonga', 'to', '676'],
 	['Trinidad and Tobago', 'tt', '1', 22, ['868']],
+	['Tristan da Cunha', 'ta', '290'],
 	['Tunisia (‫تونس‬‎)', 'tn', '216'],
 	['Turkey (Türkiye)', 'tr', '90'],
 	['Turkmenistan', 'tm', '993'],

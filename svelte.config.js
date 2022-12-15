@@ -10,8 +10,7 @@ export default {
 		})
 	],
 	kit: {
-		adapter: staticAdapter(),
-		trailingSlash: 'always'
+		adapter: staticAdapter()
 	},
 	package: {
 		exports: (filepath) => {
