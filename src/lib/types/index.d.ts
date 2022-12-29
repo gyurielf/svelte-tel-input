@@ -3,8 +3,10 @@ import type {
 	CountryCode,
 	E164Number,
 	NationalNumber,
+	MetadataJson,
 	PhoneNumber
 } from 'libphonenumber-js';
+import type { Countries } from 'libphonenumber-js/types';
 
 export interface Country {
 	id: string;
@@ -50,7 +52,15 @@ export interface NormalizedTelNumber {
 export type PhoneNumberParseError = 'NOT_A_NUMBER' | 'INVALID_COUNTRY' | 'TOO_SHORT' | 'TOO_LONG';
 export type PhoneType = 'FIXED_LINE' | 'MOBILE';
 
-export type { CountryCallingCode, CountryCode, E164Number, NationalNumber, PhoneNumber };
+export type {
+	CountryCallingCode,
+	CountryCode,
+	E164Number,
+	NationalNumber,
+	PhoneNumber,
+	Countries,
+	MetadataJson
+};
 
 export interface TelInputValidity {
 	value: boolean | null;

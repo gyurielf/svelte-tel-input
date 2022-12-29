@@ -1,21 +1,11 @@
-import {
-	AsYouType,
-	Metadata,
-	type CountryCode,
-	type MetadataJson,
-	type E164Number
-} from 'libphonenumber-js/core';
-
-import type { Countries } from 'libphonenumber-js/types.js';
-import { getInternationalPhoneNumberPrefix } from './getInternationalPhoneNumberPrefix';
-
-import type { PhoneNumber } from '$lib/types';
+import { AsYouType, Metadata, getCountryCallingCode } from 'libphonenumber-js/core';
+import type { PhoneNumber, MetadataJson, Countries, E164Number, CountryCode } from '$lib/types';
 
 export const capitalize = (str: string) => {
 	return (str && str[0].toUpperCase() + str.slice(1).toLowerCase()) || '';
 };
 
-//use with attention, it can be rate limited.
+// Use carefully, it can be rate limited.
 export const getCurrentCountry = async () => {
 	try {
 		const response = await (await fetch('https://ip2c.org/s')).text();
@@ -93,6 +83,20 @@ export const isSelected = <
 	}
 };
 
+export const getInternationalPhoneNumberPrefix = (country: CountryCode, metadata: MetadataJson) => {
+	const ONLY_DIGITS_REGEXP = /^\d+$/;
+	// Standard international phone number prefix: "+" and "country calling code".
+	let prefix = '+' + getCountryCallingCode(country, metadata);
+	// Get "leading digits" for a phone number of the country.
+	// If there're "leading digits" then they can be part of the prefix too.
+	const newMetadata = new Metadata(metadata);
+	const leadingDigits = newMetadata.numberingPlan?.leadingDigits();
+	if (leadingDigits && ONLY_DIGITS_REGEXP.test(leadingDigits)) {
+		prefix += leadingDigits;
+	}
+	return prefix;
+};
+
 /**
  * Trims phone number digits if they exceed the maximum possible length
  * for a national (significant) number for the country.
@@ -117,7 +121,7 @@ export const trimNumber = (number: E164Number, country: CountryCode, metadata: M
 	return number;
 };
 
-const getMaxNumberLength = (country: CountryCode, metadata: MetadataJson) => {
+export const getMaxNumberLength = (country: CountryCode, metadata: MetadataJson) => {
 	// Get "possible lengths" for a phone number of the country.
 	const newMetadata = new Metadata(metadata);
 	newMetadata.selectNumberingPlan(country);
@@ -128,14 +132,14 @@ const getMaxNumberLength = (country: CountryCode, metadata: MetadataJson) => {
 			newMetadata.numberingPlan.possibleLengths().length - 1
 		];
 	} else {
-		throw new Error('There i no newMetadata object.');
+		throw new Error('There is no metadata object.');
 	}
 };
 
-// If the phone number being input is an international one
-// then tries to derive the country from the phone number.
-// (regardless of whether there's any country currently selected)
 /**
+ * If the phone number being input is an international one
+ * then tries to derive the country from the phone number.
+ * (regardless of whether there's any country currently selected)
  * @param {string} partialE164Number - A possibly incomplete E.164 phone number.
  * @param {string?} country - Currently selected country.
  * @param {string[]?} countries - A list of available countries. If not passed then "all countries" are assumed.
@@ -266,7 +270,7 @@ export const isSupportedCountry = (country: CountryCode, metadata: MetadataJson)
 export const allowedCharacters = (
 	character: string,
 	{ spaces }: { spaces?: boolean } = {
-		spaces: true
+		spaces: false
 	}
 ) => {
 	const DIGITS = {
@@ -330,27 +334,27 @@ export const allowedCharacters = (
 export const inputParser = (
 	text: string,
 	{
+		allowSpaces,
 		parseCharacter
 	}: {
-		allowSpaces?: boolean;
-		parseCharacter: (characted: string, val: string) => string;
+		allowSpaces: boolean;
+		parseCharacter: (characted: string, val: string, allowSpaces?: boolean) => string;
 	}
 ) => {
 	let value = '';
 	let index = 0;
 
 	while (index < text.length) {
-		const character = parseCharacter(text[index], value);
+		const character = parseCharacter(text[index], value, allowSpaces);
 		if (character !== undefined) {
 			value += character;
 		}
 		index++;
 	}
-
 	return value;
 };
 
-export const inspectAllowedChars = (character: string, value: string) => {
+export const inspectAllowedChars = (character: string, value: string, allowSpaces?: boolean) => {
 	// Leading plus is allowed
 	if (character === '+') {
 		if (!value) {
@@ -358,5 +362,5 @@ export const inspectAllowedChars = (character: string, value: string) => {
 		}
 	}
 	// Allowed characters
-	return allowedCharacters(character);
+	return allowedCharacters(character, { spaces: allowSpaces });
 };

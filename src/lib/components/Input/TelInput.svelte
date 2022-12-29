@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { createEventDispatcher, onMount } from 'svelte';
-	import { watcher } from '$lib/stores';
-	import { normalizeTelInput, getCountryForPartialE164Number } from '$lib/utils/helpers';
-	import paresePoneNumberInput, { ParseError } from 'libphonenumber-js';
 	import metadata from 'libphonenumber-js/metadata.min.json';
-	import { inputAction } from '$lib/utils/directives/telInputAction';
+	import { parsePhoneNumberWithError, ParseError } from 'libphonenumber-js';
+	import { telInputAction } from '$lib/utils/directives/telInputAction';
+	import { normalizeTelInput, getCountryForPartialE164Number } from '$lib/utils/helpers';
+	import { watcher } from '$lib/stores';
 	import type { NormalizedTelNumber, CountryCode, E164Number, TelInputEvents } from '$lib/types';
 
 	const dispatch = createEventDispatcher<TelInputEvents>();
@@ -13,7 +13,6 @@
 	export let parsedTelInput: Partial<NormalizedTelNumber> | null = null;
 	export let valid = true;
 	export let disabled = false;
-
 	let inputValue = value;
 	let prevCountry = country;
 
@@ -31,67 +30,54 @@
 		input: string | null,
 		currCountry: CountryCode | null = null
 	) => {
-		try {
-			if (input) {
-				const numberHasCountry = getCountryForPartialE164Number(input, { metadata });
+		if (input) {
+			const numberHasCountry = getCountryForPartialE164Number(input, { metadata });
 
-				if (numberHasCountry && input !== value) {
-					updateCountry(numberHasCountry);
-				}
+			if (numberHasCountry && numberHasCountry !== prevCountry) {
+				updateCountry(numberHasCountry);
+			}
 
+			try {
 				parsedTelInput = normalizeTelInput(
-					paresePoneNumberInput(input, currCountry || numberHasCountry || undefined)
+					parsePhoneNumberWithError(input, currCountry ?? numberHasCountry)
 				);
+			} catch (err) {
+				if (err instanceof ParseError) {
+					// Not a phone number, non-existent country, etc.
+					parsedTelInput = {
+						isValid: false,
+						error: err.message
+					};
+					dispatch('parseError', err.message);
+				} else {
+					throw err;
+				}
+			}
 
+			// It's keep the html input value on the first parsed format, or the user's format.
+			if (parsedTelInput?.isValid && parsedTelInput?.formatOriginal) {
 				// It's need for refreshing html input value, if it is the same as the previouly parsed.
 				if (inputValue === parsedTelInput?.formatOriginal) {
 					inputValue = null;
 				}
-				// It's keep the html input value on the first parsed format, or the user's format.
-				if (parsedTelInput.isValid && parsedTelInput?.formatOriginal) {
-					inputValue = parsedTelInput?.formatOriginal;
-					console.log(inputValue, 'parsedOriginal');
-				}
-
-				value = parsedTelInput?.e164 ?? null;
-				valid = parsedTelInput?.isValid ?? false;
-
-				dispatch('valid', valid);
-				dispatch('parseInput', parsedTelInput);
-			} else {
-				if (currCountry !== prevCountry) {
-					value = null;
-					inputValue = '';
-					valid = true;
-				}
-				prevCountry = currCountry;
+				inputValue = parsedTelInput?.formatOriginal;
 			}
-		} catch (err) {
-			if (err instanceof ParseError) {
-				// Not a phone number, non-existent country, etc.
-				parsedTelInput = {
-					isValid: false,
-					error: err.message
-				};
-				dispatch('parseError', err.message);
-			} else {
-				throw err;
+			value = parsedTelInput?.e164 ?? null;
+			valid = parsedTelInput?.isValid ?? false;
+
+			dispatch('valid', valid);
+			dispatch('parseInput', parsedTelInput);
+		} else {
+			if (currCountry !== prevCountry) {
+				value = null;
+				inputValue = '';
+				valid = true;
 			}
+			prevCountry = currCountry;
 		}
 	};
 
-	let initRun = true;
-	const watchFunction = () => {
-		if (!initRun) {
-			handleParsePhoneNumber(null, country);
-		}
-		initRun = false;
-	};
-
-	const countryChangeWatch = watcher(null, watchFunction);
-	$: $countryChangeWatch = country;
-
-	onMount(() => {
+	const initialize = () => {
 		if (value && country) {
 			handleParsePhoneNumber(value, country);
 		} else if (value) {
@@ -105,7 +91,22 @@
 		} else if (parsedTelInput && parsedTelInput.phoneNumber) {
 			handleParsePhoneNumber(parsedTelInput.phoneNumber, country);
 		}
+	};
+
+	onMount(() => {
+		initialize();
 	});
+
+	let initRun = true;
+	const watchFunction = () => {
+		if (!initRun) {
+			handleParsePhoneNumber(null, country);
+		}
+		initRun = false;
+	};
+
+	const countryChangeWatch = watcher(null, watchFunction);
+	$: $countryChangeWatch = country;
 </script>
 
 <input
@@ -123,5 +124,5 @@
 	on:keypress
 	on:keyup
 	on:paste
-	use:inputAction={handleInputAction}
+	use:telInputAction={handleInputAction}
 />

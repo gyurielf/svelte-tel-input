@@ -10,13 +10,12 @@
 
 	// Countries
 	let selectedCountry: Country | null = null;
+	let parsedPhoneInput: NormalizedTelNumber;
 
 	// Validity of inputs
 	let dataIsValid = {
 		enteredTelInput: true
 	};
-
-	let parsedPhoneInput: NormalizedTelNumber;
 
 	onMount(async () => {
 		// Get current country on initialization by GeoIp
