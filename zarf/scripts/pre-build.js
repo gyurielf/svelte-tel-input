@@ -12,6 +12,6 @@ writeFileSync('package.json', del(readFileSync('package.json').toString(), 'type
 let packageJson = readFileSync('package.json').toString();
 packageJson = packageJson.slice(0, packageJson.lastIndexOf('}') - 1); //strip closing }
 packageJson += `,
-    "types": "./src/lib/types/index.d.ts"
+    "types": "./types/index.d.ts"
 }`;
 writeFileSync('package.json', packageJson);
