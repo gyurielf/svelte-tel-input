@@ -37,7 +37,7 @@
 		"preview": "vite preview",
 		"release": "npx changeset publish",
 		"release:package": "cd package && npm publish",
-		"svelte-check": "svelte-kit sync && svelte-check --ignore 'dist,build,coverage,.svelte-kit,package' --threshold warning --fail-on-warnings",
+		"svelte-check": "svelte-kit sync && svelte-check --ignore 'dist,build,coverage,.svelte-kit,package' --fail-on-warnings",
 		"test": "jest",
 		"test:watch": "jest --watch",
 		"ts": "tsc --noEmit"
@@ -47,30 +47,30 @@
 		"svelte": "^3.55.0"
 	},
 	"devDependencies": {
-		"@babel/core": "^7.20.7",
+		"@babel/core": "^7.20.12",
 		"@babel/preset-env": "^7.20.2",
 		"@changesets/cli": "^2.26.0",
 		"@changesets/get-github-info": "^0.5.2",
 		"@changesets/types": "^5.2.1",
 		"@macfja/svelte-persistent-store": "^2.2.1",
 		"@sveltejs/adapter-static": "^1.0.0",
-		"@sveltejs/kit": "^1.0.1",
-		"@sveltejs/package": "^1.0.1",
+		"@sveltejs/kit": "^1.0.2",
+		"@sveltejs/package": "^1.0.2",
 		"@testing-library/jest-dom": "^5.16.5",
 		"@testing-library/svelte": "^3.2.2",
-		"@types/jest": "^29.2.4",
-		"@typescript-eslint/eslint-plugin": "^5.47.1",
-		"@typescript-eslint/parser": "^5.47.1",
+		"@types/jest": "^29.2.5",
+		"@typescript-eslint/eslint-plugin": "^5.48.0",
+		"@typescript-eslint/parser": "^5.48.0",
 		"autoprefixer": "^10.4.13",
 		"babel-jest": "^29.3.1",
-		"babel-loader": "^9.1.0",
+		"babel-loader": "^9.1.2",
 		"cssnano": "^5.1.14",
 		"dotenv": "^16.0.3",
-		"eslint": "^8.30.0",
-		"eslint-config-prettier": "^8.5.0",
-		"eslint-plugin-jest": "^27.1.7",
+		"eslint": "^8.31.0",
+		"eslint-config-prettier": "^8.6.0",
+		"eslint-plugin-jest": "^27.2.0",
 		"eslint-plugin-svelte3": "^4.0.0",
-		"husky": "^8.0.2",
+		"husky": "^8.0.3",
 		"jest": "^29.3.1",
 		"jest-matchmedia-mock": "^1.1.0",
 		"micromatch": "^4.0.5",
@@ -79,7 +79,7 @@
 		"prettier": "^2.8.1",
 		"prettier-plugin-svelte": "^2.9.0",
 		"svelte-check": "^3.0.1",
-		"svelte-inview": "^3.0.1",
+		"svelte-inview": "^3.0.2",
 		"svelte-jester": "^2.3.2",
 		"svelte-loader": "^3.1.4",
 		"svelte-preprocess": "^5.0.0",
@@ -89,74 +89,7 @@
 		"tsconfig-paths-webpack-plugin": "^4.0.0",
 		"tslib": "^2.4.1",
 		"typescript": "^4.9.4",
-		"vite": "^4.0.3"
-	},
-	"standard-version": {
-		"skip": {
-			"tag": true
-		},
-		"types": [
-			{
-				"type": "chore",
-				"section": "Others (chore)",
-				"hidden": false
-			},
-			{
-				"type": "revert",
-				"section": "Reverts",
-				"hidden": false
-			},
-			{
-				"type": "feat",
-				"section": "Features",
-				"hidden": false
-			},
-			{
-				"type": "fix",
-				"section": "Bug Fixes",
-				"hidden": false
-			},
-			{
-				"type": "improvement",
-				"section": "Feature Improvements",
-				"hidden": false
-			},
-			{
-				"type": "docs",
-				"section": "Docs",
-				"hidden": false
-			},
-			{
-				"type": "style",
-				"section": "Styling",
-				"hidden": false
-			},
-			{
-				"type": "refactor",
-				"section": "Code Refactoring",
-				"hidden": false
-			},
-			{
-				"type": "perf",
-				"section": "Performance Improvements",
-				"hidden": false
-			},
-			{
-				"type": "test",
-				"section": "Tests",
-				"hidden": false
-			},
-			{
-				"type": "build",
-				"section": "Build System",
-				"hidden": false
-			},
-			{
-				"type": "ci",
-				"section": "CI",
-				"hidden": false
-			}
-		]
+		"vite": "^4.0.4"
 	},
 	"type": "module",
 	"license": "MIT"

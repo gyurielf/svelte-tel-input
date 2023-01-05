@@ -67,7 +67,7 @@ export interface TelInputValidity {
 	errorMessage?: string;
 }
 
-export type TelInputEvents = {
+export type TelInputDispatchEvents = {
 	country: CountryCode | null;
 	parseError: string;
 	parseInput: Partial<NormalizedTelNumber> | null;

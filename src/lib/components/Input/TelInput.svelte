@@ -5,9 +5,14 @@
 	import { telInputAction } from '$lib/utils/directives/telInputAction';
 	import { normalizeTelInput, getCountryForPartialE164Number } from '$lib/utils/helpers';
 	import { watcher } from '$lib/stores';
-	import type { NormalizedTelNumber, CountryCode, E164Number, TelInputEvents } from '$lib/types';
+	import type {
+		NormalizedTelNumber,
+		CountryCode,
+		E164Number,
+		TelInputDispatchEvents
+	} from '$lib/types';
 
-	const dispatch = createEventDispatcher<TelInputEvents>();
+	const dispatch = createEventDispatcher<TelInputDispatchEvents>();
 	export let country: CountryCode | null;
 	export let value: E164Number | null = null;
 	export let parsedTelInput: Partial<NormalizedTelNumber> | null = null;
