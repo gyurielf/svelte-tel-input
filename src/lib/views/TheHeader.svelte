@@ -1,16 +1,16 @@
-<script>
+<script lang="ts">
 	import ThemeSwitch from './ThemeSwitch.svelte';
 </script>
 
 <header>
 	<div
-		class="fixed top-0 z-30 w-full flex-none transform-gpu transition-transform duration-150 ease-out bg-transparent backdrop-blur dark:bg-transparent translate-y-0 border-b border-b-gray-400 dark:border-b-gray-50"
+		class="fixed top-0 z-30 w-full flex-none transform-gpu transition-transform duration-150 ease-out bg-transparent backdrop-blur translate-y-0 border-b border-b-gray-400 dark:border-b-gray-50"
 	>
 		<div
 			class="flex w-full flex-col items-center justify-center mx-auto container p-[1.25rem_0] h-[5rem]"
 		>
-			<div class="flex w-full items-center">
-				<h1 class="text-2xl">SVELTE-TEL-INPUT</h1>
+			<div class="flex w-full items-center px-2">
+				<h1 class="text-2xl">SVELTE TEL INPUT</h1>
 				<div class="flex-1" />
 				<div class="lg:hidden -mr-2 flex items-center">
 					<div class="relative inline-block text-left not-prose">

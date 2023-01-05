@@ -6,17 +6,16 @@
 	import { normalizedCountries } from '$lib/assets';
 
 	// Tel input
-	let rawPhoneInput: string;
+	let initialValue: string;
 
 	// Countries
 	let selectedCountry: Country | null = null;
+	let parsedPhoneInput: NormalizedTelNumber;
 
 	// Validity of inputs
 	let dataIsValid = {
 		enteredTelInput: true
 	};
-
-	let parsedPhoneInput: NormalizedTelNumber;
 
 	onMount(async () => {
 		// Get current country on initialization by GeoIp
@@ -27,9 +26,9 @@
 </script>
 
 <TelInput
-	country={selectedCountry?.iso2}
+	country={selectedCountry?.iso2 || null}
 	bind:parsedPhoneInput
-	bind:rawPhoneInput
+	bind:initialValue
 	class="px-4 py-1 text-gray-900 focus:outline-none rounded-sm {dataIsValid.enteredTelInput
 		? ' border-none border-0'
 		: 'border-2 border-red-600'}"

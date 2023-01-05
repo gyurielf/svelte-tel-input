@@ -25,18 +25,30 @@ npm install --save svelte-tel-input
 ```html
 <script lang="ts">
 	import TelInput from 'svelte-tel-input';
-	import type { NormalizedTelNumber, CountryCode } from 'svelte-tel-input/types';
+	import type { NormalizedTelNumber, CountryCode, E164Number } from 'svelte-tel-input/types';
 
 	// Any Country Code Alpha-2 (ISO 3166)
 	let country: CountryCode = 'US';
-
 	let parsedTelInput: NormalizedTelNumber | null = null;
+	let value: E164Number | null = null;
 </script>
 
-<TelInput {country} bind:parsedTelInput class="any class passed down" />
+<TelInput {country} bind:parsedTelInput bind:value class="any class passed down" />
 ```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+## API
+
+The default export of the library is the main TelInput component. It has the following props:
+
+| Props          | Type                 | Default Value | Usage                                                                                    |
+| -------------- | -------------------- | ------------- | ---------------------------------------------------------------------------------------- |
+| disabled       | `boolean`            | `false`       | It's block the parser and prevent entering input                                         |
+| valid          | `boolean`            | `true`        | Indicates whether the entered tel number is valid or not.                                |
+| value          | `E164Number \| null` | `null`        | [E164](https://en.wikipedia.org/wiki/E.164) is the international format of phone numbers |
+| parsedTelInput | `NormalizedTelInput` | `??`          | All of the formatted results of the tel input                                            |
+| class          | `string`             | ``            | You can pass down any classname to the component                                         |
 
 ## Features
 
