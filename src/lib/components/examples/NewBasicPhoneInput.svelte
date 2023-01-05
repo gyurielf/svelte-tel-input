@@ -37,13 +37,13 @@
 
 	$: dataIsValid.enteredTelInput = isValid;
 
-	const setSelectedCountry = (countryCode: string) => {
-		if (countryCode === 'null') {
-			selectedCountry = null;
-			return;
-		}
-		selectedCountry = countryCode as CountryCode;
-	};
+	// const setSelectedCountry = (countryCode: string) => {
+	// 	if (countryCode === 'null') {
+	// 		selectedCountry = null;
+	// 		return;
+	// 	}
+	// 	selectedCountry = countryCode as CountryCode;
+	// };
 </script>
 
 <div class="flex">

@@ -15,7 +15,12 @@ export default {
 	package: {
 		exports: (filepath) => {
 			if (filepath.endsWith('.d.ts')) return false;
-			if (filepath === 'index.ts' || filepath === 'index.js') return true;
+			if (
+				filepath === 'index.ts' ||
+				filepath === 'index.js' ||
+				filepath.endsWith('styles/flags.css')
+			)
+				return true;
 		},
 		files: (filepath) => {
 			return mm.all(filepath, [

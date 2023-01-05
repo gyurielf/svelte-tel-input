@@ -38,5 +38,8 @@ export const toggleTheme = (): void => {
 		classList.add(preferedTheme);
 	}
 
-	theme.update((newTheme) => (newTheme = preferedTheme));
+	theme.update((newTheme) => {
+		newTheme = preferedTheme;
+		return newTheme;
+	});
 };

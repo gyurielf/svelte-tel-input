@@ -29,7 +29,7 @@
 		"generate:exports": "bash ./src/lib/exportGen.sh",
 		"lint": "npm run prettier:check && npm run eslint && npm run ts && npm run svelte-check",
 		"lint:fix": "npm run eslint:fix && npm run prettier:fix",
-		"package": "svelte-kit sync && svelte-package",
+		"package": "node ./zarf/scripts/pre-build.js && svelte-kit sync && svelte-package && node ./zarf/scripts/post-build.js",
 		"prettier": "prettier",
 		"prettier:check": "prettier --check --plugin-search-dir=. .",
 		"prettier:fix": "prettier --write --plugin-search-dir=. .",
@@ -66,6 +66,7 @@
 		"babel-loader": "^9.1.2",
 		"cssnano": "^5.1.14",
 		"dotenv": "^16.0.3",
+		"edit-package-json": "^0.8.6",
 		"eslint": "^8.31.0",
 		"eslint-config-prettier": "^8.6.0",
 		"eslint-plugin-jest": "^27.2.0",
@@ -92,5 +93,11 @@
 		"vite": "^4.0.4"
 	},
 	"type": "module",
-	"license": "MIT"
+	"license": "MIT",
+	"types": "./src/lib/types/index.d.ts",
+	"exports": {
+		".": "./src/lib/index.ts",
+		"./styles/*": "./src/lib/styles/*",
+		"./types/*": "./src/lib/types/*"
+	}
 }

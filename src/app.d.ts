@@ -4,17 +4,11 @@
 // for information about these interfaces
 // and what to do when importing types
 declare namespace App {
-	interface Locals {
-		userid: string;
-	}
-
-	interface ImportMetaEnv {
-		VITE_ENV_MODE: 'dev' | 'prod';
-	}
-
+	// interface Locals {}
+	// interface PageData {}
+	// interface Error {}
 	// interface Platform {}
-
-	// interface Session {}
-
-	// interface Stuff {}
+	// interface ImportMetaEnv {
+	// 	VITE_ENV_MODE: 'dev' | 'prod';
+	// }
 }
