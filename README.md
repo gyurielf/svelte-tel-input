@@ -6,7 +6,14 @@
 
 > Lightweight svelte tel/phone input standardizer.
 
-The package is in `BETA` stage, expect bugs.
+The package is recently bumped to `1.0`. If you experience any problems, please open an issue, to be able to me to fix it.
+
+## Goals
+
+-   Solve the problem that a users can enter the same phone number in different formats.
+-   Storing a phone number in a standard format, that can be indexable and searchable in any database.
+-   Should be accessible for the the browser. Eg. for a `<a href="tel+36201234567 />`.
+-   The stored phone number format can be useable for any SMS gateway(e.g for 2FA) and if somebody can call the number from anywhere, it should work.
 
 ## Installation
 
@@ -41,23 +48,8 @@ npm install --save svelte-tel-input
 	// You must use E164 number format. It's guarantee the parsing and storing consistency.
 	let value: E164Number | null = '+36301234567';
 
-	// Optional extended information about the parsed phonen umber
+	// Optional - Extended information about the parsed phone number
 	let parsedTelInput: NormalizedTelNumber | null = null;
-	/** Output:
-	{
-	     countryCode: 'HU',
-	     isValid: true,
-	     phoneNumber: '+36301234567',
-	     countryCallingCode: '36',
-	     formattedNumber: '+36 30 123 4567',
-	     nationalNumber: '301234567',
-	     formatInternational: '+36 30 123 4567',
-	     formatOriginal: '30 123 4567',
-	     formatNational: '06 30 123 4567',
-	     uri: 'tel:+36301234567',
-	     e164: '+36301234567'
-	};
-    */
 </script>
 
 <TelInput bind:country bind:parsedTelInput bind:value class="any class passed down" />
@@ -82,8 +74,9 @@ The default export of the library is the main TelInput component. It has the fol
 
 ## Dependencies
 
-[libphonenumber-js](https://gitlab.com/catamphetamine/libphonenumber-js)
 [svelte](https://svelte.dev/)
+
+[libphonenumber-js](https://gitlab.com/catamphetamine/libphonenumber-js)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -104,8 +97,6 @@ The default export of the library is the main TelInput component. It has the fol
 -   [x] Add basics docs and examples
 -   [ ] Add advanced examples
 -   [ ] Improve A11Y
--   [x] Default country sould be optional. ( ip | browserLang |off )
--   [x] Simlify code and types
 
 See the [open issues](https://github.com/gyurielf/svelte-tel-input/issues) for a list of proposed features (and known issues).
 
