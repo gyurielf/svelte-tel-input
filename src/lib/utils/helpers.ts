@@ -57,8 +57,8 @@ export const isSelected = <
 		id: string;
 	}
 >(
-	itemToSelect: T,
-	selectedItem: T | undefined | null
+	itemToSelect: T | string,
+	selectedItem: (T | undefined | null) | string
 ): boolean => {
 	if (!selectedItem || selectedItem === null) {
 		return false;
@@ -78,6 +78,8 @@ export const isSelected = <
 		} else {
 			return false;
 		}
+	} else if (itemToSelect === selectedItem) {
+		return true;
 	} else {
 		return false;
 	}
