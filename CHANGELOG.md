@@ -1,5 +1,25 @@
 # svelte-tel-input
 
+## 1.0.0
+
+### Major Changes
+
+-   feat: prevent typing non-tel input characters into the input field. ([#108](https://github.com/gyurielf/svelte-tel-input/pull/108))
+
+-   fix: now you can use value prop as a single entry ([#108](https://github.com/gyurielf/svelte-tel-input/pull/108))
+
+-   feat: support monorepos ([#108](https://github.com/gyurielf/svelte-tel-input/pull/108))
+
+-   feat: sanitize pasted E164 number ([#108](https://github.com/gyurielf/svelte-tel-input/pull/108))
+
+-   feat: switch country automatically if the pasted/entered phone number contains a valid country calling code ([#108](https://github.com/gyurielf/svelte-tel-input/pull/108))
+
+-   fix: clear input on manual country change ([#108](https://github.com/gyurielf/svelte-tel-input/pull/108))
+
+### Minor Changes
+
+-   chore: tweak types ([#108](https://github.com/gyurielf/svelte-tel-input/pull/108))
+
 ## 0.14.2
 
 ### Patch Changes
