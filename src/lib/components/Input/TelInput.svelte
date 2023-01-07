@@ -14,8 +14,8 @@
 
 	const dispatch = createEventDispatcher<TelInputDispatchEvents>();
 	export let country: CountryCode | null;
-	export let value: E164Number | null = null;
-	export let parsedTelInput: Partial<NormalizedTelNumber> | null = null;
+	export let value: E164Number | null;
+	export let parsedTelInput: Partial<NormalizedTelNumber> | null;
 	export let valid = true;
 	export let disabled = false;
 	let inputValue = value;
