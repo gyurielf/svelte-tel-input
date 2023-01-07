@@ -3,7 +3,7 @@
 	import Usage from '$lib/views/Usage.svelte';
 	import { onDestroy } from 'svelte';
 
-	const headlines = ['Parse', 'Format', 'Standardize', 'Sanitize'];
+	const headlines = ['Parse', 'Format', 'Standardize', 'Sanitize', 'Normalize'];
 	let currentHeadline = 0;
 	$: headline = headlines[currentHeadline % headlines.length];
 
@@ -35,7 +35,7 @@
 						out:cubeOut={{ rotateTo: -90, duration: 600 }}>{headline}</span
 					>
 				{/key}
-				<span>phone/tel numbers easily.</span>
+				<span>phone numbers easily.</span>
 			</span>
 		</h2>
 	</div>
