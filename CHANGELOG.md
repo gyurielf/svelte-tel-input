@@ -1,5 +1,11 @@
 # svelte-tel-input
 
+## 1.0.1
+
+### Patch Changes
+
+-   fix: remove types field right before packaging ([#116](https://github.com/gyurielf/svelte-tel-input/pull/116))
+
 ## 1.0.0
 
 ### Major Changes
