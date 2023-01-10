@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
 	import TelInput from '$lib/components/Input/TelInput.svelte';
 	import { normalizedCountries } from '$lib/assets';
 	import type { NormalizedTelNumber, E164Number, CountryCode } from '$lib/types';
@@ -7,32 +6,14 @@
 	// E164 formatted value, usually you should store and use this.
 	let value: E164Number | null = '+14842918723';
 
-	// Countries
-	let selectedCountry: CountryCode | null = null;
+	// Selected country
+	let country: CountryCode | null = null;
 
+	// Validity
+	let valid: boolean;
+
+	// Phone number details
 	export let parsedTelInput: NormalizedTelNumber | null = null;
-
-	let isValid: boolean;
-	let dataIsValid = {
-		enteredTelInput: true
-	};
-
-	onMount(async () => {
-		// Get current country on initialization by GeoIp
-		// const currentCountry = await getCurrentCountry();
-		// if (currentCountry && currentCountry.length === 2)
-		// 	selectedCountry = normalizedCountries.find((el) => el.id === currentCountry) || null;
-	});
-
-	$: dataIsValid.enteredTelInput = isValid;
-
-	// const setSelectedCountry = (countryCode: string) => {
-	// 	if (countryCode === 'null') {
-	// 		selectedCountry = null;
-	// 		return;
-	// 	}
-	// 	selectedCountry = countryCode as CountryCode;
-	// };
 </script>
 
 <div class="flex">
@@ -49,27 +30,27 @@
     focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
 		aria-label="Default select example"
 		name="Country"
-		bind:value={selectedCountry}
+		bind:value={country}
 	>
-		<option value={null} hidden={selectedCountry !== null}>Please select</option>
-		{#each normalizedCountries as country (country.id)}
+		<option value={null} hidden={country !== null}>Please select</option>
+		{#each normalizedCountries as currentCountry (currentCountry.id)}
 			<option
-				value={country.iso2}
-				selected={country.iso2 === selectedCountry}
-				aria-selected={country.iso2 === selectedCountry}
+				value={currentCountry.iso2}
+				selected={currentCountry.iso2 === country}
+				aria-selected={currentCountry.iso2 === country}
 			>
-				{country.iso2} (+{country.dialCode})
+				{currentCountry.iso2} (+{currentCountry.dialCode})
 			</option>
 		{/each}
 	</select>
 
 	<TelInput
-		bind:country={selectedCountry}
-		bind:valid={isValid}
+		bind:country
+		bind:valid
 		bind:value
 		bind:parsedTelInput
 		class="px-4 py-1 w-full bg-gray-50 dark:bg-gray-700 
-        dark:placeholder-gray-400 dark:text-white text-gray-900 focus:outline-none rounded-r-lg {dataIsValid.enteredTelInput
+        dark:placeholder-gray-400 dark:text-white text-gray-900 focus:outline-none rounded-r-lg {valid
 			? 'border border-gray-300 border-l-gray-100 dark:border-l-gray-700 dark:border-gray-600'
 			: 'border-2 border-red-600'}"
 	/>

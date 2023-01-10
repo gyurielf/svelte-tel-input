@@ -1,14 +1,10 @@
-import preprocess from 'svelte-preprocess';
 import staticAdapter from '@sveltejs/adapter-static';
 import mm from 'micromatch';
+import { vitePreprocess } from '@sveltejs/kit/vite';
 
 /** @type {import('@sveltejs/kit').Config} */
 export default {
-	preprocess: [
-		preprocess({
-			postcss: true
-		})
-	],
+	preprocess: [vitePreprocess()],
 	kit: {
 		adapter: staticAdapter()
 	},
