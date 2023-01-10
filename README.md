@@ -39,7 +39,7 @@ npm install --save svelte-tel-input
 
 ```html
 <script lang="ts">
-	import TelInput from 'svelte-tel-input';
+	import TelInput, { normalizedCountries } from 'svelte-tel-input';
 	import type { NormalizedTelNumber, CountryCode, E164Number } from 'svelte-tel-input/types';
 
 	// Any Country Code Alpha-2 (ISO 3166)
@@ -48,16 +48,62 @@ npm install --save svelte-tel-input
 	// You must use E164 number format. It's guarantee the parsing and storing consistency.
 	let value: E164Number | null = '+36301234567';
 
-	// Optional - Extended information about the parsed phone number
+    // Validity
+    let valid = true;
+
+	// Optional - Extended details about the parsed phone number
 	let parsedTelInput: NormalizedTelNumber | null = null;
 </script>
 
-<TelInput bind:country bind:parsedTelInput bind:value class="any class passed down" />
+<div class="wrapper">
+	<select
+		class="country-select {!valid && 'invalid'}"
+		aria-label="Default select example"
+		name="Country"
+		bind:value={selectedCountry}
+	>
+		<option value={null} hidden={selectedCountry !== null}>Please select</option>
+		{#each normalizedCountries as country (country.id)}
+			<option
+				value={country.iso2}
+				selected={country.iso2 === selectedCountry}
+				aria-selected={country.iso2 === selectedCountry}
+			>
+				{country.iso2} (+{country.dialCode})
+			</option>
+		{/each}
+	</select>
+    <TelInput bind:country bind:value bind:valid bind:parsedTelInput class="basic-tel-input {!isValid && 'invalid'}" />
+</div>
+
+<style>
+  .wrapper :global(.basic-tel-input) {
+      height: 32px;
+      padding-left: 12px;
+      padding-right: 12px;
+      border-radius: 6px;
+      border: 1px solid;
+      outline: none;
+  }
+
+  .wrapper :global(.country-select) {
+      height: 36px;
+      padding-left: 12px;
+      padding-right: 12px;
+      border-radius: 6px;
+      border: 1px solid;
+      outline: none;
+  }
+
+  .wrapper :global(.invalid) {
+    border-color: red;
+  }
+</style>
 ```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-## API
+## Props
 
 The default export of the library is the main TelInput component. It has the following props:
 
