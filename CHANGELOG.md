@@ -1,5 +1,15 @@
 # svelte-tel-input
 
+## 1.0.2
+
+### Patch Changes
+
+-   chore: extend REPL example ([#119](https://github.com/gyurielf/svelte-tel-input/pull/119))
+
+-   chore: polish readme ([#119](https://github.com/gyurielf/svelte-tel-input/pull/119))
+
+-   chore: update dependencies ([#119](https://github.com/gyurielf/svelte-tel-input/pull/119))
+
 ## 1.0.1
 
 ### Patch Changes
