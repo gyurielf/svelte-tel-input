@@ -1,5 +1,13 @@
 # svelte-tel-input
 
+## 1.1.0
+
+### Minor Changes
+
+-   feat: vitests and e2e (playwright) added ([#123](https://github.com/gyurielf/svelte-tel-input/pull/123))
+
+-   chore: remove unnecessary dependencies ([#123](https://github.com/gyurielf/svelte-tel-input/pull/123))
+
 ## 1.0.2
 
 ### Patch Changes
