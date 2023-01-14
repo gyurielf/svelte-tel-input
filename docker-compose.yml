@@ -1,7 +1,7 @@
 version: '3.9'
 services:
     node:
-        image: 'node:16.14'
+        image: 'node:16.19'
         container_name: svelte-tel-input
         working_dir: /home/node/app
         command: 'sh -c "npm i && npm run prepare:husky && npm run dev -- --host"'
