@@ -1,14 +1,13 @@
-/// <reference types="@sveltejs/kit" />
-
 // See https://kit.svelte.dev/docs/types#app
 // for information about these interfaces
 // and what to do when importing types
-declare namespace App {
-	// interface Locals {}
-	// interface PageData {}
-	// interface Error {}
-	// interface Platform {}
-	// interface ImportMetaEnv {
-	// 	VITE_ENV_MODE: 'dev' | 'prod';
-	// }
+declare global {
+	declare namespace App {
+		// interface Error {}
+		// interface Locals {}
+		// interface PageData {}
+		// interface Platform {}
+	}
 }
+
+export {};
