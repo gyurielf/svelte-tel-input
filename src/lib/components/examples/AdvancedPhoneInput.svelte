@@ -1,42 +1,30 @@
-<!-- <script lang="ts">
+<script lang="ts">
 	import { createEventDispatcher } from 'svelte';
 	import { normalizedCountries } from '$lib/assets';
 	import { clickOutsideAction } from '$lib/utils/directives/clickOutsideAction';
 	import TelInput from '$lib/components/Input/TelInput.svelte';
 	import { isSelected } from '$lib/utils/helpers';
-	import type { NormalizedTelNumber, Country, CountrySelectEvents } from '$lib/types';
+	import type {
+		NormalizedTelNumber,
+		CountrySelectEvents,
+		CountryCode,
+		E164Number
+	} from '$lib/types';
 
-	export let searchText = '';
-	export let selected: Country | null = {
-		id: 'HU',
-		label: 'Hungary (Magyarország) +36',
-		name: 'Hungary (Magyarország)',
-		iso2: 'HU',
-		dialCode: '36',
-		priority: 0,
-		areaCodes: null
-	};
-
+	let searchText = '';
+	let selected: CountryCode;
 	export let clickOutside = true;
 	export let closeOnClick = true;
 	export let disabled = false;
-	export let parsedPhoneInput: NormalizedTelNumber | null = {
-		countryCode: 'HU',
-		isValid: true,
-		phoneNumber: '+36301234567',
-		countryCallingCode: '36',
-		formattedNumber: '+36 30 123 4567',
-		nationalNumber: '301234567',
-		formatInternational: '+36 30 123 4567',
-		formatOriginal: '30 123 4567',
-		formatNational: '06 30 123 4567',
-		uri: 'tel:+36301234567',
-		e164: '+36301234567'
-	};
+	export let parsedTelInput: NormalizedTelNumber | null = null;
+	export let value: E164Number | null;
+
+	$: selectedCountryDialCode =
+		normalizedCountries.find((el) => el.iso2 === selected)?.dialCode || null;
 
 	let isOpen = false;
 
-	$: isValid = parsedPhoneInput?.isValid ?? false;
+	$: isValid = parsedTelInput?.isValid ?? false;
 
 	const toggleDropDown = (e: Event) => {
 		e.preventDefault();
@@ -66,20 +54,12 @@
 					.sort((a, b) => (a.label < b.label ? -1 : 1))
 			: normalizedCountries;
 
-	const handleSelect = (val: Country, e?: Event) => {
+	const handleSelect = (val: CountryCode, e?: Event) => {
 		if (disabled) return;
 		e?.preventDefault();
-		if (typeof selected === 'object' && typeof val === 'object' && selected?.id && val?.id) {
-			if (typeof selected === 'object' && typeof val === 'object' && selected.id !== val.id) {
-				selected = val;
-				onChange(val);
-				selectClick();
-			} else {
-				dispatch('same', { option: val });
-				selectClick();
-			}
-		} else if (
-			((selected === undefined || selected === null) && typeof val === 'object') ||
+		if (
+			selected === undefined ||
+			selected === null ||
 			(typeof selected === typeof val && selected !== val)
 		) {
 			selected = val;
@@ -91,9 +71,9 @@
 		}
 	};
 
-	const dispatch = createEventDispatcher<CountrySelectEvents<Country>>();
+	const dispatch = createEventDispatcher<CountrySelectEvents<CountryCode>>();
 
-	const onChange = (selectedCountry: Country) => {
+	const onChange = (selectedCountry: CountryCode) => {
 		dispatch('change', { option: selectedCountry });
 	};
 </script>
@@ -113,8 +93,8 @@
 	>
 		{#if selected && selected !== null}
 			<div class="inline-flex items-center text-left">
-				<span class="flag flag-{selected.iso2.toLowerCase()} flex-shrink-0 mr-3" />
-				<span class=" text-gray-500">+{selected.dialCode}</span>
+				<span class="flag flag-{selected.toLowerCase()} flex-shrink-0 mr-3" />
+				<span class=" text-gray-500">+{selectedCountryDialCode}</span>
 			</div>
 		{:else}
 			Please select
@@ -158,9 +138,10 @@
 					/>
 				{/if}
 				{#each filteredItems as country (country.id)}
-					{@const isActive = isSelected(country, selected)}
+					{@const isActive = isSelected(country.iso2, selected)}
 					<li role="option" aria-selected={isActive}>
 						<button
+							value={country.iso2}
 							type="button"
 							class="inline-flex py-2 px-4 w-full text-sm hover:bg-gray-100 dark:hover:bg-gray-600 
                              active:bg-gray-800 dark:active:bg-gray-800 overflow-hidden
@@ -168,7 +149,7 @@
 								? 'bg-gray-600 dark:text-white'
 								: 'dark:hover:text-white dark:text-gray-400'}"
 							on:click={(e) => {
-								handleSelect(country, e);
+								handleSelect(country.iso2, e);
 							}}
 						>
 							<div class="inline-flex items-center text-left">
@@ -187,13 +168,13 @@
 
 	<TelInput
 		id="tel-input"
-		country={selected?.iso2}
-		bind:parsedPhoneInput
+		bind:country={selected}
+		bind:parsedTelInput
+		bind:value
 		class="border border-gray-300 border-l-gray-100 dark:border-l-gray-700 dark:border-gray-600 {isValid
 			? `bg-gray-50 dark:bg-gray-700 
             dark:placeholder-gray-400 dark:text-white text-gray-900`
 			: `dark:bg-gray-700`} text-sm rounded-r-lg block w-full p-2.5 
            focus:outline-none"
 	/>
-</div> -->
-<h1>kaka</h1>
+</div>
