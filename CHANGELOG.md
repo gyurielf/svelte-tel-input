@@ -1,5 +1,15 @@
 # svelte-tel-input
 
+## 1.1.1
+
+### Patch Changes
+
+-   fix: advanced input handleSelect method fix ([#125](https://github.com/gyurielf/svelte-tel-input/pull/125))
+
+-   fix: modify style export in package.json and in post-build.js ([#125](https://github.com/gyurielf/svelte-tel-input/pull/125))
+
+-   fix: set flags assets import relative in flags.css ([#125](https://github.com/gyurielf/svelte-tel-input/pull/125))
+
 ## 1.1.0
 
 ### Minor Changes
