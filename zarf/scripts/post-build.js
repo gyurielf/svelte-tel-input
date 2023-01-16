@@ -11,7 +11,7 @@ packageJson += `,
 	"types": "./src/lib/types/index.d.ts",
 	"exports": {
 		".": "./src/lib/index.ts",
-		"./styles/*": "./src/lib/styles/*",
+		"./styles/*": "./src/lib/styles/flags.css",
 		"./types/*": "./src/lib/types/*"
 	}
 }
