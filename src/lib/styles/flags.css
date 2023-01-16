@@ -7,7 +7,7 @@ img.flag {
 	width: 30px;
 }
 .flag {
-	background: url($lib/assets/flags_responsive.png) no-repeat;
+	background: url(../assets/flags_responsive.png) no-repeat;
 	background-size: 100%;
 }
 .flag-ad {

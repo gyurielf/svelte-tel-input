@@ -1,6 +1,6 @@
 <script lang="ts">
 	import BasicPhoneInput from '$lib/components/examples/BasicPhoneInput.svelte';
-	import AdvancedTelInput from '$lib/components/Input/AdvancedTelInput.svelte';
+	import AdvancedTelInput from '$lib/components/examples/AdvancedPhoneInput.svelte';
 	import PayloadBlock from '$lib/components/utils/PayloadBlock.svelte';
 	import type { NormalizedTelNumber, E164Number } from '$lib/types';
 

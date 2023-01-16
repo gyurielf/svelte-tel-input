@@ -93,8 +93,6 @@
 			} else {
 				handleParsePhoneNumber(value);
 			}
-		} else if (parsedTelInput && parsedTelInput.phoneNumber) {
-			handleParsePhoneNumber(parsedTelInput.phoneNumber, country);
 		}
 	};
 

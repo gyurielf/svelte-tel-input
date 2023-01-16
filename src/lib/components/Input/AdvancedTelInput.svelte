@@ -58,7 +58,8 @@
 		if (disabled) return;
 		e?.preventDefault();
 		if (
-			((selected === undefined || selected === null) && typeof val === 'object') ||
+			selected === undefined ||
+			selected === null ||
 			(typeof selected === typeof val && selected !== val)
 		) {
 			selected = val;
@@ -140,6 +141,7 @@
 					{@const isActive = isSelected(country.iso2, selected)}
 					<li role="option" aria-selected={isActive}>
 						<button
+							value={country.iso2}
 							type="button"
 							class="inline-flex py-2 px-4 w-full text-sm hover:bg-gray-100 dark:hover:bg-gray-600 
                              active:bg-gray-800 dark:active:bg-gray-800 overflow-hidden
