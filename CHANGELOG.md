@@ -1,5 +1,13 @@
 # svelte-tel-input
 
+## 1.1.2
+
+### Patch Changes
+
+-   feat: seo improvement and deps update ([#127](https://github.com/gyurielf/svelte-tel-input/pull/127))
+
+-   fix: prevent commit to the main branch ([#127](https://github.com/gyurielf/svelte-tel-input/pull/127))
+
 ## 1.1.1
 
 ### Patch Changes
