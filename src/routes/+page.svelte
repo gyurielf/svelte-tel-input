@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { page } from '$app/stores';
+	import Seo from '$lib/components/utils/Seo.svelte';
 	import { cubeIn, cubeOut } from '$lib/utils/examples/exampleHelpers';
 	import Usage from '$lib/views/Usage.svelte';
 	import { onDestroy } from 'svelte';
@@ -16,9 +18,28 @@
 	});
 </script>
 
-<svelte:head>
-	<title>Svelte Tel Input</title>
-</svelte:head>
+<Seo
+	title="Svelte Tel Input"
+	description="Phone number standardization easily via svelte tel input."
+	openGraph={{
+		title: 'Svelte Tel Input',
+		description: 'Phone number standardization easily via svelte tel input.',
+		url: `${$page.url.href}`,
+		type: 'website'
+	}}
+	jsonLd={[
+		{
+			'@type': 'WebApplication',
+			name: 'Svelte Tel Input',
+			url: 'https://svelte-tel-input.vercel.app/',
+			logo: 'https://infiniteloop.cloud/i8logo.png',
+			sameAs: [
+				'https://svelte-tel-input.vercel.app',
+				'https://github.com/gyurielf/svelte-tel-input'
+			]
+		}
+	]}
+/>
 
 <div class="container mx-auto md:mt-6 lg:mt-14 mb-14 px-2">
 	<div
