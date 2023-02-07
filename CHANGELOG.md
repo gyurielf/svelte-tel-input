@@ -1,5 +1,11 @@
 # svelte-tel-input
 
+## 1.1.3
+
+### Patch Changes
+
+-   fix: make parsedTelInput prop optional ([#129](https://github.com/gyurielf/svelte-tel-input/pull/129))
+
 ## 1.1.2
 
 ### Patch Changes
