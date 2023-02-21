@@ -1,5 +1,11 @@
 # svelte-tel-input
 
+## 1.2.0
+
+### Minor Changes
+
+-   fix: improved validation ([#132](https://github.com/gyurielf/svelte-tel-input/pull/132))
+
 ## 1.1.3
 
 ### Patch Changes
