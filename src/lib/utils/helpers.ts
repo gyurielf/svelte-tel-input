@@ -1,4 +1,4 @@
-import { AsYouType, Metadata, getCountryCallingCode } from 'libphonenumber-js/core';
+import { AsYouType, Metadata, getCountryCallingCode } from 'libphonenumber-js/max';
 import type { PhoneNumber, MetadataJson, Countries, E164Number, CountryCode } from '$lib/types';
 
 export const capitalize = (str: string) => {
@@ -85,13 +85,13 @@ export const isSelected = <
 	}
 };
 
-export const getInternationalPhoneNumberPrefix = (country: CountryCode, metadata: MetadataJson) => {
+export const getInternationalPhoneNumberPrefix = (country: CountryCode) => {
 	const ONLY_DIGITS_REGEXP = /^\d+$/;
 	// Standard international phone number prefix: "+" and "country calling code".
-	let prefix = '+' + getCountryCallingCode(country, metadata);
+	let prefix = '+' + getCountryCallingCode(country);
 	// Get "leading digits" for a phone number of the country.
 	// If there're "leading digits" then they can be part of the prefix too.
-	const newMetadata = new Metadata(metadata);
+	const newMetadata = new Metadata();
 	const leadingDigits = newMetadata.numberingPlan?.leadingDigits();
 	if (leadingDigits && ONLY_DIGITS_REGEXP.test(leadingDigits)) {
 		prefix += leadingDigits;
@@ -104,18 +104,13 @@ export const getInternationalPhoneNumberPrefix = (country: CountryCode, metadata
  * for a national (significant) number for the country.
  * @param  {string} number - A possibly incomplete phone number digits string. Can be a possibly incomplete E.164 phone number.
  * @param  {string} country
- * @param  {object} metadata - `libphonenumber-js` metadata.
  * @return {string} Can be empty.
  */
-export const trimNumber = (number: E164Number, country: CountryCode, metadata: MetadataJson) => {
-	const nationalSignificantNumberPart = getNationalSignificantNumberDigits(
-		number,
-		country,
-		metadata
-	);
+export const trimNumber = (number: E164Number, country: CountryCode) => {
+	const nationalSignificantNumberPart = getNationalSignificantNumberDigits(number, country);
 	if (nationalSignificantNumberPart) {
 		const overflowDigitsCount =
-			nationalSignificantNumberPart.length - getMaxNumberLength(country, metadata);
+			nationalSignificantNumberPart.length - getMaxNumberLength(country);
 		if (overflowDigitsCount > 0) {
 			return number.slice(0, number.length - overflowDigitsCount);
 		}
@@ -123,9 +118,9 @@ export const trimNumber = (number: E164Number, country: CountryCode, metadata: M
 	return number;
 };
 
-export const getMaxNumberLength = (country: CountryCode, metadata: MetadataJson) => {
+export const getMaxNumberLength = (country: CountryCode) => {
 	// Get "possible lengths" for a phone number of the country.
-	const newMetadata = new Metadata(metadata);
+	const newMetadata = new Metadata();
 	newMetadata.selectNumberingPlan(country);
 	// Return the last "possible length".
 
@@ -145,7 +140,6 @@ export const getMaxNumberLength = (country: CountryCode, metadata: MetadataJson)
  * @param {string} partialE164Number - A possibly incomplete E.164 phone number.
  * @param {string?} country - Currently selected country.
  * @param {string[]?} countries - A list of available countries. If not passed then "all countries" are assumed.
- * @param  {object} metadata - `libphonenumber-js` metadata.
  * @return {string?}
  */
 export const getCountryForPartialE164Number = (
@@ -153,24 +147,20 @@ export const getCountryForPartialE164Number = (
 	{
 		country,
 		countries,
-		required,
-		metadata
+		required
 	}: {
 		country?: CountryCode;
 		countries?: Countries[];
 		required?: boolean;
-		metadata: MetadataJson;
-	}
+	} = {}
 ) => {
 	if (partialE164Number === '+') {
 		// Don't change the currently selected country yet.
 		return country;
 	}
 
-	const derived_country = getCountryFromPossiblyIncompleteInternationalPhoneNumber(
-		partialE164Number,
-		metadata
-	);
+	const derived_country =
+		getCountryFromPossiblyIncompleteInternationalPhoneNumber(partialE164Number);
 
 	// If a phone number is being input in international form
 	// and the country can already be derived from it,
@@ -181,11 +171,7 @@ export const getCountryForPartialE164Number = (
 	// If "International" country option has not been disabled
 	// and the international phone number entered doesn't correspond
 	// to the currently selected country then reset the currently selected country.
-	else if (
-		country &&
-		!required &&
-		!couldNumberBelongToCountry(partialE164Number, country, metadata)
-	) {
+	else if (country && !required && !couldNumberBelongToCountry(partialE164Number, country)) {
 		return undefined;
 	}
 
@@ -196,14 +182,10 @@ export const getCountryForPartialE164Number = (
 /**
  * Determines the country for a given (possibly incomplete) E.164 phone number.
  * @param  {string} number - A possibly incomplete E.164 phone number.
- * @param  {object} metadata - `libphonenumber-js` metadata.
  * @return {string?}
  */
-export const getCountryFromPossiblyIncompleteInternationalPhoneNumber = (
-	number: E164Number,
-	metadata: MetadataJson
-) => {
-	const formatter = new AsYouType(undefined, metadata);
+export const getCountryFromPossiblyIncompleteInternationalPhoneNumber = (number: E164Number) => {
+	const formatter = new AsYouType();
 	formatter.input(number);
 	// // `001` is a special "non-geograpical entity" code
 	// // in Google's `libphonenumber` library.
@@ -220,16 +202,11 @@ export const getCountryFromPossiblyIncompleteInternationalPhoneNumber = (
  * National significant number returned doesn't come with a national prefix.
  * @param {string} number - National number digits. Or possibly incomplete E.164 phone number.
  * @param {string?} country
- * @param {object} metadata - `libphonenumber-js` metadata.
  * @return {string} [result]
  */
-export const getNationalSignificantNumberDigits = (
-	number: E164Number,
-	country: CountryCode,
-	metadata: MetadataJson
-) => {
+export const getNationalSignificantNumberDigits = (number: E164Number, country: CountryCode) => {
 	// Create "as you type" formatter.
-	const formatter = new AsYouType(country, metadata);
+	const formatter = new AsYouType(country);
 	// Input partial national phone number.
 	formatter.input(number);
 	// Return the parsed partial national phone number.
@@ -243,12 +220,8 @@ export const getNationalSignificantNumberDigits = (
  * @param  {CountryCode} country
  * @return {boolean}
  */
-export const couldNumberBelongToCountry = (
-	number: E164Number,
-	country: CountryCode,
-	metadata: MetadataJson
-) => {
-	const intlPhoneNumberPrefix = getInternationalPhoneNumberPrefix(country, metadata);
+export const couldNumberBelongToCountry = (number: E164Number, country: CountryCode) => {
+	const intlPhoneNumberPrefix = getInternationalPhoneNumberPrefix(country);
 	let i = 0;
 	while (i < number.length && i < intlPhoneNumberPrefix.length) {
 		if (number[i] !== intlPhoneNumberPrefix[i]) {

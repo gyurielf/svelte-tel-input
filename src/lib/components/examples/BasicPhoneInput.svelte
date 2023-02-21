@@ -4,7 +4,7 @@
 	import type { NormalizedTelNumber, E164Number, CountryCode } from '$lib/types';
 
 	// E164 formatted value, usually you should store and use this.
-	let value: E164Number | null = '+14842918723';
+	export let value: E164Number | null;
 
 	// Selected country
 	let country: CountryCode | null = null;

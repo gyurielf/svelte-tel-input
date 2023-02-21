@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { createEventDispatcher, onMount } from 'svelte';
-	import metadata from 'libphonenumber-js/metadata.min.json';
-	import { parsePhoneNumberWithError, ParseError } from 'libphonenumber-js';
+	import { parsePhoneNumberWithError, ParseError } from 'libphonenumber-js/max';
 	import { telInputAction } from '$lib/utils/directives/telInputAction';
 	import { normalizeTelInput, getCountryForPartialE164Number } from '$lib/utils/helpers';
 	import { watcher } from '$lib/stores';
@@ -36,7 +35,7 @@
 		currCountry: CountryCode | null = null
 	) => {
 		if (input) {
-			const numberHasCountry = getCountryForPartialE164Number(input, { metadata });
+			const numberHasCountry = getCountryForPartialE164Number(input);
 
 			if (numberHasCountry && numberHasCountry !== prevCountry) {
 				updateCountry(numberHasCountry);
@@ -86,7 +85,7 @@
 		if (value && country) {
 			handleParsePhoneNumber(value, country);
 		} else if (value) {
-			const numberHasCountry = getCountryForPartialE164Number(value, { metadata });
+			const numberHasCountry = getCountryForPartialE164Number(value);
 			if (numberHasCountry) {
 				updateCountry(numberHasCountry);
 				handleParsePhoneNumber(value, country);
