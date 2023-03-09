@@ -7,6 +7,6 @@ export {
 	normalizeTelInput,
 	getCountryForPartialE164Number
 } from './utils/helpers';
-export { parsePhoneNumberWithError } from 'libphonenumber-js/max';
+export { parsePhoneNumberWithError, ParseError } from 'libphonenumber-js/max';
 export { clickOutsideAction } from './utils/directives/clickOutsideAction';
 export { normalizedCountries } from './assets';
