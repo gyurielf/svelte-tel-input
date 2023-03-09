@@ -1,5 +1,11 @@
 # svelte-tel-input
 
+## 1.3.0
+
+### Minor Changes
+
+-   fix: validation on select all and delete ([#137](https://github.com/gyurielf/svelte-tel-input/pull/137))
+
 ## 1.2.0
 
 ### Minor Changes
