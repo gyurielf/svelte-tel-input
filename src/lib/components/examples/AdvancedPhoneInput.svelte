@@ -24,7 +24,7 @@
 
 	let isOpen = false;
 
-	$: isValid = parsedTelInput?.isValid ?? false;
+	let isValid: boolean;
 
 	const toggleDropDown = (e: Event) => {
 		e.preventDefault();
@@ -171,6 +171,7 @@
 		bind:country={selected}
 		bind:parsedTelInput
 		bind:value
+		bind:valid={isValid}
 		class="border border-gray-300 border-l-gray-100 dark:border-l-gray-700 dark:border-gray-600 {isValid
 			? `bg-gray-50 dark:bg-gray-700 
             dark:placeholder-gray-400 dark:text-white text-gray-900`

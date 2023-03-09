@@ -22,6 +22,7 @@ export default {
 			return mm.all(filepath, [
 				'!**/.*',
 				'!**/*.test.*',
+				'!**/*.spec.*',
 				'!**/*.sh',
 				'!**/env.*',
 				'!**/views/*',
