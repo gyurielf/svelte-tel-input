@@ -21,6 +21,7 @@
 	let prevCountry = country;
 
 	const handleInputAction = (value: string) => {
+		if (disabled) return;
 		handleParsePhoneNumber(value, country);
 	};
 
@@ -34,7 +35,7 @@
 		input: string | null,
 		currCountry: CountryCode | null = null
 	) => {
-		if (input) {
+		if (input !== null) {
 			const numberHasCountry = getCountryForPartialE164Number(input);
 
 			if (numberHasCountry && numberHasCountry !== prevCountry) {
@@ -68,16 +69,18 @@
 			}
 			value = parsedTelInput?.e164 ?? null;
 			valid = parsedTelInput?.isValid ?? false;
-
 			dispatch('valid', valid);
 			dispatch('parseInput', parsedTelInput);
 		} else {
 			if (currCountry !== prevCountry) {
 				value = null;
 				inputValue = '';
-				valid = true;
+				valid = false;
+				parsedTelInput = null;
 			}
 			prevCountry = currCountry;
+			dispatch('valid', valid);
+			dispatch('parseInput', parsedTelInput);
 		}
 	};
 
