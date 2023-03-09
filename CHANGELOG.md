@@ -1,5 +1,11 @@
 # svelte-tel-input
 
+## 1.3.2
+
+### Patch Changes
+
+-   chore: export ParseError class ([#141](https://github.com/gyurielf/svelte-tel-input/pull/141))
+
 ## 1.3.1
 
 ### Patch Changes
