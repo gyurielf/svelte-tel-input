@@ -1,5 +1,11 @@
 # svelte-tel-input
 
+## 1.3.1
+
+### Patch Changes
+
+-   chore: extend method exports ([#139](https://github.com/gyurielf/svelte-tel-input/pull/139))
+
 ## 1.3.0
 
 ### Minor Changes
