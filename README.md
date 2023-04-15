@@ -6,15 +6,6 @@
 
 > Lightweight svelte tel/phone input standardizer.
 
-The package is recently bumped to `1.0`. If you experience any problems, please open an issue, to be able to me to fix it.
-
-## Goals
-
--   Solve the problem that a users can enter the same phone number in different formats.
--   Storing a phone number in a standard format, that can be indexable and searchable in any database.
--   Should be accessible for the the browser. Eg. for a `<a href="tel+36201234567 />`.
--   The stored phone number format can be useable for any SMS gateway(e.g for 2FA) and if somebody can call the number from anywhere, it should work.
-
 ## Installation
 
 Svelte Tel Input is distributed via [npm](https://www.npmjs.com/package/svelte-tel-input).
@@ -27,9 +18,9 @@ npm install --save svelte-tel-input
 
 -   Parse and validate phone number.You can store one exact format (`E164`), no matter how users type their phone numbers.
 -   Format (specified to its country), to make it more readable.
--   Optionally it can set the user's current country automatically, via IP lookup.
--   Prevent non-digits typing into the input, except the `+` sign (and `space` optionally).
--   Handle copy-pasted phone numbers, it's sanitize non-digit characters except the `+` sign (and `space` optionally).
+-   Prevent non-digits typing into the input, except the leading `+` sign (and `space` optionally).
+-   Handle copy-pasted phone numbers, it's sanitize non-digit characters except the leading `+` sign (and `space` optionally).
+-   Automatic placeholder generation for the selected country.
 
 ## Usage
 
@@ -39,14 +30,14 @@ npm install --save svelte-tel-input
 
 ```html
 <script lang="ts">
-	import TelInput, { normalizedCountries } from 'svelte-tel-input';
+	import { TelInput, normalizedCountries } from 'svelte-tel-input';
 	import type { NormalizedTelNumber, CountryCode, E164Number } from 'svelte-tel-input/types';
 
 	// Any Country Code Alpha-2 (ISO 3166)
 	let country: CountryCode | null = 'HU';
 
 	// You must use E164 number format. It's guarantee the parsing and storing consistency.
-	let value: E164Number | null = '+36301234567';
+	let value: E164Number | null = '+3630123456ncu7';
 
     // Validity
     let valid = true;
@@ -118,6 +109,13 @@ The default export of the library is the main TelInput component. It has the fol
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
+## Goals
+
+-   Solve the problem that a users can enter the same phone number in different formats.
+-   Storing a phone number in a standard format, that can be indexable and searchable in any database.
+-   Should be accessible for the the browser. Eg. for a `<a href="tel+36201234567 />`.
+-   The stored phone number format can be useable for any SMS gateway(e.g for 2FA) and if somebody can call the number from anywhere, it should work.
+
 ## Dependencies
 
 [svelte](https://svelte.dev/)
@@ -141,7 +139,8 @@ The default export of the library is the main TelInput component. It has the fol
 -   [x] Integrate libphonenumber
 -   [x] Implement parser
 -   [x] Add basics docs and examples
--   [ ] Add advanced examples
+-   [x] Add advanced examples
+-   [x] Generate placeholders autimatically
 -   [ ] Improve A11Y
 
 See the [open issues](https://github.com/gyurielf/svelte-tel-input/issues) for a list of proposed features (and known issues).

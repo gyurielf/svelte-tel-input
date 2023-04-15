@@ -19,7 +19,7 @@
 <div class="flex">
 	<select
 		class="form-select appearance-none
-    block   
+    block
     px-3
     py-1.5
     text-base
