@@ -152,8 +152,6 @@
 			? generatePlaceholder(country)
 			: null
 		: placeholder;
-
-	$: console.log(combinedOptions);
 </script>
 
 <input

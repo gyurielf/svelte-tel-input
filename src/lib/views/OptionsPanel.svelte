@@ -63,7 +63,7 @@
 					value={options.spaces}
 					class="sr-only peer"
 					checked={options.spaces}
-					on:change={(e) => {
+					on:change={() => {
 						options.spaces = !options.spaces;
 					}}
 				/>
@@ -83,7 +83,7 @@
 					value={options.autoPlaceholder}
 					class="sr-only peer"
 					checked={options.autoPlaceholder}
-					on:change={(e) => {
+					on:change={() => {
 						options.autoPlaceholder = !options.autoPlaceholder;
 					}}
 				/>
