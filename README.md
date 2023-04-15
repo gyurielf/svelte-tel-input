@@ -37,7 +37,7 @@ npm install --save svelte-tel-input
 	let country: CountryCode | null = 'HU';
 
 	// You must use E164 number format. It's guarantee the parsing and storing consistency.
-	let value: E164Number | null = '+3630123456ncu7';
+	let value: E164Number | null = '+36301234567';
 
     // Validity
     let valid = true;

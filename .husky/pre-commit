@@ -8,4 +8,4 @@ if [ "$currentBranch" = "main" ]; then
   exit 1
 fi
 
-docker run -u node --rm -v $PWD/.npmrc:/home/node/app/.npmrc -v $PWD/:/home/node/app -w /home/node/app node:18.14.1 sh -c '[ ! -d ./node_modules ] && npm install ; npm run lint'
+docker run -u node --rm -v $PWD/.npmrc:/home/node/app/.npmrc -v $PWD/:/home/node/app -w /home/node/app node:18.15 sh -c '[ ! -d ./node_modules ] && npm install ; npm run lint'
