@@ -1,4 +1,11 @@
-import { AsYouType, Metadata, getCountryCallingCode } from 'libphonenumber-js/max';
+import {
+	AsYouType,
+	Metadata,
+	getCountryCallingCode,
+	getExampleNumber
+} from 'libphonenumber-js/max';
+import examples from 'libphonenumber-js/mobile/examples';
+
 import type { PhoneNumber, MetadataJson, Countries, E164Number, CountryCode } from '$lib/types';
 
 export const capitalize = (str: string) => {
@@ -50,6 +57,29 @@ export const normalizeTelInput = (input?: PhoneNumber) => {
 		}).filter(([, value]) => value !== null)
 	);
 	return filteredResult;
+};
+
+export const generatePlaceholder = (
+	country: CountryCode,
+	format: 'international' | 'national' | 'default' = 'default'
+) => {
+	const examplePhoneNumber = getExampleNumber(country, examples);
+	if (examplePhoneNumber) {
+		const countryCallingCode = examplePhoneNumber.countryCallingCode;
+		switch (format) {
+			case 'international':
+				return examplePhoneNumber.formatInternational();
+			case 'national':
+				return examplePhoneNumber.formatNational();
+			default:
+				return examplePhoneNumber
+					.formatInternational()
+					.slice(countryCallingCode.length + 1)
+					.trim();
+		}
+	} else {
+		throw new Error(`No country found with this country code: ${country}`);
+	}
 };
 
 export const isSelected = <
@@ -245,7 +275,7 @@ export const isSupportedCountry = (country: CountryCode, metadata: MetadataJson)
 export const allowedCharacters = (
 	character: string,
 	{ spaces }: { spaces?: boolean } = {
-		spaces: false
+		spaces: true
 	}
 ) => {
 	const DIGITS = {

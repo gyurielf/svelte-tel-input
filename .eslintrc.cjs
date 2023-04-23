@@ -20,6 +20,7 @@ module.exports = {
 	},
 	rules: {
 		'@typescript-eslint/consistent-type-assertions': ['error', { assertionStyle: 'as' }],
-		'@typescript-eslint/array-type': ['error', { default: 'array' }]
+		'@typescript-eslint/array-type': ['error', { default: 'array' }],
+		'no-console': ['error', { allow: ['warn', 'error'] }]
 	}
 };

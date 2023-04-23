@@ -143,7 +143,7 @@
 						<button
 							value={country.iso2}
 							type="button"
-							class="inline-flex py-2 px-4 w-full text-sm hover:bg-gray-100 dark:hover:bg-gray-600 
+							class="inline-flex py-2 px-4 w-full text-sm hover:bg-gray-100 dark:hover:bg-gray-600
                              active:bg-gray-800 dark:active:bg-gray-800 overflow-hidden
                             {isActive
 								? 'bg-gray-600 dark:text-white'

@@ -41,7 +41,7 @@ export interface NormalizedTelNumber {
 	countryCallingCode: CountryCallingCode | null;
 	formattedNumber: string | null;
 	formatOriginal: string | null;
-	nationalNumber: NationalNumber | null;
+	nationalNumber: string | null;
 	formatInternational: string | null;
 	formatNational: string | null;
 	uri: string | null;
@@ -74,3 +74,25 @@ export type TelInputDispatchEvents = {
 	valid: boolean;
 	value: E164Number | null;
 };
+
+export interface TelInputOptions {
+	/**
+	 * It generates a placeholder into your input for the selected country. E.g. if the country is `US`, the placeholder will be `201 555 0123` by default.
+	 * If you need other format, you can use tha `national` -> `(201) 555-0123` and `international` -> `+1 201 555 0123` mode.
+	 * @default true
+	 */
+
+	autoPlaceholder?: boolean;
+	/**
+	 * Allow or disallow spaces in the input field
+	 * @default true
+	 */
+	spaces?: boolean;
+	/**
+	 *  "formatInternational": "+36 20 123 4567",
+	 *  "formatOriginal": "20 123 4567",
+	 *  "formatNational": "06 20 123 4567",
+	 * @default 'original'
+	 */
+	// format: 'original' | 'national' | 'international';
+}

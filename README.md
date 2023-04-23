@@ -6,15 +6,6 @@
 
 > Lightweight svelte tel/phone input standardizer.
 
-The package is recently bumped to `1.0`. If you experience any problems, please open an issue, to be able to me to fix it.
-
-## Goals
-
--   Solve the problem that a users can enter the same phone number in different formats.
--   Storing a phone number in a standard format, that can be indexable and searchable in any database.
--   Should be accessible for the the browser. Eg. for a `<a href="tel+36201234567 />`.
--   The stored phone number format can be useable for any SMS gateway(e.g for 2FA) and if somebody can call the number from anywhere, it should work.
-
 ## Installation
 
 Svelte Tel Input is distributed via [npm](https://www.npmjs.com/package/svelte-tel-input).
@@ -27,9 +18,9 @@ npm install --save svelte-tel-input
 
 -   Parse and validate phone number.You can store one exact format (`E164`), no matter how users type their phone numbers.
 -   Format (specified to its country), to make it more readable.
--   Optionally it can set the user's current country automatically, via IP lookup.
--   Prevent non-digits typing into the input, except the `+` sign (and `space` optionally).
--   Handle copy-pasted phone numbers, it's sanitize non-digit characters except the `+` sign (and `space` optionally).
+-   Prevent non-digits typing into the input, except the leading `+` sign (and `space` optionally).
+-   Handle copy-pasted phone numbers, it's sanitize non-digit characters except the leading `+` sign (and `space` optionally).
+-   Automatic placeholder generation for the selected country.
 
 ## Usage
 
@@ -39,7 +30,7 @@ npm install --save svelte-tel-input
 
 ```html
 <script lang="ts">
-	import TelInput, { normalizedCountries } from 'svelte-tel-input';
+	import { TelInput, normalizedCountries } from 'svelte-tel-input';
 	import type { NormalizedTelNumber, CountryCode, E164Number } from 'svelte-tel-input/types';
 
 	// Any Country Code Alpha-2 (ISO 3166)
@@ -107,16 +98,25 @@ npm install --save svelte-tel-input
 
 The default export of the library is the main TelInput component. It has the following props:
 
-| Props          | Type                        | Default Value | Usage                                                                                                                                                                                                                                                                                                                |
-| -------------- | --------------------------- | ------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| country        | `CountryCode \| null`       | `null`        | It's accept any Country Code Alpha-2 (ISO 3166). You can set manually (e.g: by the user via a select). The parser will inspect the entered phone number and if it detect a valid country calling code, then it's automatically set the country to according to the detected country calling code. E.g: `+36` -> `HU` |
-| disabled       | `boolean`                   | `false`       | It's block the parser and prevent entering input. You must handle its styling on your own.                                                                                                                                                                                                                           |
-| valid          | `boolean`                   | `true`        | Indicates whether the entered tel number validity.                                                                                                                                                                                                                                                                   |
-| value          | `E164Number \| null`        | `null`        | [E164](https://en.wikipedia.org/wiki/E.164) is the international format of phone.numbers. This is the main entry point to store and/or load an existent phone number.                                                                                                                                                |
-| parsedTelInput | `NormalizedTelInput \|null` | `null`        | All of the formatted results of the tel input.                                                                                                                                                                                                                                                                       |
-| class          | `string`                    | ``            | You can pass down any classname to the component                                                                                                                                                                                                                                                                     |
+| Props           | Type                        | Default Value | Usage                                                                                                                                                                                                                                                                                                                |
+| --------------- | --------------------------- | ------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| country         | `CountryCode \| null`       | `null`        | It's accept any Country Code Alpha-2 (ISO 3166). You can set manually (e.g: by the user via a select). The parser will inspect the entered phone number and if it detect a valid country calling code, then it's automatically set the country to according to the detected country calling code. E.g: `+36` -> `HU` |
+| disabled        | `boolean`                   | `false`       | It's block the parser and prevent entering input. You must handle its styling on your own.                                                                                                                                                                                                                           |
+| valid           | `boolean`                   | `true`        | Indicates whether the entered tel number validity.                                                                                                                                                                                                                                                                   |
+| value           | `E164Number \| null`        | `null`        | [E164](https://en.wikipedia.org/wiki/E.164) is the international format of phone.numbers. This is the main entry point to store and/or load an existent phone number.                                                                                                                                                |
+| parsedTelInput  | `NormalizedTelInput \|null` | `null`        | All of the formatted results of the tel input.                                                                                                                                                                                                                                                                       |
+| class           | `string`                    | ``            | You can pass down any classname to the component                                                                                                                                                                                                                                                                     |
+| autoPlaceholder | `boolean`                   | `true`        | Generates country specific placeholder for the selected country.something                                                                                                                                                                                                                                            |
+| allowSpaces     | `boolean`                   | `true`        | Allow or disallow spaces in the input field                                                                                                                                                                                                                                                                          |
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+## Goals
+
+-   Solve the problem that a users can enter the same phone number in different formats.
+-   Storing a phone number in a standard format, that can be indexable and searchable in any database.
+-   Should be accessible for the the browser. Eg. for a `<a href="tel+36201234567 />`.
+-   The stored phone number format can be useable for any SMS gateway(e.g for 2FA) and if somebody can call the number from anywhere, it should work.
 
 ## Dependencies
 
@@ -141,7 +141,8 @@ The default export of the library is the main TelInput component. It has the fol
 -   [x] Integrate libphonenumber
 -   [x] Implement parser
 -   [x] Add basics docs and examples
--   [ ] Add advanced examples
+-   [x] Add advanced examples
+-   [x] Generate placeholders autimatically
 -   [ ] Improve A11Y
 
 See the [open issues](https://github.com/gyurielf/svelte-tel-input/issues) for a list of proposed features (and known issues).
