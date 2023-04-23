@@ -1,4 +1,4 @@
-export { default } from './components/Input/TelInput.svelte';
+export { default as TelInput } from './components/Input/TelInput.svelte';
 export {
 	getCurrentCountry,
 	isSelected,
