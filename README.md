@@ -6,6 +6,10 @@
 
 > Lightweight svelte tel/phone input standardizer.
 
+<img src="https://raw.githubusercontent.com/gyurielf/svelte-tel-input/main/static/demo.gif" width="600px" align="center">
+
+🔥 Check it out live [here](https://svelte-tel-input.vercel.app/)
+
 ## Installation
 
 Svelte Tel Input is distributed via [npm](https://www.npmjs.com/package/svelte-tel-input).
