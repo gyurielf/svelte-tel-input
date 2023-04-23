@@ -1,5 +1,11 @@
 # svelte-tel-input
 
+## 2.0.1
+
+### Patch Changes
+
+-   fix: component export ([#147](https://github.com/gyurielf/svelte-tel-input/pull/147))
+
 ## 2.0.0
 
 ### Major Changes
