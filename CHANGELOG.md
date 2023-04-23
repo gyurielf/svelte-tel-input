@@ -1,5 +1,23 @@
 # svelte-tel-input
 
+## 2.0.0
+
+### Major Changes
+
+-   breaking: switch from default to named export to export TelInput component. Use named import in the future. From now Svelte >= 3.58.0 is required. ([#143](https://github.com/gyurielf/svelte-tel-input/pull/143))
+
+### Minor Changes
+
+-   feat: space config option added, it will enable or disable spaces in the input field. ([#143](https://github.com/gyurielf/svelte-tel-input/pull/143))
+
+-   feat: autoPlaceholder feature added, it generates placeholder for each country. ([#143](https://github.com/gyurielf/svelte-tel-input/pull/143))
+
+### Patch Changes
+
+-   chore: update deps, re-generate package-lock.json ([#143](https://github.com/gyurielf/svelte-tel-input/pull/143))
+
+-   feat: added options panel to example page to be able to try out config opts. ([#143](https://github.com/gyurielf/svelte-tel-input/pull/143))
+
 ## 1.3.2
 
 ### Patch Changes
