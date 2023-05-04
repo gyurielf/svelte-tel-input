@@ -47,7 +47,7 @@ npm install --save svelte-tel-input
     let valid = true;
 
 	// Optional - Extended details about the parsed phone number
-	let parsedTelInput: NormalizedTelNumber | null = null;
+	let detailedValue: NormalizedTelNumber | null = null;
 </script>
 
 <div class="wrapper">
@@ -68,7 +68,7 @@ npm install --save svelte-tel-input
 			</option>
 		{/each}
 	</select>
-    <TelInput bind:country bind:value bind:valid bind:parsedTelInput class="basic-tel-input {!isValid && 'invalid'}" />
+    <TelInput bind:country bind:value bind:valid bind:detailedValue class="basic-tel-input {!isValid && 'invalid'}" />
 </div>
 
 <style>
@@ -102,16 +102,45 @@ npm install --save svelte-tel-input
 
 The default export of the library is the main TelInput component. It has the following props:
 
-| Props           | Type                        | Default Value | Usage                                                                                                                                                                                                                                                                                                                |
+| Property name   | Type                        | Default Value | Usage                                                                                                                                                                                                                                                                                                                |
 | --------------- | --------------------------- | ------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | country         | `CountryCode \| null`       | `null`        | It's accept any Country Code Alpha-2 (ISO 3166). You can set manually (e.g: by the user via a select). The parser will inspect the entered phone number and if it detect a valid country calling code, then it's automatically set the country to according to the detected country calling code. E.g: `+36` -> `HU` |
 | disabled        | `boolean`                   | `false`       | It's block the parser and prevent entering input. You must handle its styling on your own.                                                                                                                                                                                                                           |
 | valid           | `boolean`                   | `true`        | Indicates whether the entered tel number validity.                                                                                                                                                                                                                                                                   |
 | value           | `E164Number \| null`        | `null`        | [E164](https://en.wikipedia.org/wiki/E.164) is the international format of phone.numbers. This is the main entry point to store and/or load an existent phone number.                                                                                                                                                |
-| parsedTelInput  | `NormalizedTelInput \|null` | `null`        | All of the formatted results of the tel input.                                                                                                                                                                                                                                                                       |
+| detailedValue   | `NormalizedTelInput \|null` | `null`        | All of the formatted results of the tel input.                                                                                                                                                                                                                                                                       |
 | class           | `string`                    | ``            | You can pass down any classname to the component                                                                                                                                                                                                                                                                     |
 | autoPlaceholder | `boolean`                   | `true`        | Generates country specific placeholder for the selected country.something                                                                                                                                                                                                                                            |
 | allowSpaces     | `boolean`                   | `true`        | Allow or disallow spaces in the input field                                                                                                                                                                                                                                                                          |
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+## Events
+
+The default export of the library is the main TelInput component. It has the following props:
+
+| Event name          | Emitted value (property) |
+| ------------------- | ------------------------ |
+| changeValue         | value                    |
+| changeDetailedValue | detailedValue            |
+| changeCountry       | country                  |
+| validation          | valid                    |
+| parseError          | `string`                 |
+
+# Use case to listening events
+
+```typescript
+<script lang="ts">
+	// Imports, etc....
+	let value: E164Number | null = null;
+	const yourHandler = (e: CustomEvent<E164Number | null>) => {
+        value = e.detail //
+        // do stuff...
+	};
+</script>
+
+<TelInput value={cachedValue ?? value} on:changeValue={yourHandler} ... />
+```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 

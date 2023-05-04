@@ -9,7 +9,8 @@
 		CountrySelectEvents,
 		CountryCode,
 		E164Number,
-		TelInputOptions
+		TelInputOptions,
+		Country
 	} from '$lib/types';
 
 	export let clickOutside = true;
@@ -17,7 +18,7 @@
 	export let disabled = false;
 	// Disabled in favour of enabled autoPlaceholder.
 	// export let placeholder: string | null = null;
-	export let parsedTelInput: NormalizedTelNumber | null = null;
+	export let detailedValue: NormalizedTelNumber | null = null;
 	export let value: E164Number | null;
 	export let searchPlaceholder: string | null = 'Search';
 
@@ -55,12 +56,28 @@
 		}
 	};
 
-	$: filteredItems =
-		searchText && searchText.length > 0
-			? normalizedCountries
-					.filter((el) => el.label.toLowerCase().indexOf(searchText.toLowerCase()) >= 0)
-					.sort((a, b) => (a.label < b.label ? -1 : 1))
-			: normalizedCountries;
+	const sortCountries = (countries: Country[], text: string) => {
+		const normalizedText = text.trim().toLowerCase();
+		if (!normalizedText) {
+			return countries.sort((a, b) => a.label.localeCompare(b.label));
+		}
+		return countries.sort((a, b) => {
+			const aNameLower = a.name.toLowerCase();
+			const bNameLower = b.name.toLowerCase();
+			const aStartsWith = aNameLower.startsWith(normalizedText);
+			const bStartsWith = bNameLower.startsWith(normalizedText);
+			if (aStartsWith && !bStartsWith) return -1;
+			if (!aStartsWith && bStartsWith) return 1;
+			const aIndex = aNameLower.indexOf(normalizedText);
+			const bIndex = bNameLower.indexOf(normalizedText);
+			if (aIndex === -1 && bIndex === -1) return a.id.localeCompare(b.id);
+			if (aIndex === -1) return 1;
+			if (bIndex === -1) return -1;
+			const aWeight = aIndex + (aStartsWith ? 0 : 1);
+			const bWeight = bIndex + (bStartsWith ? 0 : 1);
+			return aWeight - bWeight;
+		});
+	};
 
 	const handleSelect = (val: CountryCode, e?: Event) => {
 		if (disabled) return;
@@ -149,7 +166,7 @@
 						bind:value={searchText}
 						placeholder={searchPlaceholder}
 					/>
-					{#each filteredItems as country (country.id)}
+					{#each sortCountries(normalizedCountries, searchText) as country (country.id)}
 						{@const isActive = isSelected(country.iso2, selectedCountry)}
 						<div id="country-{country.iso2}" role="option" aria-selected={isActive}>
 							<button
@@ -182,7 +199,7 @@
 	<TelInput
 		id="tel-input"
 		bind:country={selectedCountry}
-		bind:parsedTelInput
+		bind:detailedValue
 		bind:value
 		bind:valid={isValid}
 		{options}

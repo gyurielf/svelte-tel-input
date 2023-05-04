@@ -8,24 +8,26 @@
 		generatePlaceholder
 	} from '$lib/utils/helpers';
 	import { watcher } from '$lib/stores';
-	import type {
-		NormalizedTelNumber,
-		CountryCode,
-		E164Number,
-		TelInputDispatchEvents,
-		TelInputOptions
-	} from '$lib/types';
+	import type { NormalizedTelNumber, CountryCode, E164Number, TelInputOptions } from '$lib/types';
 	const defaultOptions = {
 		autoPlaceholder: true,
 		spaces: true
 	};
-	const dispatch = createEventDispatcher<TelInputDispatchEvents>();
+
+	const dispatch = createEventDispatcher<{
+		changeCountry: CountryCode | null;
+		parseError: string;
+		changeDetailedValue: Partial<NormalizedTelNumber> | null;
+		validation: boolean;
+		changeValue: E164Number | null;
+	}>();
+
 	/** It's accept any Country Code Alpha-2 (ISO 3166) */
 	export let country: CountryCode | null;
 	/** The core value of the input, this is the only one what you can store. It's an E164 phone number.*/
 	export let value: E164Number | null;
 	/** Detailed parse of the E164 phone number */
-	export let parsedTelInput: Partial<NormalizedTelNumber> | null = null;
+	export let detailedValue: Partial<NormalizedTelNumber> | null = null;
 	export let valid = true;
 	export let disabled = false;
 	/** It will overwrite the autoPlaceholder ! */
@@ -38,7 +40,7 @@
 	let inputValue = value;
 	let prevCountry = country;
 
-	/** Merge options into default opts, to be able to set just one config settings. */
+	/** Merge options into default opts, to be able to set just one config option. */
 	$: combinedOptions = {
 		...defaultOptions,
 		...options
@@ -52,6 +54,7 @@
 	const updateCountry = (countryCode: CountryCode) => {
 		country = countryCode;
 		prevCountry = countryCode;
+		dispatch('changeCountry', country);
 		return country;
 	};
 
@@ -67,13 +70,13 @@
 			}
 
 			try {
-				parsedTelInput = normalizeTelInput(
+				detailedValue = normalizeTelInput(
 					parsePhoneNumberWithError(input, currCountry ?? numberHasCountry)
 				);
 			} catch (err) {
 				if (err instanceof ParseError) {
 					// Not a phone number, non-existent country, etc.
-					parsedTelInput = {
+					detailedValue = {
 						isValid: false,
 						error: err.message
 					};
@@ -84,37 +87,35 @@
 			}
 
 			// It's keep the html input value on the first parsed format, or the user's format.
-			if (
-				parsedTelInput?.isValid &&
-				combinedOptions.spaces &&
-				parsedTelInput?.formatOriginal
-			) {
+			if (detailedValue?.isValid && combinedOptions.spaces && detailedValue?.formatOriginal) {
 				// It's need for refreshing html input value, if it is the same as the previouly parsed.
-				if (inputValue === parsedTelInput?.formatOriginal) {
+				if (inputValue === detailedValue?.formatOriginal) {
 					inputValue = null;
 				}
-				inputValue = parsedTelInput?.formatOriginal;
-			} else if (parsedTelInput?.isValid && parsedTelInput?.nationalNumber) {
-				if (inputValue === parsedTelInput?.nationalNumber) {
+				inputValue = detailedValue?.formatOriginal;
+			} else if (detailedValue?.isValid && detailedValue?.nationalNumber) {
+				if (inputValue === detailedValue?.nationalNumber) {
 					inputValue = null;
 				}
-				inputValue = parsedTelInput?.nationalNumber;
+				inputValue = detailedValue?.nationalNumber;
 			}
 
-			value = parsedTelInput?.e164 ?? null;
-			valid = parsedTelInput?.isValid ?? false;
-			dispatch('valid', valid);
-			dispatch('parseInput', parsedTelInput);
+			value = detailedValue?.e164 ?? null;
+			valid = detailedValue?.isValid ?? false;
+			dispatch('validation', valid);
+			dispatch('changeValue', value);
+			dispatch('changeDetailedValue', detailedValue);
 		} else {
 			if (currCountry !== prevCountry) {
 				value = null;
 				inputValue = '';
 				valid = false;
-				parsedTelInput = null;
+				detailedValue = null;
 			}
 			prevCountry = currCountry;
-			dispatch('valid', valid);
-			dispatch('parseInput', parsedTelInput);
+			dispatch('validation', valid);
+			dispatch('changeValue', value);
+			dispatch('changeDetailedValue', detailedValue);
 		}
 	};
 

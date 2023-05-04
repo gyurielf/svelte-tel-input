@@ -7,13 +7,13 @@
 
 	interface ExampleProps {
 		value: E164Number | null;
-		parsedTelInput: NormalizedTelNumber | null;
+		detailedValue: NormalizedTelNumber | null;
 	}
 
 	/* advanced example */
 	let advancedExampleProps: ExampleProps = {
 		value: '+36201234567',
-		parsedTelInput: null
+		detailedValue: null
 	};
 	let advancedExampleOptions: TelInputOptions = {
 		autoPlaceholder: true,
@@ -23,7 +23,7 @@
 	/* basicWithE164 example */
 	let basicExamplePropsWithE164: ExampleProps = {
 		value: '+14842918723',
-		parsedTelInput: null
+		detailedValue: null
 	};
 
 	let basicExampleWithE164Options: TelInputOptions = {
@@ -34,7 +34,7 @@
 	/* basicWithNull example */
 	let basicExamplePropsWithNull: ExampleProps = {
 		value: null,
-		parsedTelInput: null
+		detailedValue: null
 	};
 
 	let basicExampleWithNullOptions: TelInputOptions = {
@@ -74,13 +74,13 @@
 			<AdvancedTelInput
 				options={advancedExampleOptions}
 				bind:value={advancedExampleProps.value}
-				bind:parsedTelInput={advancedExampleProps.parsedTelInput}
+				bind:detailedValue={advancedExampleProps.detailedValue}
 			/>
 		{/key}
 		<OptionsPanel bind:options={advancedExampleOptions} />
 		<PayloadBlock
 			bind:value={advancedExampleProps.value}
-			bind:exampleData={advancedExampleProps.parsedTelInput}
+			bind:exampleData={advancedExampleProps.detailedValue}
 		/>
 	</div>
 	<hr class="my-5" />
@@ -112,12 +112,12 @@
 		</div>
 		<BasicPhoneInput
 			bind:value={basicExamplePropsWithE164.value}
-			bind:parsedTelInput={basicExamplePropsWithE164.parsedTelInput}
+			bind:detailedValue={basicExamplePropsWithE164.detailedValue}
 		/>
 		<OptionsPanel bind:options={basicExampleWithE164Options} />
 		<PayloadBlock
 			bind:value={basicExamplePropsWithE164.value}
-			bind:exampleData={basicExamplePropsWithE164.parsedTelInput}
+			bind:exampleData={basicExamplePropsWithE164.detailedValue}
 		/>
 	</div>
 	<hr class="my-5" />
@@ -149,12 +149,12 @@
 		</div>
 		<BasicPhoneInput
 			bind:value={basicExamplePropsWithNull.value}
-			bind:parsedTelInput={basicExamplePropsWithNull.parsedTelInput}
+			bind:detailedValue={basicExamplePropsWithNull.detailedValue}
 		/>
 		<OptionsPanel bind:options={basicExampleWithNullOptions} />
 		<PayloadBlock
 			bind:value={basicExamplePropsWithNull.value}
-			bind:exampleData={basicExamplePropsWithNull.parsedTelInput}
+			bind:exampleData={basicExamplePropsWithNull.detailedValue}
 		/>
 	</div>
 </div>
