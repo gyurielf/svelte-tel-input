@@ -1,11 +1,16 @@
 import { sveltekit } from '@sveltejs/kit/vite';
-import type { UserConfig } from 'vitest/config';
+import { defineConfig } from 'vite';
 
-const config: UserConfig = {
-	plugins: [sveltekit()],
-	test: {
-		include: ['src/**/*.{test,spec}.{js,ts}']
-	}
-};
-
-export default config;
+export default defineConfig(({ mode }) => {
+	return {
+		plugins: [sveltekit()],
+		test: {
+			include: ['src/**/*.{test,spec}.{js,ts}']
+		},
+		...(mode === 'development' && {
+			optimizeDeps: {
+				include: ['@macfja/svelte-persistent-store']
+			}
+		})
+	};
+});

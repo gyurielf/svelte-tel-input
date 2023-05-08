@@ -1,12 +1,27 @@
 <script lang="ts">
-	import type { E164Number, NormalizedTelNumber } from '$lib/types';
+	import type { CountryCode, E164Number, NormalizedTelNumber } from '$lib/types';
 	import { jsonPrettyParser } from '$lib/utils/examples/exampleHelpers';
 	import { slide } from 'svelte/transition';
 
 	export let exampleData: NormalizedTelNumber | null;
 	export let value: E164Number | null;
+	export let valid: boolean;
+	export let country: CountryCode | null;
 	let isOpen = true;
-	$: exampleDataEntries = (exampleData && Object.entries(exampleData)) || [];
+
+	const generateEntries = (data: NormalizedTelNumber | null | undefined) => {
+		if (data !== undefined) {
+			if (data !== null) {
+				return Object.entries(data);
+			} else {
+				return [['parsedTelInput', `${data}`]];
+			}
+		} else {
+			return [];
+		}
+	};
+
+	$: exampleDataEntries = generateEntries(exampleData);
 </script>
 
 <div class="validation-table mt-5">
@@ -58,6 +73,7 @@
 			transition:slide
 			class="grid md:grid-cols-2 gap-y-6 md:gap-y-0 p-3 font-mono border border-gray-400 dark:border-gray-400 rounded-b"
 		>
+			<!-- value -->
 			<div class="grid col-span-full">
 				<div class="mb-2 text-lg">
 					<span
@@ -82,6 +98,7 @@
 					<pre lang="no-highlight" class="whitespace-pre-wrap">"{value}"</pre>
 				{/key}
 			</div>
+			<!-- detailedValue -->
 			<hr class="col-span-full my-6 divider" />
 			<div class="grid col-span-full">
 				<div class="mb-2 text-lg">
@@ -108,11 +125,67 @@
 			<div class="grid">
 				<h3 class="text-lg font-bold">Payload</h3>
 				{#key exampleData}
-					<pre
-						lang="no-highlight"
-						class="whitespace-pre-wrap"
-						use:jsonPrettyParser={exampleData}
-					/>
+					{#if exampleData !== null}
+						<pre
+							lang="no-highlight"
+							class="whitespace-pre-wrap"
+							use:jsonPrettyParser={exampleData}
+						/>
+					{:else}
+						<pre lang="no-highlight" class="whitespace-pre-wrap">"{value}"</pre>
+					{/if}
+				{/key}
+			</div>
+			<!-- valid -->
+			<hr class="col-span-full my-6 divider" />
+			<div class="grid col-span-full">
+				<div class="mb-2 text-lg">
+					<span
+						class="bg-gray-100 text-gray-800 font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300"
+						>valid</span
+					>
+				</div>
+			</div>
+			<div class="grid grid-cols-2 break-words gap-x-2 md:gap-x-0">
+				<div>
+					<h3 class="text-lg font-bold">Key</h3>
+					<div>valid</div>
+				</div>
+				<div>
+					<h3 class="text-lg font-bold">Value</h3>
+					<div>{valid}</div>
+				</div>
+			</div>
+			<div class="grid">
+				<h3 class="text-lg font-bold">Payload</h3>
+				{#key valid}
+					<pre lang="no-highlight" class="whitespace-pre-wrap">"{valid}"</pre>
+				{/key}
+			</div>
+			<!-- country -->
+			<hr class="col-span-full my-6 divider" />
+			<div class="grid col-span-full">
+				<div class="mb-2 text-lg">
+					<span
+						class="bg-gray-100 text-gray-800 font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300"
+						>country</span
+					>
+				</div>
+			</div>
+			<div class="grid grid-cols-2 break-words gap-x-2 md:gap-x-0">
+				<div>
+					<h3 class="text-lg font-bold">Key</h3>
+					<div>country</div>
+				</div>
+				<div>
+					<h3 class="text-lg font-bold">Value</h3>
+					<div>{country}</div>
+				</div>
+			</div>
+			<div class="grid">
+				<h3 class="text-lg font-bold">Payload</h3>
+				{#key country}
+					<pre lang="no-highlight" class="whitespace-pre-wrap">"{country}"</pre>
 				{/key}
 			</div>
 		</div>

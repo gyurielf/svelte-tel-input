@@ -13,7 +13,15 @@
 	export let valid: boolean;
 
 	// Phone number details
-	export let detailedValue: NormalizedTelNumber | null = null;
+	export let parsedTelInput: (NormalizedTelNumber | Partial<NormalizedTelNumber>) | null = null;
+
+	const handleParsedTelInput = (e: CustomEvent<Partial<NormalizedTelNumber | null>>) => {
+		parsedTelInput = e.detail;
+	};
+
+	const handleTelInput = (e: CustomEvent<Partial<NormalizedTelNumber | null>>) => {
+		value = e.detail?.e164 ?? null;
+	};
 </script>
 
 <div class="flex">
@@ -47,11 +55,21 @@
 	<TelInput
 		bind:country
 		bind:valid
-		bind:value
-		bind:detailedValue
+		{value}
+		on:parseInput={(e) => {
+			handleParsedTelInput(e);
+			handleTelInput(e);
+		}}
 		class="px-4 py-1 w-full bg-gray-50 dark:bg-gray-700 
         dark:placeholder-gray-400 dark:text-white text-gray-900 focus:outline-none rounded-r-lg {valid
 			? 'border border-gray-300 border-l-gray-100 dark:border-l-gray-700 dark:border-gray-600'
 			: 'border-2 border-red-600'}"
 	/>
+	<button
+		class="ml-4 px-4 py-2 rounded bg-blue-500 text-white"
+		on:click={() => {
+			value = null;
+			country = null;
+		}}>Reset</button
+	>
 </div>

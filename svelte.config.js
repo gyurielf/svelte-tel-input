@@ -31,8 +31,10 @@ export default {
 				'!**/utils/examples/*',
 				'!**/components/utils/*',
 				'!**/components/examples/*',
-				'!**/components/examples/*',
-				'!**/stores/DevExampleStores.ts'
+				'!**/components/Input/AdvancedTelInput.svelte',
+				'!**/stores/DevExampleStores.ts',
+				'!**/assets/regions.ts',
+				'!**/assets/telTypes.ts'
 			]);
 		}
 	}

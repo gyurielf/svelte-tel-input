@@ -51,7 +51,7 @@
 		handleParsePhoneNumber(value, country);
 	};
 
-	const updateCountry = (countryCode: CountryCode) => {
+	const updateCountry = (countryCode: CountryCode | null) => {
 		country = countryCode;
 		prevCountry = countryCode;
 		dispatch('changeCountry', country);
@@ -137,17 +137,34 @@
 		initialize();
 	});
 
-	let initRun = true;
-	const watchFunction = () => {
-		if (!initRun) {
+	let countryWatchInitRun = true;
+	const countryChangeWatchFunction = () => {
+		if (!countryWatchInitRun) {
 			handleParsePhoneNumber(null, country);
 		}
-		initRun = false;
+		countryWatchInitRun = false;
 	};
 
-	const countryChangeWatch = watcher(null, watchFunction);
+	let resetValueWatchInitRun = true;
+	const resetValueWatchFunction = () => {
+		if (!resetValueWatchInitRun) {
+			inputValue = '';
+			updateCountry(null);
+			valid = true;
+			detailedValue = null;
+			dispatch('changeDetailedValue', detailedValue);
+		}
+		resetValueWatchInitRun = false;
+	};
+
+	const countryChangeWatch = watcher(null, countryChangeWatchFunction);
 	$: $countryChangeWatch = country;
 
+	const resetValueWatch = watcher(null, resetValueWatchFunction);
+
+	$: if (value === null && inputValue !== '') {
+		$resetValueWatch = value;
+	}
 	$: getPlaceholder = combinedOptions.autoPlaceholder
 		? country
 			? generatePlaceholder(country)

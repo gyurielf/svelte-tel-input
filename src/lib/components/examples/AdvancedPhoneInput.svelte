@@ -23,9 +23,9 @@
 	export let searchPlaceholder: string | null = 'Search';
 
 	let searchText = '';
-	let selectedCountry: CountryCode;
+	export let selectedCountry: CountryCode | null;
 	let isOpen = false;
-	let isValid: boolean;
+	export let valid: boolean;
 
 	export let options: TelInputOptions;
 
@@ -104,7 +104,7 @@
 </script>
 
 <div
-	class="flex relative rounded-lg {isValid
+	class="flex relative rounded-lg {valid
 		? ``
 		: ` ring-pink-500 dark:ring-pink-500 ring-1 focus-within:ring-offset-1 focus-within:ring-offset-pink-500/50 focus-within:ring-1`}"
 >
@@ -201,7 +201,7 @@
 		bind:country={selectedCountry}
 		bind:detailedValue
 		bind:value
-		bind:valid={isValid}
+		bind:valid
 		{options}
 		required={true}
 		class="text-sm rounded-r-lg block w-full p-2.5 focus:outline-none border border-gray-300 border-l-gray-100 dark:border-l-gray-700 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 
