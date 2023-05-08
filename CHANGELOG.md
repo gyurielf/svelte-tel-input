@@ -1,5 +1,11 @@
 # svelte-tel-input
 
+## 2.1.0
+
+### Minor Changes
+
+-   feat: support event driven behavior ([#150](https://github.com/gyurielf/svelte-tel-input/pull/150))
+
 ## 2.0.1
 
 ### Patch Changes
