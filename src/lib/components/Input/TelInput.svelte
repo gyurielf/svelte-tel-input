@@ -8,18 +8,20 @@
 		generatePlaceholder
 	} from '$lib/utils/helpers';
 	import { watcher } from '$lib/stores';
-	import type {
-		NormalizedTelNumber,
-		CountryCode,
-		E164Number,
-		TelInputDispatchEvents,
-		TelInputOptions
-	} from '$lib/types';
+	import type { NormalizedTelNumber, CountryCode, E164Number, TelInputOptions } from '$lib/types';
 	const defaultOptions = {
 		autoPlaceholder: true,
 		spaces: true
 	};
-	const dispatch = createEventDispatcher<TelInputDispatchEvents>();
+
+	const dispatch = createEventDispatcher<{
+		country: CountryCode | null;
+		parseError: string;
+		parseInput: (NormalizedTelNumber | Partial<NormalizedTelNumber>) | null;
+		valid: boolean;
+		value: E164Number | null;
+	}>();
+
 	/** It's accept any Country Code Alpha-2 (ISO 3166) */
 	export let country: CountryCode | null;
 	/** The core value of the input, this is the only one what you can store. It's an E164 phone number.*/
@@ -49,7 +51,7 @@
 		handleParsePhoneNumber(value, country);
 	};
 
-	const updateCountry = (countryCode: CountryCode) => {
+	const updateCountry = (countryCode: CountryCode | null) => {
 		country = countryCode;
 		prevCountry = countryCode;
 		return country;
@@ -136,17 +138,34 @@
 		initialize();
 	});
 
-	let initRun = true;
-	const watchFunction = () => {
-		if (!initRun) {
+	let countryWatchInitRun = true;
+	const countryChangeWatchFunction = () => {
+		if (!countryWatchInitRun) {
 			handleParsePhoneNumber(null, country);
 		}
-		initRun = false;
+		countryWatchInitRun = false;
 	};
 
-	const countryChangeWatch = watcher(null, watchFunction);
+	let resetValueWatchInitRun = true;
+	const resetValueWatchFunction = () => {
+		if (!resetValueWatchInitRun) {
+			inputValue = '';
+			updateCountry(null);
+			valid = true;
+			parsedTelInput = null;
+			dispatch('parseInput', parsedTelInput);
+		}
+		resetValueWatchInitRun = false;
+	};
+
+	const countryChangeWatch = watcher(null, countryChangeWatchFunction);
 	$: $countryChangeWatch = country;
 
+	const resetValueWatch = watcher(null, resetValueWatchFunction);
+
+	$: if (value === null && inputValue !== '') {
+		$resetValueWatch = value;
+	}
 	$: getPlaceholder = combinedOptions.autoPlaceholder
 		? country
 			? generatePlaceholder(country)
