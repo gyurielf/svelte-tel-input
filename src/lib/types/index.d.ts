@@ -67,14 +67,6 @@ export interface TelInputValidity {
 	errorMessage?: string;
 }
 
-export type TelInputDispatchEvents = {
-	country: CountryCode | null;
-	parseError: string;
-	parseInput: Partial<NormalizedTelNumber> | null;
-	valid: boolean;
-	value: E164Number | null;
-};
-
 export interface TelInputOptions {
 	/**
 	 * It generates a placeholder into your input for the selected country. E.g. if the country is `US`, the placeholder will be `201 555 0123` by default.
