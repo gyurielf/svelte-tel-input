@@ -1,5 +1,11 @@
 # svelte-tel-input
 
+## 2.1.1
+
+### Patch Changes
+
+-   fix: US flag is now more representative ([#154](https://github.com/gyurielf/svelte-tel-input/pull/154))
+
 ## 2.1.0
 
 ### Minor Changes
