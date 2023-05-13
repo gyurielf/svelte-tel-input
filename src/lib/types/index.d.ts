@@ -81,6 +81,11 @@ export interface TelInputOptions {
 	 */
 	spaces?: boolean;
 	/**
+	 * Set validation to false if you change the country property.
+	 * @default false
+	 */
+	invalidateOnCountryChange?: boolean;
+	/**
 	 *  "formatInternational": "+36 20 123 4567",
 	 *  "formatOriginal": "20 123 4567",
 	 *  "formatNational": "06 20 123 4567",

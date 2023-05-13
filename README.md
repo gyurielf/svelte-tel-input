@@ -121,11 +121,11 @@ The default export of the library is the main TelInput component. It has the fol
 
 | Event name          | Emitted value (property) |
 | ------------------- | ------------------------ |
-| changeValue         | value                    |
-| changeDetailedValue | detailedValue            |
-| changeCountry       | country                  |
-| validation          | valid                    |
-| parseError          | `string`                 |
+| updateValue         | value                    |
+| updateDetailedValue | detailedValue            |
+| updateCountry       | country                  |
+| updateValid         | valid                    |
+| parseError          | `error message`          |
 
 # Use case to listening events
 
@@ -139,8 +139,15 @@ The default export of the library is the main TelInput component. It has the fol
 	};
 </script>
 
-<TelInput value={cachedValue ?? value} on:changeValue={yourHandler} ... />
+<TelInput value={cachedValue ?? value} on:updateValue={yourHandler} ... />
 ```
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+## Caveats
+
+-   In order to reset the component from outside, you must pass (or set if you binded) `null` for both the `value` and `country` properties.
+-   Let's assume you pass a `US` `E164` number, which can be a partial `E164`, but long enough to determine the country and you pass `DE` country directly. The country will be updated to `US`, which is determined from the `E164` in this example. If the `E164` is not long enough to determine its country, then the country will stay what you passed to the component (`DE`).
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 

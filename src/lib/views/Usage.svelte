@@ -2,9 +2,9 @@
 	import BasicPhoneInput from '$lib/components/examples/BasicPhoneInput.svelte';
 	import AdvancedTelInput from '$lib/components/examples/AdvancedPhoneInput.svelte';
 	import PayloadBlock from '$lib/components/utils/PayloadBlock.svelte';
-	import type { NormalizedTelNumber, E164Number, TelInputOptions, CountryCode } from '$lib/types';
 	import OptionsPanel from './OptionsPanel.svelte';
 	import EventDrivenPhoneInput from '$lib/components/examples/EventDrivenPhoneInput.svelte';
+	import type { NormalizedTelNumber, E164Number, TelInputOptions, CountryCode } from '$lib/types';
 
 	interface ExampleProps {
 		value: E164Number | null;
@@ -22,7 +22,8 @@
 	};
 	let advancedExampleOptions: TelInputOptions = {
 		autoPlaceholder: true,
-		spaces: true
+		spaces: true,
+		invalidateOnCountryChange: false
 	};
 
 	/* basicWithE164 example */
@@ -53,7 +54,7 @@
 
 	/* eventDriven example */
 	let eventDrivenExampleProps: ExampleProps = {
-		value: null,
+		value: '+441234567988',
 		detailedValue: null,
 		valid: true,
 		country: null
@@ -220,7 +221,7 @@
 		</div>
 		<EventDrivenPhoneInput
 			bind:value={eventDrivenExampleProps.value}
-			bind:parsedTelInput={eventDrivenExampleProps.detailedValue}
+			bind:detailedValue={eventDrivenExampleProps.detailedValue}
 			bind:valid={eventDrivenExampleProps.valid}
 			bind:country={eventDrivenExampleProps.country}
 		/>

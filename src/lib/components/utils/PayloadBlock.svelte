@@ -117,8 +117,8 @@
 				</div>
 				<div>
 					<h3 class="text-lg font-bold">Value</h3>
-					{#each exampleDataEntries as [_, value]}
-						<div>{value}</div>
+					{#each exampleDataEntries as [_, val]}
+						<div>{val}</div>
 					{/each}
 				</div>
 			</div>
@@ -132,7 +132,7 @@
 							use:jsonPrettyParser={exampleData}
 						/>
 					{:else}
-						<pre lang="no-highlight" class="whitespace-pre-wrap">"{value}"</pre>
+						<pre lang="no-highlight" class="whitespace-pre-wrap">"{exampleData}"</pre>
 					{/if}
 				{/key}
 			</div>

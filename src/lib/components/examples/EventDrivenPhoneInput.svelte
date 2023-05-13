@@ -13,14 +13,24 @@
 	export let valid: boolean;
 
 	// Phone number details
-	export let parsedTelInput: (NormalizedTelNumber | Partial<NormalizedTelNumber>) | null = null;
+	export let detailedValue: (NormalizedTelNumber | Partial<NormalizedTelNumber>) | null = null;
 
-	const handleParsedTelInput = (e: CustomEvent<Partial<NormalizedTelNumber | null>>) => {
-		parsedTelInput = e.detail;
+	const handleValueUpdate = (e: CustomEvent<E164Number | null>) => {
+		value = e.detail ?? null;
 	};
 
-	const handleTelInput = (e: CustomEvent<Partial<NormalizedTelNumber | null>>) => {
-		value = e.detail?.e164 ?? null;
+	const handleCountryUpdate = (e: CustomEvent<CountryCode | null>) => {
+		country = e.detail;
+	};
+
+	const handleValidUpdate = (e: CustomEvent<boolean>) => {
+		valid = e.detail;
+	};
+
+	const handleDetailedValueUpdate = (
+		e: CustomEvent<(NormalizedTelNumber | Partial<NormalizedTelNumber>) | null>
+	) => {
+		detailedValue = e.detail;
 	};
 </script>
 
@@ -53,13 +63,14 @@
 	</select>
 
 	<TelInput
-		bind:country
-		bind:valid
+		{country}
+		{valid}
 		{value}
-		on:parseInput={(e) => {
-			handleParsedTelInput(e);
-			handleTelInput(e);
-		}}
+		options={{ invalidateOnCountryChange: true }}
+		on:updateValue={handleValueUpdate}
+		on:updateCountry={handleCountryUpdate}
+		on:updateValid={handleValidUpdate}
+		on:updateDetailedValue={handleDetailedValueUpdate}
 		class="px-4 py-1 w-full bg-gray-50 dark:bg-gray-700 
         dark:placeholder-gray-400 dark:text-white text-gray-900 focus:outline-none rounded-r-lg {valid
 			? 'border border-gray-300 border-l-gray-100 dark:border-l-gray-700 dark:border-gray-600'
@@ -70,6 +81,7 @@
 		on:click={() => {
 			value = null;
 			country = null;
+			// valid = true;
 		}}>Reset</button
 	>
 </div>
