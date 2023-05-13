@@ -9,18 +9,20 @@
 	} from '$lib/utils/helpers';
 	import { watcher } from '$lib/stores';
 	import type { NormalizedTelNumber, CountryCode, E164Number, TelInputOptions } from '$lib/types';
-	const defaultOptions = {
-		autoPlaceholder: true,
-		spaces: true
-	};
 
 	const dispatch = createEventDispatcher<{
-		changeCountry: CountryCode | null;
+		updateCountry: CountryCode | null;
 		parseError: string;
-		changeDetailedValue: Partial<NormalizedTelNumber> | null;
-		validation: boolean;
-		changeValue: E164Number | null;
+		updateDetailedValue: Partial<NormalizedTelNumber> | null;
+		updateValid: boolean;
+		updateValue: E164Number | null;
 	}>();
+
+	const defaultOptions = {
+		autoPlaceholder: true,
+		spaces: true,
+		invalidateOnCountryChange: false
+	};
 
 	/** It's accept any Country Code Alpha-2 (ISO 3166) */
 	export let country: CountryCode | null;
@@ -37,32 +39,39 @@
 	/** If true it's run extra validation if the field is empty */
 	export let required: boolean | null = null;
 
+	// export let invalidateOnCountryChange = false;
+
 	let inputValue = value;
 	let prevCountry = country;
 
 	/** Merge options into default opts, to be able to set just one config option. */
-	$: combinedOptions = {
+	const combinedOptions = {
 		...defaultOptions,
 		...options
 	};
 
 	const handleInputAction = (value: string) => {
 		if (disabled) return;
-		handleParsePhoneNumber(value, country);
+		handleParsePhoneNumber(value, country, 'handleInputAction');
 	};
 
 	const updateCountry = (countryCode: CountryCode | null) => {
 		country = countryCode;
 		prevCountry = countryCode;
-		dispatch('changeCountry', country);
+		dispatch('updateCountry', country);
 		return country;
 	};
 
 	const handleParsePhoneNumber = (
 		input: string | null,
-		currCountry: CountryCode | null = null
+		currCountry: CountryCode | null = null,
+		triggeredBy?: string
 	) => {
+		// if (triggeredBy === 'countryWatcher' && currCountry === prevCountry) return;
+		// console.log('TRIGGERED BY: ' + triggeredBy);
+
 		if (input !== null) {
+			// console.log('input exists');
 			const numberHasCountry = getCountryForPartialE164Number(input);
 
 			if (numberHasCountry && numberHasCountry !== prevCountry) {
@@ -71,7 +80,7 @@
 
 			try {
 				detailedValue = normalizeTelInput(
-					parsePhoneNumberWithError(input, currCountry ?? numberHasCountry)
+					parsePhoneNumberWithError(input, numberHasCountry ?? currCountry ?? undefined)
 				);
 			} catch (err) {
 				if (err instanceof ParseError) {
@@ -91,44 +100,85 @@
 				// It's need for refreshing html input value, if it is the same as the previouly parsed.
 				if (inputValue === detailedValue?.formatOriginal) {
 					inputValue = null;
+					inputValue = '';
 				}
 				inputValue = detailedValue?.formatOriginal;
 			} else if (detailedValue?.isValid && detailedValue?.nationalNumber) {
 				if (inputValue === detailedValue?.nationalNumber) {
 					inputValue = null;
+					inputValue = '';
 				}
 				inputValue = detailedValue?.nationalNumber;
 			}
 
-			value = detailedValue?.e164 ?? null;
+			// keep the input value as value
+			value = detailedValue?.e164 ?? input ?? null;
 			valid = detailedValue?.isValid ?? false;
-			dispatch('validation', valid);
-			dispatch('changeValue', value);
-			dispatch('changeDetailedValue', detailedValue);
-		} else {
+			dispatch('updateValid', valid);
+			dispatch('updateValue', value);
+			dispatch('updateDetailedValue', detailedValue);
+		} else if (input === null && currCountry !== null) {
+			// console.log('input null');
+			/** If the user modify the country, it's reset the input value, and we don't dispatch country change event,
+			 * since the user himself initiated it.
+			 * */
 			if (currCountry !== prevCountry) {
+				valid = !options.invalidateOnCountryChange;
 				value = null;
-				inputValue = '';
-				valid = false;
+				if (inputValue !== null || inputValue !== '') {
+					inputValue = null;
+					inputValue = '';
+				}
 				detailedValue = null;
+				dispatch('updateValid', valid);
+				dispatch('updateValue', value);
+				dispatch('updateDetailedValue', detailedValue);
 			}
+		} else {
+			// console.log('both null');
+			valid = true;
+			value = null;
+			detailedValue = null;
 			prevCountry = currCountry;
-			dispatch('validation', valid);
-			dispatch('changeValue', value);
-			dispatch('changeDetailedValue', detailedValue);
+			dispatch('updateValid', valid);
+			dispatch('updateDetailedValue', detailedValue);
+			inputValue = null;
+			inputValue = '';
 		}
 	};
 
+	let countryWatchInitRun = true;
+	const countryChangeWatchFunction = () => {
+		if (!countryWatchInitRun) {
+			handleParsePhoneNumber(null, country, 'countryWatcher');
+		}
+		countryWatchInitRun = false;
+	};
+
+	const countryChangeWatch = watcher(null, countryChangeWatchFunction);
+	$: $countryChangeWatch = country;
+
+	$: getPlaceholder = combinedOptions.autoPlaceholder
+		? country
+			? generatePlaceholder(country)
+			: null
+		: placeholder;
+
 	const initialize = () => {
+		// console.log(country);
 		if (value && country) {
-			handleParsePhoneNumber(value, country);
+			handleParsePhoneNumber(value, country, 'initialize - value & country');
 		} else if (value) {
 			const numberHasCountry = getCountryForPartialE164Number(value);
 			if (numberHasCountry) {
-				updateCountry(numberHasCountry);
-				handleParsePhoneNumber(value, country);
+				// updateCountry(numberHasCountry);
+				handleParsePhoneNumber(
+					value,
+					numberHasCountry,
+					'initialize - value contains country'
+				);
 			} else {
-				handleParsePhoneNumber(value);
+				handleParsePhoneNumber(value, null, 'initialize - value only');
 			}
 		}
 	};
@@ -136,49 +186,15 @@
 	onMount(() => {
 		initialize();
 	});
-
-	let countryWatchInitRun = true;
-	const countryChangeWatchFunction = () => {
-		if (!countryWatchInitRun) {
-			handleParsePhoneNumber(null, country);
-		}
-		countryWatchInitRun = false;
-	};
-
-	let resetValueWatchInitRun = true;
-	const resetValueWatchFunction = () => {
-		if (!resetValueWatchInitRun) {
-			inputValue = '';
-			updateCountry(null);
-			valid = true;
-			detailedValue = null;
-			dispatch('changeDetailedValue', detailedValue);
-		}
-		resetValueWatchInitRun = false;
-	};
-
-	const countryChangeWatch = watcher(null, countryChangeWatchFunction);
-	$: $countryChangeWatch = country;
-
-	const resetValueWatch = watcher(null, resetValueWatchFunction);
-
-	$: if (value === null && inputValue !== '') {
-		$resetValueWatch = value;
-	}
-	$: getPlaceholder = combinedOptions.autoPlaceholder
-		? country
-			? generatePlaceholder(country)
-			: null
-		: placeholder;
 </script>
 
 <input
-	{required}
-	placeholder={getPlaceholder}
-	{disabled}
 	type="tel"
-	value={inputValue}
+	placeholder={getPlaceholder}
+	{required}
+	{disabled}
 	{...$$restProps}
+	value={inputValue}
 	class={$$props.class}
 	on:beforeinput
 	on:blur
@@ -189,5 +205,6 @@
 	on:keypress
 	on:keyup
 	on:paste
+	on:click
 	use:telInputAction={{ handler: handleInputAction, spaces: combinedOptions.spaces }}
 />
