@@ -52,7 +52,7 @@
 
 	const handleInputAction = (value: string) => {
 		if (disabled) return;
-		handleParsePhoneNumber(value, country, 'handleInputAction');
+		handleParsePhoneNumber(value, country);
 	};
 
 	const updateCountry = (countryCode: CountryCode | null) => {
@@ -64,14 +64,9 @@
 
 	const handleParsePhoneNumber = (
 		input: string | null,
-		currCountry: CountryCode | null = null,
-		triggeredBy?: string
+		currCountry: CountryCode | null = null
 	) => {
-		// if (triggeredBy === 'countryWatcher' && currCountry === prevCountry) return;
-		// console.log('TRIGGERED BY: ' + triggeredBy);
-
 		if (input !== null) {
-			// console.log('input exists');
 			const numberHasCountry = getCountryForPartialE164Number(input);
 
 			if (numberHasCountry && numberHasCountry !== prevCountry) {
@@ -118,7 +113,6 @@
 			dispatch('updateValue', value);
 			dispatch('updateDetailedValue', detailedValue);
 		} else if (input === null && currCountry !== null) {
-			// console.log('input null');
 			/** If the user modify the country, it's reset the input value, and we don't dispatch country change event,
 			 * since the user himself initiated it.
 			 * */
@@ -135,7 +129,6 @@
 				dispatch('updateDetailedValue', detailedValue);
 			}
 		} else {
-			// console.log('both null');
 			valid = true;
 			value = null;
 			detailedValue = null;
@@ -150,7 +143,7 @@
 	let countryWatchInitRun = true;
 	const countryChangeWatchFunction = () => {
 		if (!countryWatchInitRun) {
-			handleParsePhoneNumber(null, country, 'countryWatcher');
+			handleParsePhoneNumber(null, country);
 		}
 		countryWatchInitRun = false;
 	};
@@ -165,20 +158,15 @@
 		: placeholder;
 
 	const initialize = () => {
-		// console.log(country);
 		if (value && country) {
-			handleParsePhoneNumber(value, country, 'initialize - value & country');
+			handleParsePhoneNumber(value, country);
 		} else if (value) {
 			const numberHasCountry = getCountryForPartialE164Number(value);
 			if (numberHasCountry) {
 				// updateCountry(numberHasCountry);
-				handleParsePhoneNumber(
-					value,
-					numberHasCountry,
-					'initialize - value contains country'
-				);
+				handleParsePhoneNumber(value, numberHasCountry);
 			} else {
-				handleParsePhoneNumber(value, null, 'initialize - value only');
+				handleParsePhoneNumber(value, null);
 			}
 		}
 	};
