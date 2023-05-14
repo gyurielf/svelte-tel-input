@@ -23,7 +23,7 @@
 	let advancedExampleOptions: TelInputOptions = {
 		autoPlaceholder: true,
 		spaces: true,
-		invalidateOnCountryChange: false
+		invalidateOnCountryChange: true
 	};
 
 	/* basicWithE164 example */
@@ -33,10 +33,10 @@
 		valid: true,
 		country: null
 	};
-
 	let basicExampleWithE164Options: TelInputOptions = {
 		autoPlaceholder: true,
-		spaces: true
+		spaces: true,
+		invalidateOnCountryChange: false
 	};
 
 	/* basicWithNull example */
@@ -49,7 +49,8 @@
 
 	let basicExampleWithNullOptions: TelInputOptions = {
 		autoPlaceholder: true,
-		spaces: true
+		spaces: true,
+		invalidateOnCountryChange: false
 	};
 
 	/* eventDriven example */
@@ -62,7 +63,8 @@
 
 	let eventDrivenExampleOptions: TelInputOptions = {
 		autoPlaceholder: true,
-		spaces: true
+		spaces: true,
+		invalidateOnCountryChange: false
 	};
 </script>
 
