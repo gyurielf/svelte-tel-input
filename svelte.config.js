@@ -29,6 +29,8 @@ export default {
 				'!**/examples/*',
 				'!**/utils/typeCheck.ts',
 				'!**/utils/examples/*',
+				'!**/utils/directives/focusAction.ts',
+				'!**/utils/directives/seoJsonLdAction.ts',
 				'!**/components/utils/*',
 				'!**/components/examples/*',
 				'!**/components/Input/AdvancedTelInput.svelte',
