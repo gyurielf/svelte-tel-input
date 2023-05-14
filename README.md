@@ -115,7 +115,7 @@ The default export of the library is the main TelInput component. It has the fol
 
 Config options:
 
-```
+```javascript
 {
     // Generates country specific placeholder for the selected country.
     autoPlaceholder: true,
