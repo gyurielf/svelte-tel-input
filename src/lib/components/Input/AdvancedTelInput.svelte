@@ -4,19 +4,14 @@
 	import { clickOutsideAction } from '$lib/utils/directives/clickOutsideAction';
 	import TelInput from '$lib/components/Input/TelInput.svelte';
 	import { isSelected } from '$lib/utils/helpers';
-	import type {
-		NormalizedTelNumber,
-		CountrySelectEvents,
-		CountryCode,
-		E164Number
-	} from '$lib/types';
+	import type { DetailedValue, CountrySelectEvents, CountryCode, E164Number } from '$lib/types';
 
 	export let searchText = '';
 	let selectedCountry: CountryCode;
 	export let clickOutside = true;
 	export let closeOnClick = true;
 	export let disabled = false;
-	export let detailedValue: NormalizedTelNumber | null = null;
+	export let detailedValue: DetailedValue | null = null;
 	export let value: E164Number | null;
 
 	$: selectedCountryDialCode =

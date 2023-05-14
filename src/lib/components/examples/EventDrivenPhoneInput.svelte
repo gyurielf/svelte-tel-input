@@ -1,7 +1,7 @@
 <script lang="ts">
 	import TelInput from '$lib/components/Input/TelInput.svelte';
 	import { normalizedCountries } from '$lib/assets';
-	import type { NormalizedTelNumber, E164Number, CountryCode } from '$lib/types';
+	import type { DetailedValue, E164Number, CountryCode } from '$lib/types';
 
 	// E164 formatted value, usually you should store and use this.
 	export let value: E164Number | null;
@@ -13,7 +13,7 @@
 	export let valid: boolean;
 
 	// Phone number details
-	export let detailedValue: (NormalizedTelNumber | Partial<NormalizedTelNumber>) | null = null;
+	export let detailedValue: (DetailedValue | Partial<DetailedValue>) | null = null;
 
 	const handleValueUpdate = (e: CustomEvent<E164Number | null>) => {
 		value = e.detail ?? null;
@@ -28,7 +28,7 @@
 	};
 
 	const handleDetailedValueUpdate = (
-		e: CustomEvent<(NormalizedTelNumber | Partial<NormalizedTelNumber>) | null>
+		e: CustomEvent<(DetailedValue | Partial<DetailedValue>) | null>
 	) => {
 		detailedValue = e.detail;
 	};
@@ -63,9 +63,9 @@
 	</select>
 
 	<TelInput
+		{value}
 		{country}
 		{valid}
-		{value}
 		options={{ invalidateOnCountryChange: true }}
 		on:updateValue={handleValueUpdate}
 		on:updateCountry={handleCountryUpdate}

@@ -5,7 +5,7 @@
 	import TelInput from '$lib/components/Input/TelInput.svelte';
 	import { isSelected } from '$lib/utils/helpers';
 	import type {
-		NormalizedTelNumber,
+		DetailedValue,
 		CountrySelectEvents,
 		CountryCode,
 		E164Number,
@@ -18,7 +18,7 @@
 	export let disabled = false;
 	// Disabled in favour of enabled autoPlaceholder.
 	// export let placeholder: string | null = null;
-	export let detailedValue: NormalizedTelNumber | null = null;
+	export let detailedValue: DetailedValue | null = null;
 	export let value: E164Number | null;
 	export let searchPlaceholder: string | null = 'Search';
 

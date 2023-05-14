@@ -34,7 +34,7 @@ export interface PhoneNumberError {
 	error: PhoneNumberParseError;
 }
 
-export interface NormalizedTelNumber {
+export interface DetailedValue {
 	countryCode?: CountryCode | null;
 	isValid: boolean;
 	phoneNumber: string | null;
@@ -51,16 +51,6 @@ export interface NormalizedTelNumber {
 
 export type PhoneNumberParseError = 'NOT_A_NUMBER' | 'INVALID_COUNTRY' | 'TOO_SHORT' | 'TOO_LONG';
 export type PhoneType = 'FIXED_LINE' | 'MOBILE';
-
-export type {
-	CountryCallingCode,
-	CountryCode,
-	E164Number,
-	NationalNumber,
-	PhoneNumber,
-	Countries,
-	MetadataJson
-};
 
 export interface TelInputValidity {
 	value: boolean | null;
@@ -93,3 +83,13 @@ export interface TelInputOptions {
 	 */
 	// format: 'original' | 'national' | 'international';
 }
+
+export type {
+	CountryCallingCode,
+	CountryCode,
+	E164Number,
+	NationalNumber,
+	PhoneNumber,
+	Countries,
+	MetadataJson
+};

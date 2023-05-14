@@ -1,7 +1,7 @@
 <script lang="ts">
 	import TelInput from '$lib/components/Input/TelInput.svelte';
 	import { normalizedCountries } from '$lib/assets';
-	import type { NormalizedTelNumber, E164Number, CountryCode } from '$lib/types';
+	import type { DetailedValue, E164Number, CountryCode } from '$lib/types';
 
 	// E164 formatted value, usually you should store and use this.
 	export let value: E164Number | null;
@@ -13,7 +13,7 @@
 	export let valid: boolean;
 
 	// Phone number details
-	export let detailedValue: NormalizedTelNumber | null = null;
+	export let detailedValue: DetailedValue | null = null;
 </script>
 
 <div class="flex">

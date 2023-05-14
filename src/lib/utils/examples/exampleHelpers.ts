@@ -1,6 +1,6 @@
-import type { NormalizedTelNumber } from '$lib/types';
+import type { DetailedValue } from '$lib/types';
 
-export const jsonPrettyParser = (node: HTMLElement, data: NormalizedTelNumber | null) => {
+export const jsonPrettyParser = (node: HTMLElement, data: DetailedValue | null) => {
 	data !== null && (node.innerHTML = `<code>${JSON.stringify(data, null, 2)}</code>`);
 	return {
 		destroy: () => {

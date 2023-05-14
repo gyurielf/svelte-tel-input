@@ -2,20 +2,26 @@
 'svelte-tel-input': major
 ---
 
-breaking: renamed parsedTelInput property:
+breaking: rename `parsedTelInput` property:
 `parsedTelInput` is `detailedValue` from now.
 ```diff
 -<TelInput bind:parsedTelInput ... />;
 +<TelInput bind:detailedValue ... />;
 ```
 
-breaking: renamed dispatched events:
+breaking: rename dispatched events:
 `parseInput` is splitted to two (`updateValue` and `updateDetailedValue` ) event.
 `valid` is `updateValid` from now.
 
 ```diff
 -<TelInput on:parseInput={...} on:valid={...} ... />;
 +<TelInput on:updateValue={...} on:updateDetailedValue={...} on:updateValid={...} on:updateCountry={...} ... />;
+```
+
+breaking: rename `NormalizedTelNumber` type to `DetailedValue`:
+```diff
+-import type { NormalizedTelNumber } from 'svelte-tel-input/types';
++import type { DetailedValue } from 'svelte-tel-input/types';
 ```
 
 feat: new event added: `updateCountry`

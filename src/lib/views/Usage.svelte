@@ -1,14 +1,14 @@
 <script lang="ts">
 	import BasicPhoneInput from '$lib/components/examples/BasicPhoneInput.svelte';
-	import AdvancedTelInput from '$lib/components/examples/AdvancedPhoneInput.svelte';
+	import AdvancedPhoneInput from '$lib/components/examples/AdvancedPhoneInput.svelte';
 	import PayloadBlock from '$lib/components/utils/PayloadBlock.svelte';
 	import OptionsPanel from './OptionsPanel.svelte';
 	import EventDrivenPhoneInput from '$lib/components/examples/EventDrivenPhoneInput.svelte';
-	import type { NormalizedTelNumber, E164Number, TelInputOptions, CountryCode } from '$lib/types';
+	import type { DetailedValue, E164Number, TelInputOptions, CountryCode } from '$lib/types';
 
 	interface ExampleProps {
 		value: E164Number | null;
-		detailedValue: NormalizedTelNumber | null;
+		detailedValue: DetailedValue | null;
 		valid: boolean;
 		country: CountryCode | null;
 	}
@@ -94,7 +94,7 @@
 			</div>
 		</div>
 		{#key advancedExampleOptions}
-			<AdvancedTelInput
+			<AdvancedPhoneInput
 				options={advancedExampleOptions}
 				bind:value={advancedExampleProps.value}
 				bind:detailedValue={advancedExampleProps.detailedValue}

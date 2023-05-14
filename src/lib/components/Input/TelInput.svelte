@@ -8,12 +8,12 @@
 		generatePlaceholder
 	} from '$lib/utils/helpers';
 	import { watcher } from '$lib/stores';
-	import type { NormalizedTelNumber, CountryCode, E164Number, TelInputOptions } from '$lib/types';
+	import type { DetailedValue, CountryCode, E164Number, TelInputOptions } from '$lib/types';
 
 	const dispatch = createEventDispatcher<{
 		updateCountry: CountryCode | null;
 		parseError: string;
-		updateDetailedValue: Partial<NormalizedTelNumber> | null;
+		updateDetailedValue: Partial<DetailedValue> | null;
 		updateValid: boolean;
 		updateValue: E164Number | null;
 	}>();
@@ -29,14 +29,14 @@
 	/** The core value of the input, this is the only one what you can store. It's an E164 phone number.*/
 	export let value: E164Number | null;
 	/** Detailed parse of the E164 phone number */
-	export let detailedValue: Partial<NormalizedTelNumber> | null = null;
+	export let detailedValue: Partial<DetailedValue> | null = null;
 	export let valid = true;
 	export let disabled = false;
 	/** It will overwrite the autoPlaceholder ! */
 	export let placeholder: string | null = null;
 	/** You can turn on and off certain features by this object */
 	export let options: TelInputOptions = defaultOptions;
-	/** If true it's run extra validation if the field is empty */
+	/** Set the required attribute on the input element */
 	export let required: boolean | null = null;
 
 	// export let invalidateOnCountryChange = false;

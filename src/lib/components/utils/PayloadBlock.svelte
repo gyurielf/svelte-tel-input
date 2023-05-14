@@ -1,15 +1,15 @@
 <script lang="ts">
-	import type { CountryCode, E164Number, NormalizedTelNumber } from '$lib/types';
+	import type { CountryCode, E164Number, DetailedValue } from '$lib/types';
 	import { jsonPrettyParser } from '$lib/utils/examples/exampleHelpers';
 	import { slide } from 'svelte/transition';
 
-	export let exampleData: NormalizedTelNumber | null;
+	export let exampleData: DetailedValue | null;
 	export let value: E164Number | null;
 	export let valid: boolean;
 	export let country: CountryCode | null;
 	let isOpen = true;
 
-	const generateEntries = (data: NormalizedTelNumber | null | undefined) => {
+	const generateEntries = (data: DetailedValue | null | undefined) => {
 		if (data !== undefined) {
 			if (data !== null) {
 				return Object.entries(data);
