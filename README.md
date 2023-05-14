@@ -35,10 +35,10 @@ npm install --save svelte-tel-input
 ```html
 <script lang="ts">
 	import { TelInput, normalizedCountries } from 'svelte-tel-input';
-	import type { NormalizedTelNumber, CountryCode, E164Number } from 'svelte-tel-input/types';
+	import type { DetailedValue, CountryCode, E164Number } from 'svelte-tel-input/types';
 
 	// Any Country Code Alpha-2 (ISO 3166)
-	let country: CountryCode | null = 'HU';
+	let selectedCountry: CountryCode | null = 'HU';
 
 	// You must use E164 number format. It's guarantee the parsing and storing consistency.
 	let value: E164Number | null = '+36301234567';
@@ -47,7 +47,7 @@ npm install --save svelte-tel-input
     let valid = true;
 
 	// Optional - Extended details about the parsed phone number
-	let parsedTelInput: NormalizedTelNumber | null = null;
+	let detailedValue: DetailedValue | null = null;
 </script>
 
 <div class="wrapper">
@@ -68,7 +68,7 @@ npm install --save svelte-tel-input
 			</option>
 		{/each}
 	</select>
-    <TelInput bind:country bind:value bind:valid bind:parsedTelInput class="basic-tel-input {!isValid && 'invalid'}" />
+    <TelInput bind:country={selectedCountry} bind:value bind:valid bind:detailedValue class="basic-tel-input {!isValid && 'invalid'}" />
 </div>
 
 <style>
@@ -102,16 +102,65 @@ npm install --save svelte-tel-input
 
 The default export of the library is the main TelInput component. It has the following props:
 
-| Props           | Type                        | Default Value | Usage                                                                                                                                                                                                                                                                                                                |
-| --------------- | --------------------------- | ------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| country         | `CountryCode \| null`       | `null`        | It's accept any Country Code Alpha-2 (ISO 3166). You can set manually (e.g: by the user via a select). The parser will inspect the entered phone number and if it detect a valid country calling code, then it's automatically set the country to according to the detected country calling code. E.g: `+36` -> `HU` |
-| disabled        | `boolean`                   | `false`       | It's block the parser and prevent entering input. You must handle its styling on your own.                                                                                                                                                                                                                           |
-| valid           | `boolean`                   | `true`        | Indicates whether the entered tel number validity.                                                                                                                                                                                                                                                                   |
-| value           | `E164Number \| null`        | `null`        | [E164](https://en.wikipedia.org/wiki/E.164) is the international format of phone.numbers. This is the main entry point to store and/or load an existent phone number.                                                                                                                                                |
-| parsedTelInput  | `NormalizedTelInput \|null` | `null`        | All of the formatted results of the tel input.                                                                                                                                                                                                                                                                       |
-| class           | `string`                    | ``            | You can pass down any classname to the component                                                                                                                                                                                                                                                                     |
-| autoPlaceholder | `boolean`                   | `true`        | Generates country specific placeholder for the selected country.something                                                                                                                                                                                                                                            |
-| allowSpaces     | `boolean`                   | `true`        | Allow or disallow spaces in the input field                                                                                                                                                                                                                                                                          |
+| Property name | Type                   | Default Value | Usage                                                                                                                                                                                                                                                                                                                |
+| ------------- | ---------------------- | ------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| value         | `E164Number \| null`   | `null`        | [E164](https://en.wikipedia.org/wiki/E.164) is the international format of phone.numbers. This is the main entry point to store and/or load an existent phone number.                                                                                                                                                |
+| country       | `CountryCode \| null`  | `null`        | It's accept any Country Code Alpha-2 (ISO 3166). You can set manually (e.g: by the user via a select). The parser will inspect the entered phone number and if it detect a valid country calling code, then it's automatically set the country to according to the detected country calling code. E.g: `+36` -> `HU` |
+| disabled      | `boolean`              | `false`       | It's block the parser and prevent entering input. You must handle its styling on your own.                                                                                                                                                                                                                           |
+| valid         | `boolean`              | `true`        | Indicates whether the entered tel number validity.                                                                                                                                                                                                                                                                   |
+| detailedValue | `DetailedValue \|null` | `null`        | All of the formatted results of the tel input.                                                                                                                                                                                                                                                                       |
+| class         | `string`               | ``            | You can pass down any classname to the component                                                                                                                                                                                                                                                                     |
+| required      | `boolean \| null`      | `null`        | Set the required attribute on the input element                                                                                                                                                                                                                                                                      |
+| options       | `TelInputOptions`      | check below   | Allow or disallow spaces in the input field                                                                                                                                                                                                                                                                          |
+
+Config options:
+
+```
+{
+    // Generates country specific placeholder for the selected country.
+    autoPlaceholder: true,
+    // Allow or disallow spaces in the input field
+    spaces: true,
+    // If you have a parsed phone number and you change country manually from outside, then it's set the `valid` prop to false.
+    invalidateOnCountryChange: false
+}
+```
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+## Dispatched Events
+
+The default export of the library is the main TelInput component. It has the following props:
+
+| Event name          | Type                   |
+| ------------------- | ---------------------- |
+| updateValue         | `E164Number \| null`   |
+| updateDetailedValue | `DetailedValue \|null` |
+| updateCountry       | `CountryCode \| null`  |
+| updateValid         | `boolean`              |
+| parseError          | `string`               |
+
+## Use case of the event driven behavior
+
+```typescript
+<script lang="ts">
+	// Imports, etc....
+	let value: E164Number | null = null;
+	const yourHandler = (e: CustomEvent<E164Number | null>) => {
+        value = e.detail //
+        // do stuff...
+	};
+</script>
+
+<TelInput value={cachedValue ?? value} on:updateValue={yourHandler} ... />
+```
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+## Caveats
+
+-   In order to reset the component from outside, you must pass (or set if you binded) `null` for both the `value` and `country` properties.
+-   Let's assume you pass a `US` `E164` number, which can be a partial `E164`, but long enough to determine the country and you pass `DE` country directly. The country will be updated to `US`, which is determined from the `E164` in this example. If the `E164` is not long enough to determine its country, then the country will stay what you passed to the component (`DE`).
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 

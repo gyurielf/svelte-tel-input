@@ -29,10 +29,14 @@ export default {
 				'!**/examples/*',
 				'!**/utils/typeCheck.ts',
 				'!**/utils/examples/*',
+				'!**/utils/directives/focusAction.ts',
+				'!**/utils/directives/seoJsonLdAction.ts',
 				'!**/components/utils/*',
 				'!**/components/examples/*',
-				'!**/components/examples/*',
-				'!**/stores/DevExampleStores.ts'
+				'!**/components/Input/AdvancedTelInput.svelte',
+				'!**/stores/DevExampleStores.ts',
+				'!**/assets/regions.ts',
+				'!**/assets/telTypes.ts'
 			]);
 		}
 	}

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import TelInput from '$lib/components/Input/TelInput.svelte';
 	import { normalizedCountries } from '$lib/assets';
-	import type { NormalizedTelNumber, E164Number, CountryCode } from '$lib/types';
+	import type { DetailedValue, E164Number, CountryCode } from '$lib/types';
 
 	// E164 formatted value, usually you should store and use this.
 	export let value: E164Number | null;
@@ -13,14 +13,24 @@
 	export let valid: boolean;
 
 	// Phone number details
-	export let parsedTelInput: (NormalizedTelNumber | Partial<NormalizedTelNumber>) | null = null;
+	export let detailedValue: (DetailedValue | Partial<DetailedValue>) | null = null;
 
-	const handleParsedTelInput = (e: CustomEvent<Partial<NormalizedTelNumber | null>>) => {
-		parsedTelInput = e.detail;
+	const handleValueUpdate = (e: CustomEvent<E164Number | null>) => {
+		value = e.detail ?? null;
 	};
 
-	const handleTelInput = (e: CustomEvent<Partial<NormalizedTelNumber | null>>) => {
-		value = e.detail?.e164 ?? null;
+	const handleCountryUpdate = (e: CustomEvent<CountryCode | null>) => {
+		country = e.detail;
+	};
+
+	const handleValidUpdate = (e: CustomEvent<boolean>) => {
+		valid = e.detail;
+	};
+
+	const handleDetailedValueUpdate = (
+		e: CustomEvent<(DetailedValue | Partial<DetailedValue>) | null>
+	) => {
+		detailedValue = e.detail;
 	};
 </script>
 
@@ -53,19 +63,25 @@
 	</select>
 
 	<TelInput
-		bind:country
-		bind:valid
 		{value}
-		on:parseInput={(e) => {
-			handleParsedTelInput(e);
-			handleTelInput(e);
-		}}
+		{country}
+		{valid}
+		options={{ invalidateOnCountryChange: true }}
+		on:updateValue={handleValueUpdate}
+		on:updateCountry={handleCountryUpdate}
+		on:updateValid={handleValidUpdate}
+		on:updateDetailedValue={handleDetailedValueUpdate}
 		class="px-4 py-1 w-full bg-gray-50 dark:bg-gray-700 
         dark:placeholder-gray-400 dark:text-white text-gray-900 focus:outline-none rounded-r-lg {valid
 			? 'border border-gray-300 border-l-gray-100 dark:border-l-gray-700 dark:border-gray-600'
 			: 'border-2 border-red-600'}"
 	/>
-	<button class="ml-4 px-4 py-2 rounded bg-blue-500 text-white" on:click={() => (value = null)}
-		>Reset</button
+	<button
+		class="ml-4 px-4 py-2 rounded bg-blue-500 text-white"
+		on:click={() => {
+			value = null;
+			country = null;
+			// valid = true;
+		}}>Reset</button
 	>
 </div>

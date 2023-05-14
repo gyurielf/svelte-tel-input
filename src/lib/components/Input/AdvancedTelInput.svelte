@@ -4,27 +4,22 @@
 	import { clickOutsideAction } from '$lib/utils/directives/clickOutsideAction';
 	import TelInput from '$lib/components/Input/TelInput.svelte';
 	import { isSelected } from '$lib/utils/helpers';
-	import type {
-		NormalizedTelNumber,
-		CountrySelectEvents,
-		CountryCode,
-		E164Number
-	} from '$lib/types';
+	import type { DetailedValue, CountrySelectEvents, CountryCode, E164Number } from '$lib/types';
 
 	export let searchText = '';
-	let selected: CountryCode;
+	let selectedCountry: CountryCode;
 	export let clickOutside = true;
 	export let closeOnClick = true;
 	export let disabled = false;
-	export let parsedTelInput: NormalizedTelNumber | null = null;
+	export let detailedValue: DetailedValue | null = null;
 	export let value: E164Number | null;
 
 	$: selectedCountryDialCode =
-		normalizedCountries.find((el) => el.iso2 === selected)?.dialCode || null;
+		normalizedCountries.find((el) => el.iso2 === selectedCountry)?.dialCode || null;
 
 	let isOpen = false;
 
-	$: isValid = parsedTelInput?.isValid ?? false;
+	$: isValid = detailedValue?.isValid ?? false;
 
 	const toggleDropDown = (e: Event) => {
 		e.preventDefault();
@@ -58,11 +53,11 @@
 		if (disabled) return;
 		e?.preventDefault();
 		if (
-			selected === undefined ||
-			selected === null ||
-			(typeof selected === typeof val && selected !== val)
+			selectedCountry === undefined ||
+			selectedCountry === null ||
+			(typeof selectedCountry === typeof val && selectedCountry !== val)
 		) {
-			selected = val;
+			selectedCountry = val;
 			onChange(val);
 			selectClick();
 		} else {
@@ -91,9 +86,9 @@
 		type="button"
 		on:click={toggleDropDown}
 	>
-		{#if selected && selected !== null}
+		{#if selectedCountry && selectedCountry !== null}
 			<div class="inline-flex items-center text-left">
-				<span class="flag flag-{selected.toLowerCase()} flex-shrink-0 mr-3" />
+				<span class="flag flag-{selectedCountry.toLowerCase()} flex-shrink-0 mr-3" />
 				<span class=" text-gray-500">+{selectedCountryDialCode}</span>
 			</div>
 		{:else}
@@ -138,7 +133,7 @@
 					/>
 				{/if}
 				{#each filteredItems as country (country.id)}
-					{@const isActive = isSelected(country.iso2, selected)}
+					{@const isActive = isSelected(country.iso2, selectedCountry)}
 					<li role="option" aria-selected={isActive}>
 						<button
 							value={country.iso2}
@@ -168,8 +163,8 @@
 
 	<TelInput
 		id="tel-input"
-		bind:country={selected}
-		bind:parsedTelInput
+		bind:country={selectedCountry}
+		bind:detailedValue
 		bind:value
 		class="border border-gray-300 border-l-gray-100 dark:border-l-gray-700 dark:border-gray-600 {isValid
 			? `bg-gray-50 dark:bg-gray-700 

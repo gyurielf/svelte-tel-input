@@ -1,14 +1,14 @@
 <script lang="ts">
 	import BasicPhoneInput from '$lib/components/examples/BasicPhoneInput.svelte';
-	import AdvancedTelInput from '$lib/components/examples/AdvancedPhoneInput.svelte';
+	import AdvancedPhoneInput from '$lib/components/examples/AdvancedPhoneInput.svelte';
 	import PayloadBlock from '$lib/components/utils/PayloadBlock.svelte';
-	import type { NormalizedTelNumber, E164Number, TelInputOptions, CountryCode } from '$lib/types';
 	import OptionsPanel from './OptionsPanel.svelte';
 	import EventDrivenPhoneInput from '$lib/components/examples/EventDrivenPhoneInput.svelte';
+	import type { DetailedValue, E164Number, TelInputOptions, CountryCode } from '$lib/types';
 
 	interface ExampleProps {
 		value: E164Number | null;
-		parsedTelInput: NormalizedTelNumber | null;
+		detailedValue: DetailedValue | null;
 		valid: boolean;
 		country: CountryCode | null;
 	}
@@ -16,52 +16,55 @@
 	/* advanced example */
 	let advancedExampleProps: ExampleProps = {
 		value: '+36201234567',
-		parsedTelInput: null,
+		detailedValue: null,
 		valid: true,
 		country: null
 	};
 	let advancedExampleOptions: TelInputOptions = {
 		autoPlaceholder: true,
-		spaces: true
+		spaces: true,
+		invalidateOnCountryChange: true
 	};
 
 	/* basicWithE164 example */
 	let basicExamplePropsWithE164: ExampleProps = {
 		value: '+14842918723',
-		parsedTelInput: null,
+		detailedValue: null,
 		valid: true,
 		country: null
 	};
-
 	let basicExampleWithE164Options: TelInputOptions = {
 		autoPlaceholder: true,
-		spaces: true
+		spaces: true,
+		invalidateOnCountryChange: false
 	};
 
 	/* basicWithNull example */
 	let basicExamplePropsWithNull: ExampleProps = {
 		value: null,
-		parsedTelInput: null,
+		detailedValue: null,
 		valid: true,
 		country: null
 	};
 
 	let basicExampleWithNullOptions: TelInputOptions = {
 		autoPlaceholder: true,
-		spaces: true
+		spaces: true,
+		invalidateOnCountryChange: false
 	};
 
-	/* eventDrivenWithNull example */
-	let eventDrivenExamplePropsWithNull: ExampleProps = {
-		value: null,
-		parsedTelInput: null,
+	/* eventDriven example */
+	let eventDrivenExampleProps: ExampleProps = {
+		value: '+441234567988',
+		detailedValue: null,
 		valid: true,
 		country: null
 	};
 
-	let eventDrivenExampleWithNullOptions: TelInputOptions = {
+	let eventDrivenExampleOptions: TelInputOptions = {
 		autoPlaceholder: true,
-		spaces: true
+		spaces: true,
+		invalidateOnCountryChange: false
 	};
 </script>
 
@@ -93,10 +96,10 @@
 			</div>
 		</div>
 		{#key advancedExampleOptions}
-			<AdvancedTelInput
+			<AdvancedPhoneInput
 				options={advancedExampleOptions}
 				bind:value={advancedExampleProps.value}
-				bind:parsedTelInput={advancedExampleProps.parsedTelInput}
+				bind:detailedValue={advancedExampleProps.detailedValue}
 				bind:valid={advancedExampleProps.valid}
 				bind:selectedCountry={advancedExampleProps.country}
 			/>
@@ -104,7 +107,7 @@
 		<OptionsPanel bind:options={advancedExampleOptions} />
 		<PayloadBlock
 			bind:value={advancedExampleProps.value}
-			bind:exampleData={advancedExampleProps.parsedTelInput}
+			bind:exampleData={advancedExampleProps.detailedValue}
 			bind:valid={advancedExampleProps.valid}
 			bind:country={advancedExampleProps.country}
 		/>
@@ -138,14 +141,14 @@
 		</div>
 		<BasicPhoneInput
 			bind:value={basicExamplePropsWithE164.value}
-			bind:parsedTelInput={basicExamplePropsWithE164.parsedTelInput}
+			bind:detailedValue={basicExamplePropsWithE164.detailedValue}
 			bind:valid={basicExamplePropsWithE164.valid}
 			bind:country={basicExamplePropsWithE164.country}
 		/>
 		<OptionsPanel bind:options={basicExampleWithE164Options} />
 		<PayloadBlock
 			bind:value={basicExamplePropsWithE164.value}
-			bind:exampleData={basicExamplePropsWithE164.parsedTelInput}
+			bind:exampleData={basicExamplePropsWithE164.detailedValue}
 			bind:valid={basicExamplePropsWithE164.valid}
 			bind:country={basicExamplePropsWithE164.country}
 		/>
@@ -179,14 +182,14 @@
 		</div>
 		<BasicPhoneInput
 			bind:value={basicExamplePropsWithNull.value}
-			bind:parsedTelInput={basicExamplePropsWithNull.parsedTelInput}
+			bind:detailedValue={basicExamplePropsWithNull.detailedValue}
 			bind:valid={basicExamplePropsWithNull.valid}
 			bind:country={basicExamplePropsWithNull.country}
 		/>
 		<OptionsPanel bind:options={basicExampleWithNullOptions} />
 		<PayloadBlock
 			bind:value={basicExamplePropsWithNull.value}
-			bind:exampleData={basicExamplePropsWithNull.parsedTelInput}
+			bind:exampleData={basicExamplePropsWithNull.detailedValue}
 			bind:valid={basicExamplePropsWithNull.valid}
 			bind:country={basicExamplePropsWithNull.country}
 		/>
@@ -194,7 +197,7 @@
 	<hr class="my-5" />
 	<div>
 		<div class="flex">
-			<h2 class="text-2xl mb-3">Event driven example without init value</h2>
+			<h2 class="text-2xl mb-3">Event driven example</h2>
 			<div class="socials ml-2">
 				<a
 					class="relative flex items-center text-gray-soft hover:text-gray-inverse border-0 rounded-md"
@@ -219,17 +222,17 @@
 			</div>
 		</div>
 		<EventDrivenPhoneInput
-			bind:value={eventDrivenExamplePropsWithNull.value}
-			bind:parsedTelInput={eventDrivenExamplePropsWithNull.parsedTelInput}
-			bind:valid={eventDrivenExamplePropsWithNull.valid}
-			bind:country={eventDrivenExamplePropsWithNull.country}
+			bind:value={eventDrivenExampleProps.value}
+			bind:detailedValue={eventDrivenExampleProps.detailedValue}
+			bind:valid={eventDrivenExampleProps.valid}
+			bind:country={eventDrivenExampleProps.country}
 		/>
-		<OptionsPanel bind:options={eventDrivenExampleWithNullOptions} />
+		<OptionsPanel bind:options={eventDrivenExampleOptions} />
 		<PayloadBlock
-			value={eventDrivenExamplePropsWithNull.value}
-			exampleData={eventDrivenExamplePropsWithNull.parsedTelInput}
-			valid={eventDrivenExamplePropsWithNull.valid}
-			country={eventDrivenExamplePropsWithNull.country}
+			value={eventDrivenExampleProps.value}
+			exampleData={eventDrivenExampleProps.detailedValue}
+			valid={eventDrivenExampleProps.valid}
+			country={eventDrivenExampleProps.country}
 		/>
 	</div>
 </div>

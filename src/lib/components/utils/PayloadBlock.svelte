@@ -1,15 +1,15 @@
 <script lang="ts">
-	import type { CountryCode, E164Number, NormalizedTelNumber } from '$lib/types';
+	import type { CountryCode, E164Number, DetailedValue } from '$lib/types';
 	import { jsonPrettyParser } from '$lib/utils/examples/exampleHelpers';
 	import { slide } from 'svelte/transition';
 
-	export let exampleData: NormalizedTelNumber | null;
+	export let exampleData: DetailedValue | null;
 	export let value: E164Number | null;
 	export let valid: boolean;
 	export let country: CountryCode | null;
 	let isOpen = true;
 
-	const generateEntries = (data: NormalizedTelNumber | null | undefined) => {
+	const generateEntries = (data: DetailedValue | null | undefined) => {
 		if (data !== undefined) {
 			if (data !== null) {
 				return Object.entries(data);
@@ -104,7 +104,7 @@
 				<div class="mb-2 text-lg">
 					<span
 						class="bg-gray-100 text-gray-800 font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300"
-						>parsedTelInput</span
+						>detailedValue</span
 					>
 				</div>
 			</div>
@@ -117,8 +117,8 @@
 				</div>
 				<div>
 					<h3 class="text-lg font-bold">Value</h3>
-					{#each exampleDataEntries as [_, value]}
-						<div>{value}</div>
+					{#each exampleDataEntries as [_, val]}
+						<div>{val}</div>
 					{/each}
 				</div>
 			</div>
@@ -132,7 +132,7 @@
 							use:jsonPrettyParser={exampleData}
 						/>
 					{:else}
-						<pre lang="no-highlight" class="whitespace-pre-wrap">"{value}"</pre>
+						<pre lang="no-highlight" class="whitespace-pre-wrap">"{exampleData}"</pre>
 					{/if}
 				{/key}
 			</div>
