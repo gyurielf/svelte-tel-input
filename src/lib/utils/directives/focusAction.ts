@@ -1,59 +1,89 @@
-export function focusable_children(node: HTMLElement) {
+export function focusableChildren(node: HTMLElement, infiniteStep = false) {
 	const nodes = Array.from(
-		node.querySelectorAll(
-			'a[href], button, input, textarea, select, details, [tabindex]:not([tabindex="-1"])'
+		node.querySelectorAll<HTMLElement>(
+			'li, button, a[href], input, textarea, select, details, [tabindex]:not([tabindex="-1"])'
 		)
 	);
 
-	const index = document.activeElement ? nodes.indexOf(document.activeElement) : -1;
+	const activeElement =
+		document.activeElement instanceof HTMLElement ? document.activeElement : null;
+	const index = activeElement ? nodes.indexOf(activeElement) : -1;
+
+	const focusNode = (node: HTMLElement | null) => {
+		if (node instanceof HTMLElement) {
+			node.focus();
+		}
+	};
+
+	const next = (selector?: string) => {
+		if (index === nodes.length - 1) {
+			// If infinite stepping is enabled, it jumps to the first element from the last.
+			if (infiniteStep) {
+				focusNode(nodes[0]);
+			}
+			// Stay on the last element
+			return;
+		}
+
+		let i = index + 1;
+		const matchedNodes = selector ? nodes.filter((node) => node.matches(selector)) : nodes;
+
+		while (i < nodes.length) {
+			const node = nodes[i];
+			if (matchedNodes.includes(node)) {
+				focusNode(node);
+				return;
+			}
+			i++;
+		}
+	};
+
+	const prev = (selector?: string) => {
+		if (index === 0) {
+			// If infinite stepping is enabled, it jumps to the last element from the first.
+			if (infiniteStep) {
+				focusNode(nodes[nodes.length - 1]);
+			}
+			// Stay on the first element
+			return;
+		}
+
+		let i = index - 1;
+		const matchedNodes = selector ? nodes.filter((node) => node.matches(selector)) : nodes;
+
+		while (i >= 0) {
+			const node = nodes[i];
+			if (matchedNodes.includes(node)) {
+				focusNode(node);
+				return;
+			}
+			i--;
+		}
+	};
 
 	const update = (d: number) => {
 		let i = index + d;
-		i += nodes.length;
-		i %= nodes.length;
-
-		// @ts-expect-error Element is not HTMLElement
-		nodes[i].focus();
+		i = Math.max(0, Math.min(i, nodes.length - 1));
+		const node = nodes[i];
+		focusNode(node);
 	};
 
 	return {
-		next: (selector: string) => {
-			const reordered = [...nodes.slice(index + 1), ...nodes.slice(0, index + 1)];
-
-			for (let i = 0; i < reordered.length; i += 1) {
-				if (!selector || reordered[i].matches(selector)) {
-					// @ts-expect-error Element is not HTMLElement
-					reordered[i].focus();
-					return;
-				}
-			}
-		},
-		prev: (selector: string) => {
-			const reordered = [...nodes.slice(index + 1), ...nodes.slice(0, index + 1)];
-
-			for (let i = reordered.length - 2; i >= 0; i -= 1) {
-				if (!selector || reordered[i].matches(selector)) {
-					// @ts-expect-error Element is not HTMLElement
-					reordered[i].focus();
-					return;
-				}
-			}
-		},
+		next,
+		prev,
 		update
 	};
 }
 
-export function trap(node: HTMLElement) {
+export function tabulatorFocusTrap(node: HTMLElement) {
 	const handle_keydown = (e: KeyboardEvent) => {
 		if (e.key === 'Tab') {
 			e.preventDefault();
 
-			const group = focusable_children(node);
+			const group = focusableChildren(node);
 			if (e.shiftKey) {
-				// @ts-expect-error Element is not HTMLElement
 				group.prev();
 			} else {
-				// @ts-expect-error Element is not HTMLElement
 				group.next();
 			}
 		}
@@ -68,11 +98,11 @@ export function trap(node: HTMLElement) {
 	};
 }
 
-// Put onto the element, where you want to use the keyboard navigation.
+// Put it to the wrapper element, where you want to use the keyboard navigation.
 // on:keydown={(e) => {
 //     if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
 //         e.preventDefault();
-//         const group = focusable_children(e.currentTarget);
+//         const group = focusableChildren(e.currentTarget);
 //         // when using arrow keys (as opposed to tab), don't focus buttons
 //         const selector = 'a, input';
 //         if (e.key === 'ArrowDown') {
@@ -82,4 +112,4 @@ export function trap(node: HTMLElement) {
 //         }
 //     }
 // }}
-// use:trap
+// use:tabulatorFocusTrap

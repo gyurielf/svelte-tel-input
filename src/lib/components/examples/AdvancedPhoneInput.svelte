@@ -12,6 +12,8 @@
 		TelInputOptions,
 		Country
 	} from '$lib/types';
+	import { focusableChildren, tabulatorFocusTrap } from '$lib/utils/directives/focusAction';
+	import { closeOnEscape } from '$lib/utils/directives/closeOnEscAction';
 
 	export let clickOutside = true;
 	export let closeOnClick = true;
@@ -108,7 +110,26 @@
 		? ``
 		: ` ring-pink-500 dark:ring-pink-500 ring-1 focus-within:ring-offset-1 focus-within:ring-offset-pink-500/50 focus-within:ring-1`}"
 >
-	<div class="flex" use:clickOutsideAction={closeOnClickOutside}>
+	<div
+		class="flex"
+		use:clickOutsideAction={closeOnClickOutside}
+		use:tabulatorFocusTrap
+		use:closeOnEscape={closeDropdown}
+		on:keydown={(e) => {
+			if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+				e.preventDefault();
+				const group = focusableChildren(e.currentTarget);
+
+				// when using arrow keys (as opposed to tab), don't focus buttons
+				const selector = 'li, input';
+				if (e.key === 'ArrowDown') {
+					group.next(selector);
+				} else {
+					group.prev(selector);
+				}
+			}
+		}}
+	>
 		<button
 			id="states-button"
 			data-dropdown-toggle="dropdown-states"
@@ -169,9 +190,10 @@
 					{#each sortCountries(normalizedCountries, searchText) as country (country.id)}
 						{@const isActive = isSelected(country.iso2, selectedCountry)}
 						<div id="country-{country.iso2}" role="option" aria-selected={isActive}>
-							<button
+							<!-- svelte-ignore a11y-click-events-have-key-events -->
+							<li
+								tabindex="-1"
 								value={country.iso2}
-								type="button"
 								class="inline-flex py-2 px-4 w-full text-sm hover:bg-gray-100 dark:hover:bg-gray-600
                              active:bg-gray-800 dark:active:bg-gray-800 overflow-hidden
                             {isActive
@@ -188,7 +210,7 @@
 									<span class="mr-2">{country.name}</span>
 									<span class="text-gray-500">+{country.dialCode}</span>
 								</div>
-							</button>
+							</li>
 						</div>
 					{/each}
 				</div>
