@@ -1,5 +1,13 @@
 # svelte-tel-input
 
+## 3.0.1
+
+### Patch Changes
+
+-   chore: update readme with advanced example REPL ([#162](https://github.com/gyurielf/svelte-tel-input/pull/162))
+
+-   fix: auto country update after manual country change ([#162](https://github.com/gyurielf/svelte-tel-input/pull/162))
+
 ## 3.0.0
 
 ### Major Changes
