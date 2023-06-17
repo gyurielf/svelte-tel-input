@@ -117,6 +117,7 @@
 			 * since the user himself initiated it.
 			 * */
 			if (currCountry !== prevCountry) {
+				prevCountry = currCountry;
 				valid = !options.invalidateOnCountryChange;
 				value = null;
 				if (inputValue !== null || inputValue !== '') {
@@ -140,6 +141,7 @@
 		}
 	};
 
+	// Watch user's country change.
 	let countryWatchInitRun = true;
 	const countryChangeWatchFunction = () => {
 		if (!countryWatchInitRun) {
@@ -147,7 +149,6 @@
 		}
 		countryWatchInitRun = false;
 	};
-
 	const countryChangeWatch = watcher(null, countryChangeWatchFunction);
 	$: $countryChangeWatch = country;
 

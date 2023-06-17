@@ -28,6 +28,10 @@ npm install --save svelte-tel-input
 
 ## Usage
 
+### Advanced
+
+_Snippet would be too long_ - [REPL](https://stackblitz.com/edit/svelte-tel-input-repl-1jfaar?file=README.md) (StackBlitz)
+
 ### Basic
 
 [REPL](https://stackblitz.com/edit/svelte-tel-input-repl?file=README.md) (StackBlitz)
