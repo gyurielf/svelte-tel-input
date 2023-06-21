@@ -1,4 +1,5 @@
 import { inspectAllowedChars, inputParser } from '$lib';
+import type { E164Number } from 'libphonenumber-js';
 export const telInputAction = (
 	node: HTMLInputElement,
 	{
@@ -7,12 +8,13 @@ export const telInputAction = (
 	}: {
 		handler: (val: string) => void;
 		spaces: boolean;
+		value: E164Number | null;
 	}
 ) => {
 	const onInput = (event: Event) => {
 		if (node && node.contains(event.target as HTMLInputElement)) {
-			const value = (event.target as HTMLInputElement).value;
-			const formattedInput = inputParser(value, {
+			const currentValue = (event.target as HTMLInputElement).value;
+			const formattedInput = inputParser(currentValue, {
 				parseCharacter: inspectAllowedChars,
 				allowSpaces: spaces
 			});
@@ -22,6 +24,15 @@ export const telInputAction = (
 	};
 	node.addEventListener('input', onInput, true);
 	return {
+		update(params: {
+			handler: (val: string) => void;
+			spaces: boolean;
+			value: E164Number | null;
+		}) {
+			if (params.value === null || params.value === '') {
+				node.value = '';
+			}
+		},
 		destroy() {
 			node.removeEventListener('input', onInput, true);
 		}
