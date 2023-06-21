@@ -81,7 +81,7 @@
 		on:click={() => {
 			value = null;
 			country = null;
-			// valid = true;
+			valid = true;
 		}}>Reset</button
 	>
 </div>

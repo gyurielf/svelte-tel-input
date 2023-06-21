@@ -39,8 +39,6 @@
 	/** Set the required attribute on the input element */
 	export let required: boolean | null = null;
 
-	// export let invalidateOnCountryChange = false;
-
 	let inputValue = value;
 	let prevCountry = country;
 
@@ -95,13 +93,11 @@
 				// It's need for refreshing html input value, if it is the same as the previouly parsed.
 				if (inputValue === detailedValue?.formatOriginal) {
 					inputValue = null;
-					inputValue = '';
 				}
 				inputValue = detailedValue?.formatOriginal;
 			} else if (detailedValue?.isValid && detailedValue?.nationalNumber) {
 				if (inputValue === detailedValue?.nationalNumber) {
 					inputValue = null;
-					inputValue = '';
 				}
 				inputValue = detailedValue?.nationalNumber;
 			}
@@ -122,7 +118,6 @@
 				value = null;
 				if (inputValue !== null || inputValue !== '') {
 					inputValue = null;
-					inputValue = '';
 				}
 				detailedValue = null;
 				dispatch('updateValid', valid);
@@ -137,7 +132,6 @@
 			dispatch('updateValid', valid);
 			dispatch('updateDetailedValue', detailedValue);
 			inputValue = null;
-			inputValue = '';
 		}
 	};
 
@@ -158,13 +152,19 @@
 			: null
 		: placeholder;
 
+	// Handle reset value only
+	$: if (value === null && inputValue !== null && detailedValue !== null) {
+		inputValue = null;
+		detailedValue = null;
+		dispatch('updateDetailedValue', detailedValue);
+	}
+
 	const initialize = () => {
 		if (value && country) {
 			handleParsePhoneNumber(value, country);
 		} else if (value) {
 			const numberHasCountry = getCountryForPartialE164Number(value);
 			if (numberHasCountry) {
-				// updateCountry(numberHasCountry);
 				handleParsePhoneNumber(value, numberHasCountry);
 			} else {
 				handleParsePhoneNumber(value, null);
@@ -195,5 +195,9 @@
 	on:keyup
 	on:paste
 	on:click
-	use:telInputAction={{ handler: handleInputAction, spaces: combinedOptions.spaces }}
+	use:telInputAction={{
+		handler: handleInputAction,
+		spaces: combinedOptions.spaces,
+		value
+	}}
 />
