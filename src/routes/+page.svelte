@@ -32,6 +32,8 @@
 			'@type': 'WebApplication',
 			name: 'Svelte Tel Input',
 			url: 'https://svelte-tel-input.vercel.app/',
+			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+			// @ts-ignore
 			logo: 'https://infiniteloop.cloud/i8logo.png',
 			sameAs: [
 				'https://svelte-tel-input.vercel.app',
