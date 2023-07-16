@@ -1,5 +1,11 @@
 # svelte-tel-input
 
+## 3.2.1
+
+### Patch Changes
+
+-   fix: readme and license ([#179](https://github.com/gyurielf/svelte-tel-input/pull/179))
+
 ## 3.2.0
 
 ### Minor Changes
