@@ -1,0 +1,16 @@
+version: '3.9'
+services:
+    node:
+        image: 'node:18.15-alpine3.17'
+        container_name: mono-sti
+        working_dir: /home/node/app
+        command: 'sh -c "pnpm i && pnpm run prepare && pnpm run dev -- --host"'
+        user: node
+        tty: true
+        ports:
+            # Server
+            - '3000:3000'
+            # Vite
+            - '24678:24678'
+        volumes:
+            - ./:/home/node/app

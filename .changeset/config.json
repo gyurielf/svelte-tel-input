@@ -1,9 +1,12 @@
 {   
-    "$schema": "https://unpkg.com/@changesets/config@2.3.0/schema.json",
+    "$schema": "https://unpkg.com/@changesets/config@2.3.1/schema.json",
     "changelog": ["../scripts/changelog-github-custom.cjs", { "repo": "gyurielf/svelte-tel-input" }],
     "commit": false,
+    "fixed": [],
     "linked": [],
     "access": "public",
     "baseBranch": "main",
-    "updateInternalDependencies": "patch"
+    "updateInternalDependencies": "patch",
+    "bumpVersionsWithWorkspaceProtocolOnly": true,
+    "ignore": ["!(@gyurielf/*|svelte-tel-input)"]
 }

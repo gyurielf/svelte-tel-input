@@ -1,0 +1,23 @@
+.DS_Store
+node_modules
+/build
+/.svelte-kit
+/dist
+/docs
+.env
+.env.*
+!.env.example
+/coverage
+
+# Ignore files for PNPM, NPM and YARN
+pnpm-lock.yaml
+package-lock.json
+yarn.lock
+
+# don't lint nyc coverage output
+coverage
+static
+
+# Utility and CI tools
+zarf
+scripts

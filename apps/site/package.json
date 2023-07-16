@@ -1,0 +1,71 @@
+{
+	"name": "sti-site",
+	"description": "mono-sti",
+	"version": "3.0.1",
+	"private": true,
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/gyurielf/mono-sti.git"
+	},
+	"homepage": "https://github.com/gyurielf/mono-sti#readme",
+	"keywords": [
+		"svelte",
+		"tel input",
+		"phone",
+		"phone input",
+		"intl",
+		"intl tel input"
+	],
+	"engines": {
+		"npm": ">= 8",
+		"yarn": ">=2",
+		"node": ">= 16",
+		"pnpm": ">= 7"
+	},
+	"scripts": {
+		"build": "vite build",
+		"dev": "vite dev",
+		"eslint": "eslint --ext .js,.ts,.svelte .",
+		"eslint:fix": "eslint --fix",
+		"lint": "npm run prettier:check && npm run eslint && npm run ts && npm run svelte-check",
+		"lint:fix": "npm run eslint:fix && npm run prettier:fix",
+		"preview": "vite preview",
+		"sync": "svelte-kit sync",
+		"test": "playwright test",
+		"ts": "tsc --noEmit",
+		"prettier:check": "prettier --check --plugin-search-dir=. .",
+		"prettier:fix": "prettier --write --plugin-search-dir=. .",
+		"svelte-check": "svelte-kit sync && svelte-check --ignore 'dist,build,coverage,.svelte-kit,package' --fail-on-warnings"
+	},
+	"dependencies": {
+		"@gyurielf/mono-sti": "workspace:*",
+		"svelte": "^3.58.0"
+	},
+	"devDependencies": {
+		"@macfja/svelte-persistent-store": "^2.3.0",
+		"@playwright/test": "^1.35.1",
+		"@sveltejs/adapter-static": "^2.0.2",
+		"@sveltejs/kit": "^1.20.4",
+		"@types/micromatch": "^4.0.2",
+		"@typescript-eslint/eslint-plugin": "^5.59.11",
+		"@typescript-eslint/parser": "^5.59.11",
+		"autoprefixer": "^10.4.14",
+		"cssnano": "^6.0.1",
+		"dotenv": "^16.3.0",
+		"eslint": "^8.43.0",
+		"eslint-config-prettier": "^8.8.0",
+		"eslint-plugin-svelte": "^2.32.2",
+		"postcss": "^8.4.24",
+		"prettier": "^2.8.8",
+		"prettier-plugin-svelte": "^2.10.1",
+		"schema-dts": "^1.1.2",
+		"svelte-check": "^3.4.3",
+		"svelte2tsx": "^0.6.15",
+		"tailwindcss": "^3.3.2",
+		"tslib": "^2.5.3",
+		"typescript": "^5.0.4",
+		"vite": "^4.3.9"
+	},
+	"type": "module",
+	"license": "MIT"
+}
