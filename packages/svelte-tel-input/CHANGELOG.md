@@ -1,5 +1,11 @@
 # svelte-tel-input
 
+## 3.2.0
+
+### Minor Changes
+
+-   feat: support svelte 4 ([#172](https://github.com/gyurielf/svelte-tel-input/pull/172))
+
 ## 3.1.0
 
 ### Minor Changes
