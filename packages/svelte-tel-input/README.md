@@ -213,6 +213,7 @@ The default export of the library is the main TelInput component. It has the fol
 - [x] Add basics docs and examples
 - [x] Add advanced examples
 - [x] Generate placeholders autimatically
+- [x] Move to monorepo
 - [ ] Improve A11Y
 
 See the [open issues](https://github.com/gyurielf/svelte-tel-input/issues) for a list of proposed features (and known issues).
