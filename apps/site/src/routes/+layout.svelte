@@ -2,7 +2,7 @@
 	import TheFooter from '$lib/views/TheFooter.svelte';
 	import TheHeader from '$lib/views/TheHeader.svelte';
 	import '../app.css';
-	import '@gyurielf/mono-sti/styles/flags.css';
+	import 'svelte-tel-input/styles/flags.css';
 </script>
 
 <TheHeader />

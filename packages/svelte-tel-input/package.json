@@ -9,118 +9,113 @@
 	"homepage": "https://github.com/gyurielf/svelte-tel-input#readme",
 	"keywords": [
 		"svelte",
-        "svelte kit",
-        "sveltekit",
+		"svelte kit",
+		"sveltekit",
 		"tel input",
-		"phone",        
+		"phone",
 		"phone input",
-        "svelte phone input",
-        "svelte tel input",
+		"svelte phone input",
+		"svelte tel input",
 		"intl",
 		"intl tel input",
-        "svelte intl tel input"
+		"svelte intl tel input"
 	],
-    "engines": {
-        "npm": ">= 8",
-        "yarn": ">= 2",
-        "node": ">= 18",
-        "pnpm": ">= 8"
-    },
-    "scripts": {
-        "check:publint": "publint . --strict",
-        "eslint": "eslint --ext .js,.ts,.svelte .",
-        "eslint:fix": "eslint --fix",
-        "lint": "npm run prettier:check && npm run eslint && npm run ts && npm run svelte-check",
-        "lint:fix": "npm run eslint:fix && npm run prettier:fix",
-        "package:watch": "svelte-kit sync && svelte-package --watch",
-        "package": "svelte-kit sync && svelte-package && npm run check:publint",
-        "prettier:check": "prettier --check --plugin-search-dir=. .",
-        "prettier:fix": "prettier --write --plugin-search-dir=. .",
-        "svelte-check": "svelte-kit sync && svelte-check --ignore 'dist,build,coverage,.svelte-kit,package' --fail-on-warnings",
-        "sync": "svelte-kit sync",
-        "test": "vitest",
-        "ts": "tsc --noEmit"
-    },
-    "peerDependencies": {
-        "libphonenumber-js": "^1.10.30",
-        "svelte": "^3.58.0 || ^4.0.0"
-    },
-    "dependencies": {
-        "libphonenumber-js": "^1.10.37",
-        "svelte": "^4.0.5"
-    },
+	"engines": {
+		"npm": ">= 8",
+		"yarn": ">= 2",
+		"node": ">= 18",
+		"pnpm": ">= 8"
+	},
+	"scripts": {
+		"check:publint": "publint . --strict",
+		"eslint": "eslint --ext .js,.ts,.svelte .",
+		"eslint:fix": "eslint --fix",
+		"lint": "npm run prettier:check && npm run eslint && npm run ts && npm run svelte-check",
+		"lint:fix": "npm run eslint:fix && npm run prettier:fix",
+		"package:watch": "svelte-kit sync && svelte-package --watch",
+		"package": "svelte-kit sync && svelte-package && npm run check:publint",
+		"prettier:check": "prettier --check --plugin-search-dir=. .",
+		"prettier:fix": "prettier --write --plugin-search-dir=. .",
+		"svelte-check": "svelte-kit sync && svelte-check --ignore 'dist,build,coverage,.svelte-kit,package' --fail-on-warnings",
+		"sync": "svelte-kit sync",
+		"test": "vitest",
+		"ts": "tsc --noEmit"
+	},
+	"peerDependencies": {
+		"libphonenumber-js": "^1.10.30",
+		"svelte": "^3.58.0 || ^4.0.0"
+	},
+	"dependencies": {
+		"libphonenumber-js": "^1.10.37",
+		"svelte": "^4.0.5"
+	},
 	"devDependencies": {
-		"@changesets/cli": "^2.26.1",
-		"@changesets/get-github-info": "^0.5.2",
-		"@changesets/types": "^5.2.1",
-		"@macfja/svelte-persistent-store": "^2.3.0",
-		"@playwright/test": "^1.35.1",
-		"@sveltejs/adapter-static": "^2.0.2",
-		"@sveltejs/kit": "^1.20.4",
-		"@sveltejs/package": "^1.0.2",
-		"@testing-library/svelte": "^3.2.2",
+		"@sveltejs/adapter-auto": "2.1.0",
+		"@sveltejs/kit": "^1.22.3",
+		"@sveltejs/package": "^2.2.0",
+		"@testing-library/svelte": "^4.0.3",
 		"@testing-library/user-event": "^14.4.3",
-		"@typescript-eslint/eslint-plugin": "^5.60.0",
-		"@typescript-eslint/parser": "^5.60.0",
+		"@types/micromatch": "^4.0.2",
+		"@typescript-eslint/eslint-plugin": "^6.0.0",
+		"@typescript-eslint/parser": "^6.0.0",
 		"autoprefixer": "^10.4.14",
 		"cssnano": "^6.0.1",
 		"dotenv": "^16.3.1",
-		"edit-package-json": "^0.8.14",
-		"eslint": "^8.43.0",
+		"eslint": "^8.45.0",
 		"eslint-config-prettier": "^8.8.0",
-		"eslint-plugin-svelte3": "^4.0.0",
-		"husky": "^8.0.3",
+		"eslint-plugin-import": "^2.27.5",
+		"eslint-plugin-svelte": "^2.32.2",
 		"jsdom": "^22.1.0",
 		"micromatch": "^4.0.5",
-		"postcss": "^8.4.24",
+		"postcss": "^8.4.26",
 		"prettier": "^2.8.8",
 		"prettier-plugin-svelte": "^2.10.1",
-		"schema-dts": "^1.1.2",
-		"svelte-check": "^3.4.3",
-		"svelte2tsx": "^0.6.15",
-		"tailwindcss": "^3.3.2",
-		"tslib": "^2.5.3",
-		"typescript": "^5.0.4",
-		"vite": "^4.3.9",
-		"vitest": "^0.32.2"
+		"publint": "^0.1.16",
+		"svelte-check": "^3.4.6",
+		"svelte2tsx": "^0.6.19",
+		"tailwindcss": "^3.3.3",
+		"tslib": "^2.6.0",
+		"typescript": "^5.1.6",
+		"vite": "^4.4.4",
+		"vitest": "^0.33.0"
 	},
 	"type": "module",
 	"license": "MIT",
-    "files": [
-        "dist"
-    ],
-    "types": "./dist/index.d.ts",
-    "typesVersions": {
-        "*": {
-            "types": [
-                "./dist/types/index.d.ts"
-            ],
-            "utils": [
-                "./dist/utils/index.d.ts"
-            ],
-            "assets": [
-                "./dist/assets/index.d.ts"
-            ]
-        }
-    },
-    "exports": {
-        ".": {
-            "types": "./dist/index.d.ts",
-            "svelte": "./dist/index.js",
-            "default": "./dist/index.js"
-        },
-        "./types": {
-            "types": "./dist/types/index.d.ts",
-            "default": "./dist/types/index.d.ts"
-        },
-        "./utils": {
-            "types": "./dist/utils/index.d.ts",
-            "default": "./dist/utils/index.js"
-        },
-        "./assets": {
-            "types": "./dist/assets/index.d.ts",
-            "default": "./dist/assets/index.js"
-        },
-        "./styles/flags.css": "./dist/styles/flags.css"
-    }
+	"files": [
+		"dist"
+	],
+	"types": "./dist/index.d.ts",
+	"typesVersions": {
+		"*": {
+			"types": [
+				"./dist/types/index.d.ts"
+			],
+			"utils": [
+				"./dist/utils/index.d.ts"
+			],
+			"assets": [
+				"./dist/assets/index.d.ts"
+			]
+		}
+	},
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"svelte": "./dist/index.js",
+			"default": "./dist/index.js"
+		},
+		"./types": {
+			"types": "./dist/types/index.d.ts",
+			"default": "./dist/types/index.d.ts"
+		},
+		"./utils": {
+			"types": "./dist/utils/index.d.ts",
+			"default": "./dist/utils/index.js"
+		},
+		"./assets": {
+			"types": "./dist/assets/index.d.ts",
+			"default": "./dist/assets/index.js"
+		},
+		"./styles/flags.css": "./dist/styles/flags.css"
+	}
 }

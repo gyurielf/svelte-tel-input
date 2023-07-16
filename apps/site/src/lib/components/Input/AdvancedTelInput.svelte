@@ -1,13 +1,13 @@
 <script lang="ts">
 	import { createEventDispatcher } from 'svelte';
-	import { TelInput, normalizedCountries } from '@gyurielf/mono-sti';
-	import { isSelected, clickOutsideAction } from '@gyurielf/mono-sti/utils';
+	import { TelInput, normalizedCountries } from 'svelte-tel-input';
+	import { isSelected, clickOutsideAction } from 'svelte-tel-input/utils';
 	import type {
 		DetailedValue,
 		CountrySelectEvents,
 		CountryCode,
 		E164Number
-	} from '@gyurielf/mono-sti/types';
+	} from 'svelte-tel-input/types';
 
 	export let searchText = '';
 	let selectedCountry: CountryCode;

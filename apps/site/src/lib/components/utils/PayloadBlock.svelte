@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { CountryCode, E164Number, DetailedValue } from '@gyurielf/mono-sti/types';
+	import type { CountryCode, E164Number, DetailedValue } from 'svelte-tel-input/types';
 	import { jsonPrettyParser } from '$lib/utils/examples/exampleHelpers.js';
 	import { slide } from 'svelte/transition';
 

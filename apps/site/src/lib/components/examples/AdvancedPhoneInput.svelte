@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { createEventDispatcher } from 'svelte';
-	import { clickOutsideAction } from '@gyurielf/mono-sti/utils';
-	import { TelInput, isSelected, normalizedCountries } from '@gyurielf/mono-sti';
+	import { clickOutsideAction } from 'svelte-tel-input/utils';
+	import { TelInput, isSelected, normalizedCountries } from 'svelte-tel-input';
 	import type {
 		DetailedValue,
 		CountrySelectEvents,
@@ -9,8 +9,8 @@
 		E164Number,
 		TelInputOptions,
 		Country
-	} from '@gyurielf/mono-sti/types';
-	import '@gyurielf/mono-sti/styles/flags.css';
+	} from 'svelte-tel-input/types';
+	import 'svelte-tel-input/styles/flags.css';
 
 	export let clickOutside = true;
 	export let closeOnClick = true;
