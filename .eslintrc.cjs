@@ -1,26 +1,64 @@
 module.exports = {
-	root: true,
-	parser: '@typescript-eslint/parser',
-	extends: ['eslint:recommended', 'plugin:@typescript-eslint/recommended', 'prettier'],
-	plugins: ['svelte3', '@typescript-eslint'],
-	ignorePatterns: ['*.cjs', 'node_modules'],
-	overrides: [{ files: ['*.svelte'], processor: 'svelte3/svelte3' }],
-	settings: {
-		'svelte3/typescript': () => require('typescript'),
-		'svelte3/ignore-styles': () => true
-	},
-	parserOptions: {
-		sourceType: 'module',
-		ecmaVersion: 2020
-	},
-	env: {
-		browser: true,
-		es2020: true,
-		node: true
-	},
-	rules: {
-		'@typescript-eslint/consistent-type-assertions': ['error', { assertionStyle: 'as' }],
-		'@typescript-eslint/array-type': ['error', { default: 'array' }],
-		'no-console': ['error', { allow: ['warn', 'error'] }]
-	}
+    root: true,
+    parser: '@typescript-eslint/parser',
+    extends: [
+        'eslint:recommended',
+        'plugin:@typescript-eslint/recommended',
+        'plugin:svelte/recommended',
+        'prettier'
+    ],
+    plugins: ['@typescript-eslint', 'import'],
+    ignorePatterns: ['*.cjs', '.temp/**/*'],
+    overrides: [
+        {
+            files: ['*.svelte'],
+            parser: 'svelte-eslint-parser',
+            parserOptions: {
+                parser: '@typescript-eslint/parser'
+            }
+        }
+    ],
+    env: {
+        browser: true,
+        es2017: true,
+        node: true
+    },
+    rules: {
+        'svelte/no-at-html-tags': 'off',
+        // 'import/extensions': [
+        //     'error',
+        //     'always',
+        //     {
+        //         ignorePackages: true,
+        //         pattern: {
+        //             js: 'always',
+        //             ts: 'never'
+        //         }
+        //     }
+        // ],
+        'no-restricted-imports': [
+            'warn',
+            {
+                paths: [
+                    {
+                        name: '.',
+                        message: 'Usage of local index imports is not allowed.'
+                    },
+                    {
+                        name: './index',
+                        message: 'Import from the source file instead.'
+                    }
+                ]
+            }
+        ],
+        '@typescript-eslint/no-unused-vars': [
+            'warn', // or "error"
+            {
+                argsIgnorePattern: '_',
+                varsIgnorePattern: '_',
+                caughtErrorsIgnorePattern: '_'
+            }
+        ],
+        '@typescript-eslint/no-empty-function': ['error', { allow: ['arrowFunctions'] }]
+    }
 };

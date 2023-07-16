@@ -1,21 +1,16 @@
 name: Lint
 on: [push]
+permissions:
+    contents: read # to fetch code (actions/checkout)
 jobs:
     lint-code:
         runs-on: ubuntu-latest
+        timeout-minutes: 5
         steps:
-            - uses: actions/checkout@v2
-            - uses: actions/setup-node@v2
+            - uses: actions/checkout@v3
+            - uses: pnpm/action-setup@v2.2.4
+            - uses: actions/setup-node@v3
               with:
-                  node-version: '18.x'
-            - run: npm install
-            - run: npm run lint
-    unit-test:
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@v2
-            - uses: actions/setup-node@v2
-              with:
-                  node-version: '18.x'
-            - run: npm install
-            - run: npm run test:unit
+                  node-version: 18.x
+                  cache: pnpm
+            - run: 'pnpm i && pnpm run sync && pnpm run package && pnpm run lint'

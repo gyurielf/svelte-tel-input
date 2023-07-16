@@ -1,18 +1,16 @@
 .DS_Store
+.svelte-kit
 node_modules
 /build
-/.svelte-kit
 /package
-/docs
 .env
 .env.*
 !.env.example
-CHANGELOG.md
-.changeset
-static
-/coverage
+vite.config.js*
+apps/site/.vercel
 
 # Ignore files for PNPM, NPM and YARN
 pnpm-lock.yaml
+pnpm-workspace.yaml
 package-lock.json
 yarn.lock
