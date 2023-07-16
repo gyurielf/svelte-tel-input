@@ -1,13 +1,13 @@
 <script lang="ts">
 	import { createEventDispatcher, onMount } from 'svelte';
 	import { parsePhoneNumberWithError, ParseError } from 'libphonenumber-js/max';
-	import { telInputAction } from '$lib/utils/directives/telInputAction';
 	import {
 		normalizeTelInput,
 		getCountryForPartialE164Number,
-		generatePlaceholder
-	} from '$lib/utils/helpers';
-	import { watcher } from '$lib/stores';
+		generatePlaceholder,
+		telInputAction
+	} from '$lib/utils/index.js';
+	import { watcher } from '$lib/stores/index.js';
 	import type { DetailedValue, CountryCode, E164Number, TelInputOptions } from '$lib/types';
 
 	const dispatch = createEventDispatcher<{

@@ -1,4 +1,4 @@
-import { inputParser, inspectAllowedChars } from '$lib/utils/helpers';
+import { inputParser, inspectAllowedChars } from '$lib/utils/index.js';
 import { describe, it, expect } from 'vitest';
 
 describe('Hello.svelte', () => {

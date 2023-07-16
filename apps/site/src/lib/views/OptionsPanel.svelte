@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { TelInputOptions } from '$lib/types';
+	import type { TelInputOptions } from 'svelte-tel-input/types';
 	import { slide } from 'svelte/transition';
 	export let options: TelInputOptions;
 	let isOpen = false;
