@@ -1,7 +1,7 @@
 {
-	"name": "sti-site",
-	"description": "mono-sti",
-	"version": "3.0.1",
+	"name": "svelte-tel-input-site",
+	"description": "svelte-tel-input-site",
+	"version": "1.0.0",
 	"private": true,
 	"repository": {
 		"type": "git",
@@ -38,7 +38,7 @@
 		"svelte-check": "svelte-kit sync && svelte-check --ignore 'dist,build,coverage,.svelte-kit,package' --fail-on-warnings"
 	},
 	"dependencies": {
-		"@gyurielf/mono-sti": "workspace:*",
+		"svelte-tel-input": "workspace:*",
 		"svelte": "^3.58.0"
 	},
 	"devDependencies": {

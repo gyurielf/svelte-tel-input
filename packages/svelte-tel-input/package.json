@@ -9,45 +9,46 @@
 	"homepage": "https://github.com/gyurielf/svelte-tel-input#readme",
 	"keywords": [
 		"svelte",
+        "svelte kit",
+        "sveltekit",
 		"tel input",
-		"phone",
+		"phone",        
 		"phone input",
+        "svelte phone input",
+        "svelte tel input",
 		"intl",
-		"intl tel input"
+		"intl tel input",
+        "svelte intl tel input"
 	],
-	"engines": {
-		"npm": ">= 8",
-		"yarn": ">=2",
-		"node": ">= 16",
-		"pnpm": ">= 7"
-	},
-	"scripts": {
-		"build": "vite build",
-		"changeset:version": "changeset version && npm i --lockfile-only",
-		"dev": "vite dev",
-		"eslint": "eslint --ext .js,.ts,.svelte .",
-		"eslint:fix": "eslint --fix",
-		"generate:exports": "bash ./src/lib/exportGen.sh",
-		"lint": "npm run prettier:check && npm run eslint && npm run ts && npm run svelte-check",
-		"lint:fix": "npm run eslint:fix && npm run prettier:fix",
-		"package": "node ./zarf/scripts/pre-build.js && svelte-kit sync && svelte-package && node ./zarf/scripts/post-build.js",
-		"prettier": "prettier",
-		"prettier:check": "prettier --check --plugin-search-dir=. .",
-		"prettier:fix": "prettier --write --plugin-search-dir=. .",
-		"prepare:husky": "husky install",
-		"preview": "vite preview",
-		"release": "npx changeset publish",
-		"release:package": "cd package && npm publish",
-		"svelte-check": "svelte-kit sync && svelte-check --ignore 'dist,build,coverage,.svelte-kit,package' --fail-on-warnings",
-		"test": "playwright test",
-		"test:unit": "vitest",
-		"ts": "tsc --noEmit",
-		"sync": "svelte-kit sync"
-	},
-	"dependencies": {
-		"libphonenumber-js": "^1.10.36",
-		"svelte": "^3.58.0"
-	},
+    "engines": {
+        "npm": ">= 8",
+        "yarn": ">= 2",
+        "node": ">= 18",
+        "pnpm": ">= 8"
+    },
+    "scripts": {
+        "check:publint": "publint . --strict",
+        "eslint": "eslint --ext .js,.ts,.svelte .",
+        "eslint:fix": "eslint --fix",
+        "lint": "npm run prettier:check && npm run eslint && npm run ts && npm run svelte-check",
+        "lint:fix": "npm run eslint:fix && npm run prettier:fix",
+        "package:watch": "svelte-kit sync && svelte-package --watch",
+        "package": "svelte-kit sync && svelte-package && npm run check:publint",
+        "prettier:check": "prettier --check --plugin-search-dir=. .",
+        "prettier:fix": "prettier --write --plugin-search-dir=. .",
+        "svelte-check": "svelte-kit sync && svelte-check --ignore 'dist,build,coverage,.svelte-kit,package' --fail-on-warnings",
+        "sync": "svelte-kit sync",
+        "test": "vitest",
+        "ts": "tsc --noEmit"
+    },
+    "peerDependencies": {
+        "libphonenumber-js": "^1.10.30",
+        "svelte": "^3.58.0 || ^4.0.0"
+    },
+    "dependencies": {
+        "libphonenumber-js": "^1.10.37",
+        "svelte": "^4.0.5"
+    },
 	"devDependencies": {
 		"@changesets/cli": "^2.26.1",
 		"@changesets/get-github-info": "^0.5.2",
@@ -85,10 +86,41 @@
 	},
 	"type": "module",
 	"license": "MIT",
-	"types": "./src/lib/types/index.d.ts",
-	"exports": {
-		".": "./src/lib/index.ts",
-		"./styles/*": "./src/lib/styles/flags.css",
-		"./types/*": "./src/lib/types/*"
-	}
+    "files": [
+        "dist"
+    ],
+    "types": "./dist/index.d.ts",
+    "typesVersions": {
+        "*": {
+            "types": [
+                "./dist/types/index.d.ts"
+            ],
+            "utils": [
+                "./dist/utils/index.d.ts"
+            ],
+            "assets": [
+                "./dist/assets/index.d.ts"
+            ]
+        }
+    },
+    "exports": {
+        ".": {
+            "types": "./dist/index.d.ts",
+            "svelte": "./dist/index.js",
+            "default": "./dist/index.js"
+        },
+        "./types": {
+            "types": "./dist/types/index.d.ts",
+            "default": "./dist/types/index.d.ts"
+        },
+        "./utils": {
+            "types": "./dist/utils/index.d.ts",
+            "default": "./dist/utils/index.js"
+        },
+        "./assets": {
+            "types": "./dist/assets/index.d.ts",
+            "default": "./dist/assets/index.js"
+        },
+        "./styles/flags.css": "./dist/styles/flags.css"
+    }
 }
