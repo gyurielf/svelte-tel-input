@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { TelInput, normalizedCountries } from '@gyurielf/mono-sti';
-	import type { DetailedValue, E164Number, CountryCode } from '@gyurielf/mono-sti/types';
+	import { TelInput, normalizedCountries } from 'svelte-tel-input';
+	import type { DetailedValue, E164Number, CountryCode } from 'svelte-tel-input/types';
 
 	// E164 formatted value, usually you should store and use this.
 	export let value: E164Number | null;
@@ -78,9 +78,9 @@
 	<button
 		class="ml-4 px-4 py-2 rounded bg-blue-500 text-white"
 		on:click={() => {
-			// value = null;
+			value = null;
 			country = null;
-			// valid = true;
+			valid = true;
 		}}>Reset</button
 	>
 </div>
