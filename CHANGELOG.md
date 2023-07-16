@@ -1,1 +1,1 @@
-/packages/svelte-tel-input/CHANGELOG.md
+packages/svelte-tel-input/CHANGELOG.md

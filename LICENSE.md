@@ -1,1 +1,1 @@
-/packages/svelte-tel-input/LICENSE.md
+packages/svelte-tel-input/LICENSE.md
