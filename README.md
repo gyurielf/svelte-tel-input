@@ -1,1 +1,1 @@
-/packages/svelte-tel-input/README.md
+./packages/svelte-tel-input/README.md
