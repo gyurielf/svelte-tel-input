@@ -190,17 +190,15 @@ The default export of the library is the main TelInput component. It has the fol
 
 ## Dependencies
 
-[svelte](https://svelte.dev/)
-
 [libphonenumber-js](https://gitlab.com/catamphetamine/libphonenumber-js)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ## Changelog
 
-| Package                        | Changelog                 |
-| ------------------------------ | ------------------------- |
-| [@gyurielf/svelte-tel-input]() | [Changelog](CHANGELOG.md) |
+| Package                                                                                                        | Changelog                                                                                                  |
+| -------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| [@gyurielf/svelte-tel-input](https://github.com/gyurielf/svelte-tel-input/tree/main/packages/svelte-tel-input) | [Changelog](https://github.com/gyurielf/svelte-tel-input/blob/main/packages/svelte-tel-input/CHANGELOG.md) |
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
