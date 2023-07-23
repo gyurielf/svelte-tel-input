@@ -1,5 +1,13 @@
 # svelte-tel-input
 
+## 3.2.2
+
+### Patch Changes
+
+-   fix: license, package.json of the package ([#181](https://github.com/gyurielf/svelte-tel-input/pull/181))
+
+-   chore: update devdeps ([#181](https://github.com/gyurielf/svelte-tel-input/pull/181))
+
 ## 3.2.1
 
 ### Patch Changes
