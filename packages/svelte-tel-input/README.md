@@ -20,6 +20,7 @@ npm install --save svelte-tel-input
 
 ## Features
 
+- Support SSR/SSG.
 - Parse and validate phone number.You can store one exact format (`E164`), no matter how users type their phone numbers.
 - Format (specified to its country), to make it more readable.
 - Prevent non-digits typing into the input, except the leading `+` sign (and `space` optionally).
@@ -190,17 +191,15 @@ The default export of the library is the main TelInput component. It has the fol
 
 ## Dependencies
 
-[svelte](https://svelte.dev/)
-
 [libphonenumber-js](https://gitlab.com/catamphetamine/libphonenumber-js)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ## Changelog
 
-| Package                        | Changelog                 |
-| ------------------------------ | ------------------------- |
-| [@gyurielf/svelte-tel-input]() | [Changelog](CHANGELOG.md) |
+| Package                                                                                                        | Changelog                                                                                                  |
+| -------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| [@gyurielf/svelte-tel-input](https://github.com/gyurielf/svelte-tel-input/tree/main/packages/svelte-tel-input) | [Changelog](https://github.com/gyurielf/svelte-tel-input/blob/main/packages/svelte-tel-input/CHANGELOG.md) |
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
