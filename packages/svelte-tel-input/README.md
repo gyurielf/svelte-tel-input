@@ -20,6 +20,7 @@ npm install --save svelte-tel-input
 
 ## Features
 
+- Support SSR/SSG.
 - Parse and validate phone number.You can store one exact format (`E164`), no matter how users type their phone numbers.
 - Format (specified to its country), to make it more readable.
 - Prevent non-digits typing into the input, except the leading `+` sign (and `space` optionally).
