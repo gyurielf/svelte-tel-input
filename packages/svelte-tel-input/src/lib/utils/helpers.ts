@@ -5,7 +5,6 @@ import {
 	getExampleNumber
 } from 'libphonenumber-js/max';
 import examples from 'libphonenumber-js/mobile/examples';
-
 import type {
 	PhoneNumber,
 	MetadataJson,
@@ -95,7 +94,7 @@ export const isSelected = <
 >(
 	itemToSelect: T | string,
 	selectedItem: (T | undefined | null) | string
-): boolean => {
+) => {
 	if (!selectedItem || selectedItem === null) {
 		return false;
 	}

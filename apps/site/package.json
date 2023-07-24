@@ -1,13 +1,13 @@
 {
-	"name": "svelte-tel-input-site",
-	"description": "svelte-tel-input-site",
+	"name": "sti-examples",
+	"description": "sti-examples",
 	"version": "1.0.0",
 	"private": true,
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/gyurielf/mono-sti.git"
+		"url": "git+https://github.com/gyurielf/svelte-tel-input.git"
 	},
-	"homepage": "https://github.com/gyurielf/mono-sti#readme",
+	"homepage": "https://github.com/gyurielf/svelte-tel-input#readme",
 	"keywords": [
 		"svelte",
 		"tel input",
@@ -64,7 +64,7 @@
 		"tailwindcss": "^3.3.3",
 		"tslib": "^2.6.0",
 		"typescript": "^5.1.6",
-		"vite": "^4.4.6"
+		"vite": "^4.4.7"
 	},
 	"type": "module",
 	"license": "MIT"
