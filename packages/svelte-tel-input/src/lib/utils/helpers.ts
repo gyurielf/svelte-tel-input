@@ -14,7 +14,8 @@ import type {
 } from '$lib/types/index.js';
 
 export const capitalize = (str: string) => {
-	return (str && str[0].toUpperCase() + str.slice(1).toLowerCase()) || '';
+	if (!str) return '';
+	return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
 };
 
 // Use carefully, it can be rate limited.
@@ -94,29 +95,15 @@ export const isSelected = <
 	itemToSelect: T | string,
 	selectedItem: (T | undefined | null) | string
 ) => {
-	if (!selectedItem || selectedItem === null) {
+	if (!selectedItem) {
 		return false;
 	}
-	if (
-		typeof selectedItem === 'object' &&
-		typeof itemToSelect === 'object' &&
-		selectedItem !== null &&
-		itemToSelect !== null
-	) {
-		if (
-			typeof selectedItem === 'object' &&
-			typeof itemToSelect === 'object' &&
-			selectedItem.id === itemToSelect.id
-		) {
-			return true;
-		} else {
-			return false;
-		}
-	} else if (itemToSelect === selectedItem) {
-		return true;
-	} else {
-		return false;
+
+	if (typeof selectedItem === 'object' && typeof itemToSelect === 'object') {
+		return selectedItem.id === itemToSelect.id;
 	}
+
+	return itemToSelect === selectedItem;
 };
 
 export const getInternationalPhoneNumberPrefix = (country: CountryCode) => {
@@ -347,19 +334,18 @@ export const inputParser = (
 		parseCharacter
 	}: {
 		allowSpaces: boolean;
-		parseCharacter: (characted: string, val: string, allowSpaces?: boolean) => string;
+		parseCharacter: (char: string, val: string, allowSpaces?: boolean) => string | undefined;
 	}
 ) => {
 	let value = '';
-	let index = 0;
 
-	while (index < text.length) {
+	for (let index = 0; index < text.length; index++) {
 		const character = parseCharacter(text[index], value, allowSpaces);
 		if (character !== undefined) {
 			value += character;
 		}
-		index++;
 	}
+
 	return value;
 };
 
