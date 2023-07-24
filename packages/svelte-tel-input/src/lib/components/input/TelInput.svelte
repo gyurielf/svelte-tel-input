@@ -22,7 +22,7 @@
 		autoPlaceholder: true,
 		spaces: true,
 		invalidateOnCountryChange: false
-	};
+	} as const satisfies TelInputOptions;
 
 	/** It's accept any Country Code Alpha-2 (ISO 3166) */
 	export let country: CountryCode | null;
