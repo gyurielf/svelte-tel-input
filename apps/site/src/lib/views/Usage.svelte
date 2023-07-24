@@ -28,7 +28,8 @@
 	let advancedExampleOptions: TelInputOptions = {
 		autoPlaceholder: true,
 		spaces: true,
-		invalidateOnCountryChange: true
+		invalidateOnCountryChange: true,
+		format: 'international'
 	};
 
 	/* basicWithE164 example */

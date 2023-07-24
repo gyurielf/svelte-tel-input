@@ -15,18 +15,14 @@
 	export let clickOutside = true;
 	export let closeOnClick = true;
 	export let disabled = false;
-	// Disabled in favour of enabled autoPlaceholder.
-	// export let placeholder: string | null = null;
 	export let detailedValue: DetailedValue | null = null;
 	export let value: E164Number | null;
 	export let searchPlaceholder: string | null = 'Search';
-
-	let searchText = '';
 	export let selectedCountry: CountryCode | null;
-	let isOpen = false;
 	export let valid: boolean;
-
 	export let options: TelInputOptions;
+	let searchText = '';
+	let isOpen = false;
 
 	$: selectedCountryDialCode =
 		normalizedCountries.find((el) => el.iso2 === selectedCountry)?.dialCode || null;
@@ -122,8 +118,11 @@
 			{#if selectedCountry && selectedCountry !== null}
 				<div class="inline-flex items-center text-left">
 					<span class="flag flag-{selectedCountry.toLowerCase()} flex-shrink-0 mr-3" />
-					<span class=" text-gray-600 dark:text-gray-400">+{selectedCountryDialCode}</span
-					>
+					{#if options.format === 'original'}
+						<span class=" text-gray-600 dark:text-gray-400"
+							>+{selectedCountryDialCode}</span
+						>
+					{/if}
 				</div>
 			{:else}
 				Please select

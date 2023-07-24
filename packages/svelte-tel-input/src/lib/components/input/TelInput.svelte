@@ -89,17 +89,24 @@
 			}
 
 			// It's keep the html input value on the first parsed format, or the user's format.
-			if (detailedValue?.isValid && combinedOptions.spaces && detailedValue?.formatOriginal) {
-				// It's need for refreshing html input value, if it is the same as the previouly parsed.
-				if (inputValue === detailedValue?.formatOriginal) {
+			if (detailedValue?.isValid) {
+				if (
+					combinedOptions.format === 'international' &&
+					detailedValue.formatInternational
+				) {
+					inputValue = detailedValue.formatInternational;
+				} else if (combinedOptions.format === 'original' && detailedValue.formatOriginal) {
+					inputValue = detailedValue.formatOriginal;
+				} else if (detailedValue.e164) {
+					inputValue = detailedValue.e164;
+				}
+
+				// It's needed for refreshing the HTML input value if it is the same as the previously parsed.
+				if (inputValue === value) {
 					inputValue = null;
 				}
-				inputValue = detailedValue?.formatOriginal;
-			} else if (detailedValue?.isValid && detailedValue?.nationalNumber) {
-				if (inputValue === detailedValue?.nationalNumber) {
-					inputValue = null;
-				}
-				inputValue = detailedValue?.nationalNumber;
+			} else {
+				inputValue = null;
 			}
 
 			// keep the input value as value
