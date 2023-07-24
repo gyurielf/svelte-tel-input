@@ -70,7 +70,6 @@ export const generatePlaceholder = (
 ) => {
 	const examplePhoneNumber = getExampleNumber(country, examples);
 	if (examplePhoneNumber) {
-		const countryCallingCode = examplePhoneNumber.countryCallingCode;
 		switch (format) {
 			case 'international':
 				return examplePhoneNumber.formatInternational();
@@ -79,7 +78,7 @@ export const generatePlaceholder = (
 			default:
 				return examplePhoneNumber
 					.formatInternational()
-					.slice(countryCallingCode.length + 1)
+					.slice(examplePhoneNumber.countryCallingCode.length + 1)
 					.trim();
 		}
 	} else {
