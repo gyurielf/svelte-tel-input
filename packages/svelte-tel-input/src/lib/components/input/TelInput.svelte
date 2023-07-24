@@ -53,10 +53,12 @@
 		handleParsePhoneNumber(value, country);
 	};
 
+	// Update the country and dispatch event
 	const updateCountry = (countryCode: CountryCode | null) => {
-		country = countryCode;
-		prevCountry = countryCode;
-		dispatch('updateCountry', country);
+		if (countryCode !== country) {
+			country = prevCountry = countryCode;
+			dispatch('updateCountry', country);
+		}
 		return country;
 	};
 
@@ -77,7 +79,6 @@
 				);
 			} catch (err) {
 				if (err instanceof ParseError) {
-					// Not a phone number, non-existent country, etc.
 					detailedValue = {
 						isValid: false,
 						error: err.message
@@ -90,16 +91,12 @@
 
 			// It's keep the html input value on the first parsed format, or the user's format.
 			if (detailedValue?.isValid) {
-				if (
-					combinedOptions.format === 'international' &&
-					detailedValue.formatInternational
-				) {
-					inputValue = detailedValue.formatInternational;
-				} else if (combinedOptions.format === 'original' && detailedValue.formatOriginal) {
-					inputValue = detailedValue.formatOriginal;
-				} else if (detailedValue.e164) {
-					inputValue = detailedValue.e164;
-				}
+				inputValue =
+					(combinedOptions.format === 'international' && detailedValue.formatInternational
+						? detailedValue.formatInternational
+						: combinedOptions.format === 'original' && detailedValue.formatOriginal
+						? detailedValue.formatOriginal
+						: detailedValue.e164) ?? null;
 
 				// It's needed for refreshing the HTML input value if it is the same as the previously parsed.
 				if (inputValue === value) {
@@ -116,22 +113,19 @@
 			dispatch('updateValue', value);
 			dispatch('updateDetailedValue', detailedValue);
 		} else if (input === null && currCountry !== null) {
-			/** If the user modify the country, it's reset the input value, and we don't dispatch country change event,
-			 * since the user himself initiated it.
-			 * */
+			// If the user modifies the country, reset the input value and don't dispatch the country change event.
 			if (currCountry !== prevCountry) {
 				prevCountry = currCountry;
 				valid = !options.invalidateOnCountryChange;
 				value = null;
-				if (inputValue !== null || inputValue !== '') {
-					inputValue = null;
-				}
+				inputValue = null;
 				detailedValue = null;
 				dispatch('updateValid', valid);
 				dispatch('updateValue', value);
 				dispatch('updateDetailedValue', detailedValue);
 			}
 		} else {
+			// Otherwise, reset all values
 			valid = true;
 			value = null;
 			detailedValue = null;
@@ -153,7 +147,8 @@
 	const countryChangeWatch = watcher(null, countryChangeWatchFunction);
 	$: $countryChangeWatch = country;
 
-	$: getPlaceholder = combinedOptions.autoPlaceholder
+	// Generate placeholder based on the autoPlaceholder option
+	let getPlaceholder = combinedOptions.autoPlaceholder
 		? country
 			? generatePlaceholder(country)
 			: null
@@ -167,15 +162,8 @@
 	}
 
 	const initialize = () => {
-		if (value && country) {
-			handleParsePhoneNumber(value, country);
-		} else if (value) {
-			const numberHasCountry = getCountryForPartialE164Number(value);
-			if (numberHasCountry) {
-				handleParsePhoneNumber(value, numberHasCountry);
-			} else {
-				handleParsePhoneNumber(value, null);
-			}
+		if (value) {
+			handleParsePhoneNumber(value, getCountryForPartialE164Number(value) || country);
 		}
 	};
 
