@@ -1,5 +1,6 @@
 export { default as TelInput } from './components/input/TelInput.svelte';
 export {
+	getCurrentCountry,
 	inputParser,
 	inspectAllowedChars,
 	normalizeTelInput,

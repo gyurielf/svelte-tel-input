@@ -118,7 +118,7 @@
 			{#if selectedCountry && selectedCountry !== null}
 				<div class="inline-flex items-center text-left">
 					<span class="flag flag-{selectedCountry.toLowerCase()} flex-shrink-0 mr-3" />
-					{#if options.format === 'original'}
+					{#if options.format === 'national'}
 						<span class=" text-gray-600 dark:text-gray-400"
 							>+{selectedCountryDialCode}</span
 						>

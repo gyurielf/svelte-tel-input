@@ -73,8 +73,6 @@ export const generatePlaceholder = (
 	}
 ) => {
 	const examplePhoneNumber = getExampleNumber(country, examples);
-	console.log(examplePhoneNumber?.nationalNumber);
-	console.log(spaces);
 	if (examplePhoneNumber) {
 		switch (format) {
 			case 'international':
