@@ -10,12 +10,10 @@
 	let isOpen = true;
 
 	const generateEntries = (data: DetailedValue | null | undefined) => {
-		if (data !== undefined) {
-			if (data !== null) {
-				return Object.entries(data);
-			} else {
-				return [['parsedTelInput', `${data}`]];
-			}
+		if (data === null) {
+			return [['parsedTelInput', `${data}`]];
+		} else if (data !== undefined) {
+			return Object.entries(data);
 		} else {
 			return [];
 		}

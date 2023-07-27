@@ -67,15 +67,13 @@ export const normalizeTelInput = (input?: PhoneNumber) => {
 
 export const generatePlaceholder = (
 	country: CountryCode,
-	format: 'international' | 'national' | 'default' = 'default'
+	{ format }: { format: 'international' | 'national' } = { format: 'national' }
 ) => {
 	const examplePhoneNumber = getExampleNumber(country, examples);
 	if (examplePhoneNumber) {
 		switch (format) {
 			case 'international':
 				return examplePhoneNumber.formatInternational();
-			case 'national':
-				return examplePhoneNumber.formatNational();
 			default:
 				return examplePhoneNumber
 					.formatInternational()

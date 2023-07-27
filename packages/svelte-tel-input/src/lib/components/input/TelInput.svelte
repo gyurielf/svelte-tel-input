@@ -21,7 +21,8 @@
 	const defaultOptions = {
 		autoPlaceholder: true,
 		spaces: true,
-		invalidateOnCountryChange: false
+		invalidateOnCountryChange: false,
+		format: 'national'
 	} as const satisfies TelInputOptions;
 
 	/** It's accept any Country Code Alpha-2 (ISO 3166) */
@@ -89,21 +90,26 @@
 				}
 			}
 
-			// It's keep the html input value on the first parsed format, or the user's format.
 			if (detailedValue?.isValid) {
-				inputValue =
-					(combinedOptions.format === 'international' && detailedValue.formatInternational
-						? detailedValue.formatInternational
-						: combinedOptions.format === 'original' && detailedValue.formatOriginal
-						? detailedValue.formatOriginal
-						: detailedValue.e164) ?? null;
+				const formatOption =
+					combinedOptions.format === 'national' ? 'nationalNumber' : 'e164';
+				const formattedValue =
+					combinedOptions.format === 'national'
+						? 'formatOriginal'
+						: 'formatInternational';
 
-				// It's needed for refreshing the HTML input value if it is the same as the previously parsed.
-				if (inputValue === value) {
-					inputValue = null;
+				if (combinedOptions.spaces && detailedValue?.[formattedValue]) {
+					// It's needed to refresh the HTML input value if it is the same as the previously parsed.
+					inputValue =
+						inputValue === detailedValue[formattedValue]
+							? null
+							: detailedValue[formattedValue] ?? null;
+				} else if (detailedValue?.[formatOption]) {
+					inputValue =
+						inputValue === detailedValue[formatOption]
+							? null
+							: detailedValue[formatOption] ?? null;
 				}
-			} else {
-				inputValue = null;
 			}
 
 			// keep the input value as value
@@ -150,7 +156,7 @@
 	// Generate placeholder based on the autoPlaceholder option
 	let getPlaceholder = combinedOptions.autoPlaceholder
 		? country
-			? generatePlaceholder(country)
+			? generatePlaceholder(country, { format: combinedOptions.format })
 			: null
 		: placeholder;
 
