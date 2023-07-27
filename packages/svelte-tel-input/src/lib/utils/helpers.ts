@@ -67,18 +67,27 @@ export const normalizeTelInput = (input?: PhoneNumber) => {
 
 export const generatePlaceholder = (
 	country: CountryCode,
-	{ format }: { format: 'international' | 'national' } = { format: 'national' }
+	{ format, spaces }: { format: 'international' | 'national'; spaces: boolean } = {
+		format: 'national',
+		spaces: true
+	}
 ) => {
 	const examplePhoneNumber = getExampleNumber(country, examples);
+	console.log(examplePhoneNumber?.nationalNumber);
+	console.log(spaces);
 	if (examplePhoneNumber) {
 		switch (format) {
 			case 'international':
-				return examplePhoneNumber.formatInternational();
+				return spaces
+					? examplePhoneNumber.formatInternational()
+					: examplePhoneNumber.number;
 			default:
-				return examplePhoneNumber
-					.formatInternational()
-					.slice(examplePhoneNumber.countryCallingCode.length + 1)
-					.trim();
+				return spaces
+					? examplePhoneNumber
+							.formatInternational()
+							.slice(examplePhoneNumber.countryCallingCode.length + 1)
+							.trim()
+					: examplePhoneNumber.nationalNumber;
 		}
 	} else {
 		throw new Error(`No country found with this country code: ${country}`);

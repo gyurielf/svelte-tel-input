@@ -154,9 +154,12 @@
 	$: $countryChangeWatch = country;
 
 	// Generate placeholder based on the autoPlaceholder option
-	let getPlaceholder = combinedOptions.autoPlaceholder
+	$: getPlaceholder = combinedOptions.autoPlaceholder
 		? country
-			? generatePlaceholder(country, { format: combinedOptions.format })
+			? generatePlaceholder(country, {
+					format: combinedOptions.format,
+					spaces: combinedOptions.spaces
+			  })
 			: null
 		: placeholder;
 
