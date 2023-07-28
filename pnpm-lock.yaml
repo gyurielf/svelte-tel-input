@@ -127,8 +127,8 @@ importers:
   packages/svelte-tel-input:
     dependencies:
       libphonenumber-js:
-        specifier: ^1.10.37
-        version: 1.10.37
+        specifier: ^1.10.38
+        version: 1.10.38
     devDependencies:
       '@sveltejs/adapter-auto':
         specifier: 2.1.0
@@ -191,8 +191,8 @@ importers:
         specifier: ^2.10.1
         version: 2.10.1(prettier@2.8.8)(svelte@3.58.0)
       publint:
-        specifier: ^0.1.16
-        version: 0.1.16
+        specifier: ^0.2.0
+        version: 0.2.0
       svelte:
         specifier: ^3.58.0
         version: 3.58.0
@@ -3301,8 +3301,8 @@ packages:
       type-check: 0.4.0
     dev: true
 
-  /libphonenumber-js@1.10.37:
-    resolution: {integrity: sha512-Z10PCaOCiAxbUxLyR31DNeeNugSVP6iv/m7UrSKS5JHziEMApJtgku4e9Q69pzzSC9LnQiM09sqsGf2ticZnMw==}
+  /libphonenumber-js@1.10.38:
+    resolution: {integrity: sha512-4NjVXVUmpZ9Zsqq6FXa2+MKI+KAI3tOqA0pxXgXGluhpj4ge5didmbWJpMBqGB3AVGv1SnEtKdGTbxjSEG1kCQ==}
     dev: false
 
   /lilconfig@2.1.0:
@@ -4336,8 +4336,8 @@ packages:
     resolution: {integrity: sha512-E/ZsdU4HLs/68gYzgGTkMicWTLPdAftJLfJFlLUAAKZGkStNU72sZjT66SnMDVOfOWY/YAoiD7Jxa9iHvngcag==}
     dev: true
 
-  /publint@0.1.16:
-    resolution: {integrity: sha512-wJgk7HnXDT5Ap0DjFYbGz78kPkN44iQvDiaq8P63IEEyNU9mYXvaMd2cAyIM6OgqXM/IA3CK6XWIsRq+wjNpgw==}
+  /publint@0.2.0:
+    resolution: {integrity: sha512-h8lxdjhQjpDw+A4BgY4sE7Z4CU3x5tCGGpERVdKGDQmWMtr1P7kvptJS2P10HhmNnS7Yeny37zfQE5+xRZ6nig==}
     engines: {node: '>=16'}
     hasBin: true
     dependencies:
