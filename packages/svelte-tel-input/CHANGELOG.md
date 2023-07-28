@@ -1,5 +1,19 @@
 # svelte-tel-input
 
+## 3.3.0
+
+### Minor Changes
+
+-   feat: introduce `international format` ([#186](https://github.com/gyurielf/svelte-tel-input/pull/186))
+
+### Patch Changes
+
+-   fix: package.json for backward compatibility ([#186](https://github.com/gyurielf/svelte-tel-input/pull/186))
+
+-   fix: optimize code performance ([#186](https://github.com/gyurielf/svelte-tel-input/pull/186))
+
+-   chore: shrink package size, rename, concat files and folders ([#186](https://github.com/gyurielf/svelte-tel-input/pull/186))
+
 ## 3.2.2
 
 ### Patch Changes
