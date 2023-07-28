@@ -127,7 +127,9 @@ Config options:
     // Allow or disallow spaces in the input field
     spaces: true,
     // If you have a parsed phone number and you change country manually from outside, then it's set the `valid` prop to false.
-    invalidateOnCountryChange: false
+    invalidateOnCountryChange: false,
+    // Formatted output `national` | `international`
+    format: 'national'
 }
 ```
 
