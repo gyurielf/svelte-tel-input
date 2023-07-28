@@ -150,6 +150,7 @@
 		</div>
 		{#key basicExampleWithE164Options}
 			<BasicPhoneInput
+				options={basicExampleWithE164Options}
 				bind:value={basicExamplePropsWithE164.value}
 				bind:detailedValue={basicExamplePropsWithE164.detailedValue}
 				bind:valid={basicExamplePropsWithE164.valid}
@@ -193,6 +194,7 @@
 		</div>
 		{#key basicExampleWithNullOptions}
 			<BasicPhoneInput
+				options={basicExampleWithNullOptions}
 				bind:value={basicExamplePropsWithNull.value}
 				bind:detailedValue={basicExamplePropsWithNull.detailedValue}
 				bind:valid={basicExamplePropsWithNull.valid}
@@ -236,6 +238,7 @@
 		</div>
 		{#key eventDrivenExampleOptions}
 			<EventDrivenPhoneInput
+				options={eventDrivenExampleOptions}
 				bind:value={eventDrivenExampleProps.value}
 				bind:detailedValue={eventDrivenExampleProps.detailedValue}
 				bind:valid={eventDrivenExampleProps.valid}

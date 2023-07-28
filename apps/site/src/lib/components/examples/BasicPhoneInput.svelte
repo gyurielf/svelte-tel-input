@@ -1,6 +1,11 @@
 <script lang="ts">
 	import { TelInput, normalizedCountries } from 'svelte-tel-input';
-	import type { DetailedValue, E164Number, CountryCode } from 'svelte-tel-input/types';
+	import type {
+		DetailedValue,
+		E164Number,
+		CountryCode,
+		TelInputOptions
+	} from 'svelte-tel-input/types';
 
 	// E164 formatted value, usually you should store and use this.
 	export let value: E164Number | null;
