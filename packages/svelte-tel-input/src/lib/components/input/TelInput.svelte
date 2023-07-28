@@ -21,8 +21,9 @@
 	const defaultOptions = {
 		autoPlaceholder: true,
 		spaces: true,
-		invalidateOnCountryChange: false
-	};
+		invalidateOnCountryChange: false,
+		format: 'national'
+	} as const satisfies TelInputOptions;
 
 	/** It's accept any Country Code Alpha-2 (ISO 3166) */
 	export let country: CountryCode | null;
@@ -53,10 +54,12 @@
 		handleParsePhoneNumber(value, country);
 	};
 
+	// Update the country and dispatch event
 	const updateCountry = (countryCode: CountryCode | null) => {
-		country = countryCode;
-		prevCountry = countryCode;
-		dispatch('updateCountry', country);
+		if (countryCode !== country) {
+			country = prevCountry = countryCode;
+			dispatch('updateCountry', country);
+		}
 		return country;
 	};
 
@@ -77,7 +80,6 @@
 				);
 			} catch (err) {
 				if (err instanceof ParseError) {
-					// Not a phone number, non-existent country, etc.
 					detailedValue = {
 						isValid: false,
 						error: err.message
@@ -88,18 +90,26 @@
 				}
 			}
 
-			// It's keep the html input value on the first parsed format, or the user's format.
-			if (detailedValue?.isValid && combinedOptions.spaces && detailedValue?.formatOriginal) {
-				// It's need for refreshing html input value, if it is the same as the previouly parsed.
-				if (inputValue === detailedValue?.formatOriginal) {
-					inputValue = null;
+			if (detailedValue?.isValid) {
+				const formatOption =
+					combinedOptions.format === 'national' ? 'nationalNumber' : 'e164';
+				const formattedValue =
+					combinedOptions.format === 'national'
+						? 'formatOriginal'
+						: 'formatInternational';
+
+				if (combinedOptions.spaces && detailedValue?.[formattedValue]) {
+					// It's needed to refresh the HTML input value if it is the same as the previously parsed.
+					inputValue =
+						inputValue === detailedValue[formattedValue]
+							? null
+							: detailedValue[formattedValue] ?? null;
+				} else if (detailedValue?.[formatOption]) {
+					inputValue =
+						inputValue === detailedValue[formatOption]
+							? null
+							: detailedValue[formatOption] ?? null;
 				}
-				inputValue = detailedValue?.formatOriginal;
-			} else if (detailedValue?.isValid && detailedValue?.nationalNumber) {
-				if (inputValue === detailedValue?.nationalNumber) {
-					inputValue = null;
-				}
-				inputValue = detailedValue?.nationalNumber;
 			}
 
 			// keep the input value as value
@@ -109,22 +119,19 @@
 			dispatch('updateValue', value);
 			dispatch('updateDetailedValue', detailedValue);
 		} else if (input === null && currCountry !== null) {
-			/** If the user modify the country, it's reset the input value, and we don't dispatch country change event,
-			 * since the user himself initiated it.
-			 * */
+			// If the user modifies the country, reset the input value and don't dispatch the country change event.
 			if (currCountry !== prevCountry) {
 				prevCountry = currCountry;
 				valid = !options.invalidateOnCountryChange;
 				value = null;
-				if (inputValue !== null || inputValue !== '') {
-					inputValue = null;
-				}
+				inputValue = null;
 				detailedValue = null;
 				dispatch('updateValid', valid);
 				dispatch('updateValue', value);
 				dispatch('updateDetailedValue', detailedValue);
 			}
 		} else {
+			// Otherwise, reset all values
 			valid = true;
 			value = null;
 			detailedValue = null;
@@ -146,9 +153,13 @@
 	const countryChangeWatch = watcher(null, countryChangeWatchFunction);
 	$: $countryChangeWatch = country;
 
+	// Generate placeholder based on the autoPlaceholder option
 	$: getPlaceholder = combinedOptions.autoPlaceholder
 		? country
-			? generatePlaceholder(country)
+			? generatePlaceholder(country, {
+					format: combinedOptions.format,
+					spaces: combinedOptions.spaces
+			  })
 			: null
 		: placeholder;
 
@@ -160,15 +171,8 @@
 	}
 
 	const initialize = () => {
-		if (value && country) {
-			handleParsePhoneNumber(value, country);
-		} else if (value) {
-			const numberHasCountry = getCountryForPartialE164Number(value);
-			if (numberHasCountry) {
-				handleParsePhoneNumber(value, numberHasCountry);
-			} else {
-				handleParsePhoneNumber(value, null);
-			}
+		if (value) {
+			handleParsePhoneNumber(value, getCountryForPartialE164Number(value) || country);
 		}
 	};
 

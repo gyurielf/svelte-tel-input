@@ -1,6 +1,11 @@
 <script lang="ts">
 	import { TelInput, normalizedCountries } from 'svelte-tel-input';
-	import type { DetailedValue, E164Number, CountryCode } from 'svelte-tel-input/types';
+	import type {
+		DetailedValue,
+		E164Number,
+		CountryCode,
+		TelInputOptions
+	} from 'svelte-tel-input/types';
 
 	// E164 formatted value, usually you should store and use this.
 	export let value: E164Number | null;
@@ -13,6 +18,8 @@
 
 	// Phone number details
 	export let detailedValue: (DetailedValue | Partial<DetailedValue>) | null = null;
+
+	export let options: TelInputOptions;
 
 	const handleValueUpdate = (e: CustomEvent<E164Number | null>) => {
 		value = e.detail ?? null;
@@ -65,7 +72,7 @@
 		{value}
 		{country}
 		{valid}
-		options={{ invalidateOnCountryChange: true }}
+		options={{ ...options, invalidateOnCountryChange: true }}
 		on:updateValue={handleValueUpdate}
 		on:updateCountry={handleCountryUpdate}
 		on:updateValid={handleValidUpdate}

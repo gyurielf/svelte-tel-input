@@ -5,7 +5,6 @@ import {
 	getExampleNumber
 } from 'libphonenumber-js/max';
 import examples from 'libphonenumber-js/mobile/examples';
-
 import type {
 	PhoneNumber,
 	MetadataJson,
@@ -15,7 +14,8 @@ import type {
 } from '$lib/types/index.js';
 
 export const capitalize = (str: string) => {
-	return (str && str[0].toUpperCase() + str.slice(1).toLowerCase()) || '';
+	if (!str) return '';
+	return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
 };
 
 // Use carefully, it can be rate limited.
@@ -67,21 +67,25 @@ export const normalizeTelInput = (input?: PhoneNumber) => {
 
 export const generatePlaceholder = (
 	country: CountryCode,
-	format: 'international' | 'national' | 'default' = 'default'
+	{ format, spaces }: { format: 'international' | 'national'; spaces: boolean } = {
+		format: 'national',
+		spaces: true
+	}
 ) => {
 	const examplePhoneNumber = getExampleNumber(country, examples);
 	if (examplePhoneNumber) {
-		const countryCallingCode = examplePhoneNumber.countryCallingCode;
 		switch (format) {
 			case 'international':
-				return examplePhoneNumber.formatInternational();
-			case 'national':
-				return examplePhoneNumber.formatNational();
+				return spaces
+					? examplePhoneNumber.formatInternational()
+					: examplePhoneNumber.number;
 			default:
-				return examplePhoneNumber
-					.formatInternational()
-					.slice(countryCallingCode.length + 1)
-					.trim();
+				return spaces
+					? examplePhoneNumber
+							.formatInternational()
+							.slice(examplePhoneNumber.countryCallingCode.length + 1)
+							.trim()
+					: examplePhoneNumber.nationalNumber;
 		}
 	} else {
 		throw new Error(`No country found with this country code: ${country}`);
@@ -95,30 +99,16 @@ export const isSelected = <
 >(
 	itemToSelect: T | string,
 	selectedItem: (T | undefined | null) | string
-): boolean => {
-	if (!selectedItem || selectedItem === null) {
+) => {
+	if (!selectedItem) {
 		return false;
 	}
-	if (
-		typeof selectedItem === 'object' &&
-		typeof itemToSelect === 'object' &&
-		selectedItem !== null &&
-		itemToSelect !== null
-	) {
-		if (
-			typeof selectedItem === 'object' &&
-			typeof itemToSelect === 'object' &&
-			selectedItem.id === itemToSelect.id
-		) {
-			return true;
-		} else {
-			return false;
-		}
-	} else if (itemToSelect === selectedItem) {
-		return true;
-	} else {
-		return false;
+
+	if (typeof selectedItem === 'object' && typeof itemToSelect === 'object') {
+		return selectedItem.id === itemToSelect.id;
 	}
+
+	return itemToSelect === selectedItem;
 };
 
 export const getInternationalPhoneNumberPrefix = (country: CountryCode) => {
@@ -349,19 +339,18 @@ export const inputParser = (
 		parseCharacter
 	}: {
 		allowSpaces: boolean;
-		parseCharacter: (characted: string, val: string, allowSpaces?: boolean) => string;
+		parseCharacter: (char: string, val: string, allowSpaces?: boolean) => string | undefined;
 	}
 ) => {
 	let value = '';
-	let index = 0;
 
-	while (index < text.length) {
+	for (let index = 0; index < text.length; index++) {
 		const character = parseCharacter(text[index], value, allowSpaces);
 		if (character !== undefined) {
 			value += character;
 		}
-		index++;
 	}
+
 	return value;
 };
 

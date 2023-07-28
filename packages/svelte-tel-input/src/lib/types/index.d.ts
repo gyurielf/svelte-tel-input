@@ -76,12 +76,11 @@ export interface TelInputOptions {
 	 */
 	invalidateOnCountryChange?: boolean;
 	/**
-	 *  "formatInternational": "+36 20 123 4567",
-	 *  "formatOriginal": "20 123 4567",
-	 *  "formatNational": "06 20 123 4567",
-	 * @default 'original'
+	 *  "international": `+36 20 123 4567`,
+	 *  "default": `20 123 4567`
+	 * @default national
 	 */
-	// format: 'original' | 'national' | 'international';
+	format?: 'national' | 'international';
 }
 
 export type {

@@ -28,7 +28,8 @@
 	let advancedExampleOptions: TelInputOptions = {
 		autoPlaceholder: true,
 		spaces: true,
-		invalidateOnCountryChange: true
+		invalidateOnCountryChange: true,
+		format: 'national'
 	};
 
 	/* basicWithE164 example */
@@ -41,7 +42,8 @@
 	let basicExampleWithE164Options: TelInputOptions = {
 		autoPlaceholder: true,
 		spaces: true,
-		invalidateOnCountryChange: false
+		invalidateOnCountryChange: false,
+		format: 'national'
 	};
 
 	/* basicWithNull example */
@@ -55,7 +57,8 @@
 	let basicExampleWithNullOptions: TelInputOptions = {
 		autoPlaceholder: true,
 		spaces: true,
-		invalidateOnCountryChange: false
+		invalidateOnCountryChange: false,
+		format: 'national'
 	};
 
 	/* eventDriven example */
@@ -69,7 +72,8 @@
 	let eventDrivenExampleOptions: TelInputOptions = {
 		autoPlaceholder: true,
 		spaces: true,
-		invalidateOnCountryChange: false
+		invalidateOnCountryChange: false,
+		format: 'national'
 	};
 </script>
 
@@ -111,10 +115,10 @@
 		{/key}
 		<OptionsPanel bind:options={advancedExampleOptions} />
 		<PayloadBlock
-			bind:value={advancedExampleProps.value}
-			bind:exampleData={advancedExampleProps.detailedValue}
-			bind:valid={advancedExampleProps.valid}
-			bind:country={advancedExampleProps.country}
+			value={advancedExampleProps.value}
+			exampleData={advancedExampleProps.detailedValue}
+			valid={advancedExampleProps.valid}
+			country={advancedExampleProps.country}
 		/>
 	</div>
 	<hr class="my-5" />
@@ -144,18 +148,21 @@
 				</a>
 			</div>
 		</div>
-		<BasicPhoneInput
-			bind:value={basicExamplePropsWithE164.value}
-			bind:detailedValue={basicExamplePropsWithE164.detailedValue}
-			bind:valid={basicExamplePropsWithE164.valid}
-			bind:country={basicExamplePropsWithE164.country}
-		/>
+		{#key basicExampleWithE164Options}
+			<BasicPhoneInput
+				options={basicExampleWithE164Options}
+				bind:value={basicExamplePropsWithE164.value}
+				bind:detailedValue={basicExamplePropsWithE164.detailedValue}
+				bind:valid={basicExamplePropsWithE164.valid}
+				bind:country={basicExamplePropsWithE164.country}
+			/>
+		{/key}
 		<OptionsPanel bind:options={basicExampleWithE164Options} />
 		<PayloadBlock
-			bind:value={basicExamplePropsWithE164.value}
-			bind:exampleData={basicExamplePropsWithE164.detailedValue}
-			bind:valid={basicExamplePropsWithE164.valid}
-			bind:country={basicExamplePropsWithE164.country}
+			value={basicExamplePropsWithE164.value}
+			exampleData={basicExamplePropsWithE164.detailedValue}
+			valid={basicExamplePropsWithE164.valid}
+			country={basicExamplePropsWithE164.country}
 		/>
 	</div>
 	<hr class="my-5" />
@@ -185,18 +192,21 @@
 				</a>
 			</div>
 		</div>
-		<BasicPhoneInput
-			bind:value={basicExamplePropsWithNull.value}
-			bind:detailedValue={basicExamplePropsWithNull.detailedValue}
-			bind:valid={basicExamplePropsWithNull.valid}
-			bind:country={basicExamplePropsWithNull.country}
-		/>
+		{#key basicExampleWithNullOptions}
+			<BasicPhoneInput
+				options={basicExampleWithNullOptions}
+				bind:value={basicExamplePropsWithNull.value}
+				bind:detailedValue={basicExamplePropsWithNull.detailedValue}
+				bind:valid={basicExamplePropsWithNull.valid}
+				bind:country={basicExamplePropsWithNull.country}
+			/>
+		{/key}
 		<OptionsPanel bind:options={basicExampleWithNullOptions} />
 		<PayloadBlock
-			bind:value={basicExamplePropsWithNull.value}
-			bind:exampleData={basicExamplePropsWithNull.detailedValue}
-			bind:valid={basicExamplePropsWithNull.valid}
-			bind:country={basicExamplePropsWithNull.country}
+			value={basicExamplePropsWithNull.value}
+			exampleData={basicExamplePropsWithNull.detailedValue}
+			valid={basicExamplePropsWithNull.valid}
+			country={basicExamplePropsWithNull.country}
 		/>
 	</div>
 	<hr class="my-5" />
@@ -226,12 +236,15 @@
 				</a>
 			</div>
 		</div>
-		<EventDrivenPhoneInput
-			bind:value={eventDrivenExampleProps.value}
-			bind:detailedValue={eventDrivenExampleProps.detailedValue}
-			bind:valid={eventDrivenExampleProps.valid}
-			bind:country={eventDrivenExampleProps.country}
-		/>
+		{#key eventDrivenExampleOptions}
+			<EventDrivenPhoneInput
+				options={eventDrivenExampleOptions}
+				bind:value={eventDrivenExampleProps.value}
+				bind:detailedValue={eventDrivenExampleProps.detailedValue}
+				bind:valid={eventDrivenExampleProps.valid}
+				bind:country={eventDrivenExampleProps.country}
+			/>
+		{/key}
 		<OptionsPanel bind:options={eventDrivenExampleOptions} />
 		<PayloadBlock
 			value={eventDrivenExampleProps.value}
