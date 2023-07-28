@@ -13,6 +13,8 @@
 
 	// Phone number details
 	export let detailedValue: DetailedValue | null = null;
+
+	export let options: TelInputOptions;
 </script>
 
 <div class="flex">
@@ -44,6 +46,7 @@
 	</select>
 
 	<TelInput
+		{options}
 		bind:country
 		bind:valid
 		bind:value

@@ -60,7 +60,7 @@
 			class="p-3 font-mono border border-gray-400 dark:border-gray-400 rounded-b"
 		>
 			<label
-				for="spaces"
+				for="spaces-{markupId}"
 				class="relative inline-flex items-center align-middle cursor-pointer"
 			>
 				<input
@@ -80,7 +80,7 @@
 				>
 			</label>
 			<label
-				for="autoPlaceholder"
+				for="autoPlaceholder-{markupId}"
 				class="relative inline-flex items-center align-middle cursor-pointer"
 			>
 				<input
@@ -101,7 +101,7 @@
 				>
 			</label>
 			<label
-				for="invalidateOnCountryChange"
+				for="invalidateOnCountryChange-{markupId}"
 				class="relative inline-flex items-center align-middle cursor-pointer"
 			>
 				<input
