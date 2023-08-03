@@ -15,7 +15,6 @@
 	aria-label={$theme}
 	aria-checked={isDarkModeEnabled}
 	on:click={toggleTheme}
-	on:keydown={(e) => e.key === 'Enter' && toggleTheme()}
 >
 	<span
 		class="theme-switch__icon light-icon absolute transition-[transform,opacity] ease-out {isDarkModeEnabled

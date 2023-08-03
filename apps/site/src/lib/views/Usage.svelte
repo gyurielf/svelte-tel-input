@@ -19,62 +19,60 @@
 	}
 
 	/* advanced example */
-	let advancedExampleProps: ExampleProps = {
+	let advancedExampleProps = {
 		value: '+36201234567',
 		detailedValue: null,
 		valid: true,
 		country: null
-	};
-	let advancedExampleOptions: TelInputOptions = {
+	} satisfies ExampleProps;
+	let advancedExampleOptions = {
 		autoPlaceholder: true,
 		spaces: true,
 		invalidateOnCountryChange: true,
 		format: 'national'
-	};
+	} satisfies TelInputOptions;
 
 	/* basicWithE164 example */
-	let basicExamplePropsWithE164: ExampleProps = {
+	let basicExamplePropsWithE164 = {
 		value: '+14842918723',
 		detailedValue: null,
 		valid: true,
 		country: null
-	};
-	let basicExampleWithE164Options: TelInputOptions = {
+	} satisfies ExampleProps;
+	let basicExampleWithE164Options = {
 		autoPlaceholder: true,
 		spaces: true,
 		invalidateOnCountryChange: false,
 		format: 'national'
-	};
+	} satisfies TelInputOptions;
 
 	/* basicWithNull example */
-	let basicExamplePropsWithNull: ExampleProps = {
+	let basicExamplePropsWithNull = {
 		value: null,
 		detailedValue: null,
 		valid: true,
 		country: null
-	};
-
-	let basicExampleWithNullOptions: TelInputOptions = {
+	} satisfies ExampleProps;
+	let basicExampleWithNullOptions = {
 		autoPlaceholder: true,
 		spaces: true,
 		invalidateOnCountryChange: false,
 		format: 'national'
-	};
+	} satisfies TelInputOptions;
 
 	/* eventDriven example */
-	let eventDrivenExampleProps: ExampleProps = {
+	let eventDrivenExampleProps = {
 		value: '+441234567988',
 		detailedValue: null,
 		valid: true,
 		country: null
-	};
-
-	let eventDrivenExampleOptions: TelInputOptions = {
+	} satisfies ExampleProps;
+	let eventDrivenExampleOptions = {
 		autoPlaceholder: true,
 		spaces: true,
 		invalidateOnCountryChange: false,
 		format: 'national'
-	};
+	} satisfies TelInputOptions;
 </script>
 
 <div class="grid gap-y-10">
@@ -84,7 +82,7 @@
 			<div class="socials ml-2">
 				<a
 					class="relative flex items-center text-gray-soft hover:text-gray-inverse border-0 rounded-md"
-					href="https://github.com/gyurielf/svelte-tel-input/blob/main/src/lib/components/examples/AdvancedPhoneInput.svelte"
+					href="https://github.com/gyurielf/svelte-tel-input/blob/main/apps/site/src/lib/components/examples/AdvancedPhoneInput.svelte"
 					target="_blank"
 					rel="noreferrer"
 				>
@@ -128,7 +126,7 @@
 			<div class="socials ml-2">
 				<a
 					class="relative flex items-center text-gray-soft hover:text-gray-inverse border-0 rounded-md"
-					href="https://github.com/gyurielf/svelte-tel-input/blob/main/src/lib/components/examples/BasicPhoneInput.svelte"
+					href="https://github.com/gyurielf/svelte-tel-input/blob/main/apps/site/src/lib/components/examples/BasicPhoneInput.svelte"
 					target="_blank"
 					rel="noreferrer"
 				>
@@ -172,7 +170,7 @@
 			<div class="socials ml-2">
 				<a
 					class="relative flex items-center text-gray-soft hover:text-gray-inverse border-0 rounded-md"
-					href="https://github.com/gyurielf/svelte-tel-input/blob/main/src/lib/components/examples/BasicPhoneInput.svelte"
+					href="https://github.com/gyurielf/svelte-tel-input/blob/main/apps/site/src/lib/components/examples/BasicPhoneInput.svelte"
 					target="_blank"
 					rel="noreferrer"
 				>
@@ -216,7 +214,7 @@
 			<div class="socials ml-2">
 				<a
 					class="relative flex items-center text-gray-soft hover:text-gray-inverse border-0 rounded-md"
-					href="https://github.com/gyurielf/svelte-tel-input/blob/main/src/lib/components/examples/EventDrivenPhoneInput.svelte"
+					href="https://github.com/gyurielf/svelte-tel-input/blob/main/apps/site/src/lib/components/examples/EventDrivenPhoneInput.svelte"
 					target="_blank"
 					rel="noreferrer"
 				>
