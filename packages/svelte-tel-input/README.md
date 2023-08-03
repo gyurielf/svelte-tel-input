@@ -26,16 +26,17 @@ npm install --save svelte-tel-input
 - Prevent non-digits typing into the input, except the leading `+` sign (and `space` optionally).
 - Handle copy-pasted phone numbers, it's sanitize non-digit characters except the leading `+` sign (and `space` optionally).
 - Automatic placeholder generation for the selected country.
+- International or National formatted phone numbers.
 
 ## Usage
 
 ### Advanced
 
-_Snippet would be too long_ - [REPL](https://stackblitz.com/edit/svelte-tel-input-repl-1jfaar?file=README.md) (StackBlitz)
+_Snippet would be too long_ - [Example](https://github.com/gyurielf/svelte-tel-input/blob/main/apps/site/src/lib/components/examples/AdvancedPhoneInput.svelte) - [REPL](https://stackblitz.com/edit/svelte-tel-input-repl-1jfaar?file=README.md) (StackBlitz)
 
 ### Basic
 
-[REPL](https://stackblitz.com/edit/svelte-tel-input-repl?file=README.md) (StackBlitz)
+[Example](https://github.com/gyurielf/svelte-tel-input/blob/main/apps/site/src/lib/components/examples/BasicPhoneInput.svelte) - [REPL](https://stackblitz.com/edit/svelte-tel-input-repl?file=README.md) (StackBlitz)
 
 ```html
 <script lang="ts">
