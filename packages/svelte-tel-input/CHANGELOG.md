@@ -1,5 +1,13 @@
 # svelte-tel-input
 
+## 3.3.1
+
+### Patch Changes
+
+-   chore: update dependencies ([#188](https://github.com/gyurielf/svelte-tel-input/pull/188))
+
+-   chore: extend readme with the new features and example links ([#188](https://github.com/gyurielf/svelte-tel-input/pull/188))
+
 ## 3.3.0
 
 ### Minor Changes
