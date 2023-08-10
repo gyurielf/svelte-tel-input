@@ -195,13 +195,12 @@
 	</div>
 
 	<TelInput
-		id="tel-input"
 		bind:country={selectedCountry}
 		bind:detailedValue
 		bind:value
 		bind:valid
 		{options}
-		required={true}
+		required
 		class="text-sm rounded-r-lg block w-full p-2.5 focus:outline-none border border-gray-300 border-l-gray-100 dark:border-l-gray-700 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 
         dark:placeholder-gray-400 dark:text-white text-gray-900"
 	/>
