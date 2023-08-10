@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { createEventDispatcher, onMount } from 'svelte';
+	import { createEventDispatcher } from 'svelte';
 	import { parsePhoneNumberWithError, ParseError } from 'libphonenumber-js/max';
 	import {
 		normalizeTelInput,
