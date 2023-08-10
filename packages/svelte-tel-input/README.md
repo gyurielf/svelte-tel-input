@@ -123,7 +123,7 @@ The default export of the library is the main TelInput component. It has the fol
 | readonly      | `boolean \| null`      | `null`        | HTMLInputElement's attribute                                                                                                                                                                                                                                                                                         |
 | size          | `number \| null`       | `null`        | HTMLInputElement's attribute                                                                                                                                                                                                                                                                                         |
 | autocomplete  | `string \| null`       | `null`        | HTMLInputElement's attribute                                                                                                                                                                                                                                                                                         |
-|  |
+|               |
 
 Config options:
 
