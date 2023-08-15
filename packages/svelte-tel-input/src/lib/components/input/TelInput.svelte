@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { createEventDispatcher, onMount } from 'svelte';
+	import { createEventDispatcher } from 'svelte';
 	import { parsePhoneNumberWithError, ParseError } from 'libphonenumber-js/max';
 	import {
 		normalizeTelInput,
@@ -23,22 +23,37 @@
 		spaces: true,
 		invalidateOnCountryChange: false,
 		format: 'national'
-	} as const satisfies TelInputOptions;
+	} satisfies TelInputOptions;
 
-	/** It's accept any Country Code Alpha-2 (ISO 3166) */
-	export let country: CountryCode | null;
-	/** The core value of the input, this is the only one what you can store. It's an E164 phone number.*/
-	export let value: E164Number | null;
-	/** Detailed parse of the E164 phone number */
-	export let detailedValue: Partial<DetailedValue> | null = null;
-	export let valid = true;
+	export let autocomplete: string | null = null;
+	let classes = '';
+	/** You can set the classes of the input field*/
+	export { classes as class };
+	/** You can disable the component and set the disabled attribute of the input field */
 	export let disabled = false;
+	/** You can set the id attribute of the input field */
+	export let id =
+		'phone-input-' + new Date().getTime().toString(36) + Math.random().toString(36).slice(2);
+	/** You can set the name attribute of the input field */
+	export let name: string | null = null;
 	/** It will overwrite the autoPlaceholder ! */
 	export let placeholder: string | null = null;
-	/** You can turn on and off certain features by this object */
-	export let options: TelInputOptions = defaultOptions;
+	/** You can set the readonly attribute of the input field */
+	export let readonly: boolean | null = null;
 	/** Set the required attribute on the input element */
 	export let required: boolean | null = null;
+	/** You can set the size attribute of the input field */
+	export let size: number | null = null;
+	/** The core value of the input, this is the only one what you can store. It's an E164 phone number.*/
+	export let value: E164Number | null;
+	/** It's accept any Country Code Alpha-2 (ISO 3166) */
+	export let country: CountryCode | null;
+	/** Detailed parse of the E164 phone number */
+	export let detailedValue: Partial<DetailedValue> | null = null;
+	/** Validity of the input based on the config settings.*/
+	export let valid = true;
+	/** You can turn on and off certain features by this object */
+	export let options: TelInputOptions = defaultOptions;
 
 	let inputValue = value;
 	let prevCountry = country;
@@ -50,7 +65,7 @@
 	};
 
 	const handleInputAction = (value: string) => {
-		if (disabled) return;
+		if (disabled || readonly) return;
 		handleParsePhoneNumber(value, country);
 	};
 
@@ -99,11 +114,9 @@
 						: 'formatInternational';
 
 				if (combinedOptions.spaces && detailedValue?.[formattedValue]) {
-					// It's needed to refresh the HTML input value if it is the same as the previously parsed.
-					inputValue =
-						inputValue === detailedValue[formattedValue]
-							? null
-							: detailedValue[formattedValue] ?? null;
+					if (inputValue !== detailedValue[formattedValue]) {
+						inputValue = detailedValue[formattedValue] ?? null;
+					}
 				} else if (detailedValue?.[formatOption]) {
 					inputValue =
 						inputValue === detailedValue[formatOption]
@@ -170,35 +183,33 @@
 		dispatch('updateDetailedValue', detailedValue);
 	}
 
-	const initialize = () => {
-		if (value) {
-			handleParsePhoneNumber(value, getCountryForPartialE164Number(value) || country);
-		}
-	};
-
-	onMount(() => {
-		initialize();
-	});
+	if (value) {
+		handleParsePhoneNumber(value, getCountryForPartialE164Number(value) || country);
+	}
 </script>
 
 <input
-	type="tel"
-	placeholder={getPlaceholder}
-	{required}
+	{autocomplete}
+	class={classes}
 	{disabled}
-	{...$$restProps}
+	{id}
+	{name}
+	{readonly}
+	{required}
+	{size}
+	placeholder={getPlaceholder}
+	type="tel"
 	value={inputValue}
-	class={$$props.class}
 	on:beforeinput
 	on:blur
 	on:change
+	on:click
 	on:focus
 	on:input
 	on:keydown
 	on:keypress
 	on:keyup
 	on:paste
-	on:click
 	use:telInputAction={{
 		handler: handleInputAction,
 		spaces: combinedOptions.spaces,

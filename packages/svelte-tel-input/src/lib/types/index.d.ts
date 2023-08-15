@@ -78,7 +78,7 @@ export interface TelInputOptions {
 	/**
 	 *  "international": `+36 20 123 4567`,
 	 *  "default": `20 123 4567`
-	 * @default national
+	 * @default "national"
 	 */
 	format?: 'national' | 'international';
 }
