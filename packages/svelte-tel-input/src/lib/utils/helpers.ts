@@ -4,7 +4,7 @@ import {
 	getCountryCallingCode,
 	getExampleNumber
 } from 'libphonenumber-js/max';
-import examples from 'libphonenumber-js/mobile/examples';
+import examples from 'libphonenumber-js/mobile/examples' assert { type: 'json' };
 import type {
 	PhoneNumber,
 	MetadataJson,
