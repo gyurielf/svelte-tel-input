@@ -2,4 +2,4 @@
 'svelte-tel-input': patch
 ---
 
-fix: placeholders json import assertion
+fix: add `assert { type: 'json' }` for placeholders json import assertion, experimentally (needs at least node 17).
