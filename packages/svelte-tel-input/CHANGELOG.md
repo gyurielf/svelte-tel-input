@@ -1,5 +1,17 @@
 # svelte-tel-input
 
+## 3.3.2
+
+### Patch Changes
+
+-   feat: generate unique id for the input by default ([#190](https://github.com/gyurielf/svelte-tel-input/pull/190))
+
+-   fix: simplify parsing, remove onmount ([#190](https://github.com/gyurielf/svelte-tel-input/pull/190))
+
+-   fix: improve a11y with new props like name, size, readonly etc.. ([#190](https://github.com/gyurielf/svelte-tel-input/pull/190))
+
+-   fix: add `assert { type: 'json' }` for placeholders json import assertion, experimentally (needs at least node 17). ([#190](https://github.com/gyurielf/svelte-tel-input/pull/190))
+
 ## 3.3.1
 
 ### Patch Changes
