@@ -105,24 +105,13 @@
 				}
 			}
 
-			if (detailedValue?.isValid) {
-				const formatOption =
-					combinedOptions.format === 'national' ? 'nationalNumber' : 'e164';
-				const formattedValue =
-					combinedOptions.format === 'national'
-						? 'formatOriginal'
-						: 'formatInternational';
-
-				if (combinedOptions.spaces && detailedValue?.[formattedValue]) {
-					if (inputValue !== detailedValue[formattedValue]) {
-						inputValue = detailedValue[formattedValue] ?? null;
-					}
-				} else if (detailedValue?.[formatOption]) {
-					inputValue =
-						inputValue === detailedValue[formatOption]
-							? null
-							: detailedValue[formatOption] ?? null;
-				}
+			const formatOption = combinedOptions.format === 'national' ? 'nationalNumber' : 'e164';
+			const formattedValue =
+				combinedOptions.format === 'national' ? 'formatOriginal' : 'formatInternational';
+			if (combinedOptions.spaces && detailedValue?.[formattedValue]) {
+				inputValue = detailedValue[formattedValue] ?? null;
+			} else if (detailedValue?.[formatOption]) {
+				inputValue = detailedValue[formatOption] ?? null;
 			}
 
 			// keep the input value as value
