@@ -1,5 +1,13 @@
 # svelte-tel-input
 
+## 3.3.3
+
+### Patch Changes
+
+-   fix: parsing and formatting input value ([#194](https://github.com/gyurielf/svelte-tel-input/pull/194))
+
+-   chore: update dev deps ([#194](https://github.com/gyurielf/svelte-tel-input/pull/194))
+
 ## 3.3.2
 
 ### Patch Changes
