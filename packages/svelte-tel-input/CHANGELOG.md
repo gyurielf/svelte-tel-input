@@ -1,5 +1,11 @@
 # svelte-tel-input
 
+## 3.3.5
+
+### Patch Changes
+
+-   fix: import of examplePhoneNumbers ([#201](https://github.com/gyurielf/svelte-tel-input/pull/201))
+
 ## 3.3.4
 
 ### Patch Changes
