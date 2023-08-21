@@ -1,5 +1,13 @@
 # svelte-tel-input
 
+## 3.3.4
+
+### Patch Changes
+
+-   fix: asserted json import workaround ([#197](https://github.com/gyurielf/svelte-tel-input/pull/197))
+
+-   chore: update deps ([#197](https://github.com/gyurielf/svelte-tel-input/pull/197))
+
 ## 3.3.3
 
 ### Patch Changes
