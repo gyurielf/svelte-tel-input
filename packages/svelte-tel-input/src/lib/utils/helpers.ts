@@ -4,7 +4,6 @@ import {
 	getCountryCallingCode,
 	getExampleNumber
 } from 'libphonenumber-js/max';
-import examples from 'libphonenumber-js/mobile/examples' assert { type: 'json' };
 import type {
 	PhoneNumber,
 	MetadataJson,
@@ -12,6 +11,7 @@ import type {
 	E164Number,
 	CountryCode
 } from '$lib/types/index.js';
+import { examplePhoneNumbers } from '$lib/assets/index.js';
 
 export const capitalize = (str: string) => {
 	if (!str) return '';
@@ -72,7 +72,7 @@ export const generatePlaceholder = (
 		spaces: true
 	}
 ) => {
-	const examplePhoneNumber = getExampleNumber(country, examples);
+	const examplePhoneNumber = getExampleNumber(country, examplePhoneNumbers);
 	if (examplePhoneNumber) {
 		switch (format) {
 			case 'international':
