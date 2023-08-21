@@ -21,3 +21,4 @@ yarn.lock
 # Utility and CI tools
 zarf
 scripts
+examplePhoneNumbers.ts
