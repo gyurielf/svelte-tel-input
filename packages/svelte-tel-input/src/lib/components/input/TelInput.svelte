@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { createEventDispatcher } from 'svelte';
+	import { createEventDispatcher, onMount } from 'svelte';
 	import { parsePhoneNumberWithError, ParseError } from 'libphonenumber-js/max';
 	import {
 		normalizeTelInput,
@@ -72,7 +72,8 @@
 	// Update the country and dispatch event
 	const updateCountry = (countryCode: CountryCode | null) => {
 		if (countryCode !== country) {
-			country = prevCountry = countryCode;
+			country = countryCode;
+			prevCountry = country;
 			dispatch('updateCountry', country);
 		}
 		return country;
@@ -172,9 +173,11 @@
 		dispatch('updateDetailedValue', detailedValue);
 	}
 
-	if (value) {
-		handleParsePhoneNumber(value, getCountryForPartialE164Number(value) || country);
-	}
+	onMount(() => {
+		if (value) {
+			handleParsePhoneNumber(value, getCountryForPartialE164Number(value) || country);
+		}
+	});
 </script>
 
 <input
