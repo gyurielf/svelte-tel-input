@@ -19,6 +19,5 @@ module.exports = {
 				tabWidth: 2
 			}
 		}
-	],
-	pluginSearchDirs: ['.']
+	]
 };
