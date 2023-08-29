@@ -1,5 +1,13 @@
 # svelte-tel-input
 
+## 3.3.6
+
+### Patch Changes
+
+-   fix: country parse happened too early ([#203](https://github.com/gyurielf/svelte-tel-input/pull/203))
+
+-   chore: update deps ([#203](https://github.com/gyurielf/svelte-tel-input/pull/203))
+
 ## 3.3.5
 
 ### Patch Changes
