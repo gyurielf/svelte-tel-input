@@ -38,7 +38,7 @@ _Snippet would be too long_ - [Example](https://github.com/gyurielf/svelte-tel-i
 
 [Example](https://github.com/gyurielf/svelte-tel-input/blob/main/apps/site/src/lib/components/examples/BasicPhoneInput.svelte) - [REPL](https://stackblitz.com/edit/svelte-tel-input-repl?file=README.md) (StackBlitz)
 
-```html
+```svelte
 <script lang="ts">
   import { TelInput, normalizedCountries } from 'svelte-tel-input';
   import type { DetailedValue, CountryCode, E164Number } from 'svelte-tel-input/types';
@@ -58,34 +58,28 @@ _Snippet would be too long_ - [Example](https://github.com/gyurielf/svelte-tel-i
 
 <div class="wrapper">
   <select
-    class="country-select {!valid && 'invalid'}"
+    class="country-select {!valid ? 'invalid' : ''}"
     aria-label="Default select example"
     name="Country"
-    bind:value="{selectedCountry}"
+    bind:value={selectedCountry}
   >
-    <option value="{null}" hidden="{selectedCountry" !="" ="null}">Please select</option>
-    {#each normalizedCountries as country (country.id)}
-    <option
-      value="{country.iso2}"
-      selected="{country.iso2"
-      =""
-      =""
-      ="selectedCountry}"
-      aria-selected="{country.iso2"
-      =""
-      =""
-      ="selectedCountry}"
-    >
-      {country.iso2} (+{country.dialCode})
-    </option>
+    <option value={null} hidden={country !== null}>Please select</option>
+    {#each normalizedCountries as currentCountry (currentCountry.id)}
+      <option
+        value={currentCountry.iso2}
+        selected={currentCountry.iso2 === country}
+        aria-selected={currentCountry.iso2 === country}
+      >
+        {currentCountry.iso2} (+{currentCountry.dialCode})
+      </option>
     {/each}
   </select>
   <TelInput
-    bind:country="{selectedCountry}"
+    bind:country={selectedCountry}
     bind:value
     bind:valid
     bind:detailedValue
-    class="basic-tel-input {!isValid && 'invalid'}"
+    class="basic-tel-input {!isValid ? 'invalid' : ''}"
   />
 </div>
 
