@@ -1,5 +1,11 @@
 # svelte-tel-input
 
+## 3.3.7
+
+### Patch Changes
+
+-   chore: allow yarn classic engine ([#207](https://github.com/gyurielf/svelte-tel-input/pull/207))
+
 ## 3.3.6
 
 ### Patch Changes
