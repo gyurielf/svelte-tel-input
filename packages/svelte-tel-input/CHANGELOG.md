@@ -1,5 +1,11 @@
 # svelte-tel-input
 
+## 3.3.8
+
+### Patch Changes
+
+-   fix: allow using yarn classic in all workspaces ([#209](https://github.com/gyurielf/svelte-tel-input/pull/209))
+
 ## 3.3.7
 
 ### Patch Changes
