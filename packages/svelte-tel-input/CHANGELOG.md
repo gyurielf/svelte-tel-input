@@ -1,5 +1,13 @@
 # svelte-tel-input
 
+## 3.3.9
+
+### Patch Changes
+
+-   Not ignore placeholder if country is falsie ([#213](https://github.com/gyurielf/svelte-tel-input/pull/213))
+
+-   packaging: abide closer to svelte spec ([#211](https://github.com/gyurielf/svelte-tel-input/pull/211))
+
 ## 3.3.8
 
 ### Patch Changes
