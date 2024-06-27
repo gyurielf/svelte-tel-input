@@ -39,11 +39,11 @@ export interface DetailedValue {
 	isValid: boolean;
 	phoneNumber: string | null;
 	countryCallingCode: CountryCallingCode | null;
-	formattedNumber: string | null;
-	formatOriginal: string | null;
-	nationalNumber: string | null;
-	formatInternational: string | null;
-	formatNational: string | null;
+	formattedNumber: E164Number | null;
+	formatOriginal: E164Number | null;
+	nationalNumber: E164Number | null;
+	formatInternational: E164Number | null;
+	formatNational: E164Number | null;
 	uri: string | null;
 	e164: E164Number | null;
 	error?: string;

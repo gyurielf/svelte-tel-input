@@ -80,9 +80,10 @@
 	};
 
 	const handleParsePhoneNumber = (
-		input: string | null,
+		rawInput: string | null,
 		currCountry: CountryCode | null = null
 	) => {
+		const input = rawInput as E164Number;
 		if (input !== null) {
 			const numberHasCountry = getCountryForPartialE164Number(input);
 
@@ -157,12 +158,13 @@
 	$: $countryChangeWatch = country;
 
 	// Generate placeholder based on the autoPlaceholder option
-	$: getPlaceholder = combinedOptions.autoPlaceholder && country
-		? generatePlaceholder(country, {
-				format: combinedOptions.format,
-				spaces: combinedOptions.spaces
-		  })
-		: placeholder;
+	$: getPlaceholder =
+		combinedOptions.autoPlaceholder && country
+			? generatePlaceholder(country, {
+					format: combinedOptions.format,
+					spaces: combinedOptions.spaces
+				})
+			: placeholder;
 
 	// Handle reset value only
 	$: if (value === null && inputValue !== null && detailedValue !== null) {
@@ -170,6 +172,19 @@
 		detailedValue = null;
 		dispatch('updateDetailedValue', detailedValue);
 	}
+
+	export const updateValue = (
+		newValue: string | E164Number | null,
+		newCountry: CountryCode | null
+	) => {
+		const castedValue = newValue as E164Number;
+		if (castedValue) {
+			handleParsePhoneNumber(
+				castedValue,
+				getCountryForPartialE164Number(castedValue) || newCountry
+			);
+		}
+	};
 
 	onMount(() => {
 		if (value) {
