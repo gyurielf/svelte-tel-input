@@ -33,8 +33,8 @@
 		"sync": "svelte-kit sync",
 		"test": "playwright test",
 		"ts": "tsc --noEmit",
-		"prettier:check": "prettier --check --plugin-search-dir=. .",
-		"prettier:fix": "prettier --write --plugin-search-dir=. .",
+		"prettier:check": "prettier --check .",
+		"prettier:fix": "prettier --write .",
 		"svelte-check": "svelte-kit sync && svelte-check --ignore 'dist,build,coverage,.svelte-kit,package' --fail-on-warnings"
 	},
 	"dependencies": {
