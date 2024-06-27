@@ -1,5 +1,12 @@
 # svelte-tel-input
 
+## 3.4.1
+### Patch Changes
+
+
+
+- fix: updateValue second param should be optional ([#218](https://github.com/gyurielf/svelte-tel-input/pull/218))
+
 ## 3.4.0
 ### Minor Changes
 
