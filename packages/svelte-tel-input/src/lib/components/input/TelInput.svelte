@@ -175,7 +175,7 @@
 
 	export const updateValue = (
 		newValue: string | E164Number | null,
-		newCountry: CountryCode | null
+		newCountry?: CountryCode | null
 	) => {
 		const castedValue = newValue as E164Number;
 		if (castedValue) {
