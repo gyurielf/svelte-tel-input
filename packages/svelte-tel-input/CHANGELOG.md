@@ -1,5 +1,12 @@
 # svelte-tel-input
 
+## 3.4.0
+### Minor Changes
+
+
+
+- feat: introduce `updateValue` method which allows you to update value from outside. ([#216](https://github.com/gyurielf/svelte-tel-input/pull/216))
+
 ## 3.3.9
 
 ### Patch Changes
