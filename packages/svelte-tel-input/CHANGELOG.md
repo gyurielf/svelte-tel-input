@@ -1,5 +1,16 @@
 # svelte-tel-input
 
+## 3.5.0
+### Minor Changes
+
+
+
+- Add `$restProps` ([#222](https://github.com/gyurielf/svelte-tel-input/pull/222))
+
+
+
+- Add `el` prop to allow for binding to underlying `<input>` element ([#222](https://github.com/gyurielf/svelte-tel-input/pull/222))
+
 ## 3.4.1
 ### Patch Changes
 
