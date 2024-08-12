@@ -60,5 +60,6 @@
 		"prettier-plugin-svelte": "^3.2.5"
 	},
 	"type": "module",
-	"license": "MIT"
+	"license": "MIT",
+	"packageManager": "pnpm@8.6.0"
 }
