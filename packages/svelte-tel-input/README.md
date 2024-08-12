@@ -15,7 +15,7 @@
 Svelte Tel Input is distributed via [npm](https://www.npmjs.com/package/svelte-tel-input).
 
 ```bash
-npm install --save svelte-tel-input
+npm install svelte-tel-input
 ```
 
 ## Features
