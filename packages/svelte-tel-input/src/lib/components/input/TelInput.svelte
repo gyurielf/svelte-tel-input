@@ -54,6 +54,8 @@
 	export let valid = true;
 	/** You can turn on and off certain features by this object */
 	export let options: TelInputOptions = defaultOptions;
+	/** Binding to the underlying `<input>` element */
+	export let el: HTMLInputElement | undefined = undefined;
 
 	let inputValue = value;
 	let prevCountry = country;
@@ -194,6 +196,8 @@
 </script>
 
 <input
+	{...$$restProps}
+	bind:this={el}
 	{autocomplete}
 	class={classes}
 	{disabled}
