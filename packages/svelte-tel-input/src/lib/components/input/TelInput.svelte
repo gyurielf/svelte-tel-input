@@ -7,7 +7,6 @@
 		generatePlaceholder,
 		telInputAction
 	} from '$lib/utils/index.js';
-	import { watcher } from '$lib/stores/index.js';
 	import type { DetailedValue, CountryCode, E164Number, TelInputOptions } from '$lib/types';
 
 	const dispatch = createEventDispatcher<{
@@ -45,9 +44,9 @@
 	/** You can set the size attribute of the input field */
 	export let size: number | null = null;
 	/** The core value of the input, this is the only one what you can store. It's an E164 phone number.*/
-	export let value: E164Number | null;
+	export let value: E164Number | null | undefined = undefined;
 	/** It's accept any Country Code Alpha-2 (ISO 3166) */
-	export let country: CountryCode | null;
+	export let country: CountryCode | null | undefined = undefined;
 	/** Detailed parse of the E164 phone number */
 	export let detailedValue: Partial<DetailedValue> | null = null;
 	/** Validity of the input based on the config settings.*/
@@ -150,14 +149,14 @@
 
 	// Watch user's country change.
 	let countryWatchInitRun = true;
-	const countryChangeWatchFunction = () => {
+	const countryChangeWatchFunction = (current: CountryCode | null | undefined) => {
 		if (!countryWatchInitRun) {
-			handleParsePhoneNumber(null, country);
+			handleParsePhoneNumber(null, current);
 		}
 		countryWatchInitRun = false;
 	};
-	const countryChangeWatch = watcher(null, countryChangeWatchFunction);
-	$: $countryChangeWatch = country;
+
+	$: countryChangeWatchFunction(country);
 
 	// Generate placeholder based on the autoPlaceholder option
 	$: getPlaceholder =
