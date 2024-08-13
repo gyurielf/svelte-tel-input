@@ -44,7 +44,7 @@
 	/** You can set the size attribute of the input field */
 	export let size: number | null = null;
 	/** The core value of the input, this is the only one what you can store. It's an E164 phone number.*/
-	export let value: E164Number | null | undefined = undefined;
+	export let value: E164Number | null = null;
 	/** It's accept any Country Code Alpha-2 (ISO 3166) */
 	export let country: CountryCode | null | undefined = undefined;
 	/** Detailed parse of the E164 phone number */
