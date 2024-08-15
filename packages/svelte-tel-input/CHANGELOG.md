@@ -1,5 +1,12 @@
 # svelte-tel-input
 
+## 3.5.1
+### Patch Changes
+
+
+
+- fix: Allow for `undefined` as a value for country making the input easier to consume in reusable components. ([#228](https://github.com/gyurielf/svelte-tel-input/pull/228))
+
 ## 3.5.0
 ### Minor Changes
 
