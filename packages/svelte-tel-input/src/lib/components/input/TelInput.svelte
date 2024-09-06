@@ -93,12 +93,11 @@
 
 			// Since newValue has not been normalized yet, we need to map any non standard digits.
 			const nvChar = allowedCharacters(newValue[nvIndex], {spaces: false});
-			const fvChar = formattedValue[fvIndex];
 
 			// For each non-formatting character encountered in the value entered by the user,
 			// find the corresponding digit in the formatted value.
 			if(nvChar >= '0' && nvChar <= '9') {
-				while(!(fvChar >= '0' && fvChar <= '9') && fvIndex < formattedValue.length) {
+				while(!(formattedValue[fvIndex] >= '0' && formattedValue[fvIndex] <= '9') && fvIndex < formattedValue.length) {
 					fvIndex++;
 				}
 				fvIndex++;
