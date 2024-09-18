@@ -49,15 +49,15 @@ export const normalizeTelInput = (input?: PhoneNumber) => {
 			phoneNumber: input ? input.number : null,
 			countryCallingCode: input ? input.countryCallingCode : null,
 			formattedNumber: input ? input.formatInternational() : null,
-			nationalNumber: input ? input.nationalNumber : null,
+			nationalNumber: input ? (new AsYouType(input.country)).input(input.nationalNumber) : null,
 			formatInternational: input ? (new AsYouType()).input(input.number) : null,
 			formatOriginal: input
-				? input
-						.formatInternational()
+				? (new AsYouType())
+						.input(input.number)
 						.slice(input.countryCallingCode.length + 1)
 						.trim()
 				: null,
-			formatNational: input ? input.formatNational() : null,
+			formatNational: input ? (new AsYouType(input.country)).input(input.number) : null,
 			uri: input ? input.getURI() : null,
 			e164: input ? input.number : null
 		}).filter(([, value]) => value !== null)
