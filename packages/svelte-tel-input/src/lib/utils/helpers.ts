@@ -48,8 +48,8 @@ export const normalizeTelInput = (input?: PhoneNumber) => {
 			isPossible: input ? input.isPossible() : false,
 			phoneNumber: input ? input.number : null,
 			countryCallingCode: input ? input.countryCallingCode : null,
-			formattedNumber: input ? input.formatInternational() : null,
-			nationalNumber: input ? (new AsYouType(input.country)).input(input.nationalNumber) : null,
+			formattedNumber: input ? (new AsYouType()).input(input.number) : null,
+			nationalNumber: input ? input.nationalNumber : null,
 			formatInternational: input ? (new AsYouType()).input(input.number) : null,
 			formatOriginal: input
 				? (new AsYouType())
