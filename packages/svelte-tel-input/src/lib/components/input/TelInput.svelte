@@ -1,4 +1,7 @@
 <script lang="ts">
+	import { run, createBubbler } from 'svelte/legacy';
+
+	const bubble = createBubbler();
 	import { createEventDispatcher, onMount } from 'svelte';
 	import { parsePhoneNumberWithError, ParseError } from 'libphonenumber-js/max';
 	import {
@@ -24,39 +27,73 @@
 		format: 'national'
 	} satisfies TelInputOptions;
 
-	export let autocomplete: string | null = null;
-	let classes = '';
 	/** You can set the classes of the input field*/
-	export { classes as class };
-	/** You can disable the component and set the disabled attribute of the input field */
-	export let disabled = false;
-	/** You can set the id attribute of the input field */
-	export let id =
-		'phone-input-' + new Date().getTime().toString(36) + Math.random().toString(36).slice(2);
-	/** You can set the name attribute of the input field */
-	export let name: string | null = null;
-	/** It will overwrite the autoPlaceholder ! */
-	export let placeholder: string | null = null;
-	/** You can set the readonly attribute of the input field */
-	export let readonly: boolean | null = null;
-	/** Set the required attribute on the input element */
-	export let required: boolean | null = null;
-	/** You can set the size attribute of the input field */
-	export let size: number | null = null;
-	/** The core value of the input, this is the only one what you can store. It's an E164 phone number.*/
-	export let value: E164Number | null;
-	/** It's accept any Country Code Alpha-2 (ISO 3166) */
-	export let country: CountryCode | null | undefined = undefined;
-	/** Detailed parse of the E164 phone number */
-	export let detailedValue: Partial<DetailedValue> | null = null;
-	/** Validity of the input based on the config settings.*/
-	export let valid = true;
-	/** You can turn on and off certain features by this object */
-	export let options: TelInputOptions = defaultOptions;
-	/** Binding to the underlying `<input>` element */
-	export let el: HTMLInputElement | undefined = undefined;
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	interface Props {
+		autocomplete?: string | null;
+		class?: string;
+		You can disable the component and set the disabled attribute of the input field
+		disabled?: boolean;
+		You can set the id attribute of the input field
+		id?: any;
+		/** You can set the name attribute of the input field */
+		name?: string | null;
+		/** It will overwrite the autoPlaceholder ! */
+		placeholder?: string | null;
+		/** You can set the readonly attribute of the input field */
+		readonly?: boolean | null;
+		/** Set the required attribute on the input element */
+		required?: boolean | null;
+		/** You can set the size attribute of the input field */
+		size?: number | null;
+		/** The core value of the input, this is the only one what you can store. It's an E164 phone number.*/
+		value: E164Number | null;
+		/** It's accept any Country Code Alpha-2 (ISO 3166) */
+		country?: CountryCode | null | undefined;
+		/** Detailed parse of the E164 phone number */
+		detailedValue?: Partial<DetailedValue> | null;
+		Validity of the input based on the config settings.
+		valid?: boolean;
+		/** You can turn on and off certain features by this object */
+		options?: TelInputOptions;
+		/** Binding to the underlying `<input>` element */
+		el?: HTMLInputElement | undefined;
+		[key: string]: any
+	}
 
-	let inputValue = value;
+	let {
+		autocomplete = null,
+		class: classes = '',
+		disabled = false,
+		id = 'phone-input-' + new Date().getTime().toString(36) + Math.random().toString(36).slice(2),
+		name = null,
+		placeholder = null,
+		readonly = null,
+		required = null,
+		size = null,
+		value = $bindable(),
+		country = $bindable(undefined),
+		detailedValue = $bindable(null),
+		valid = $bindable(true),
+		options = defaultOptions,
+		el = $bindable(undefined),
+		...rest
+	}: Props = $props();
+
+	let inputValue = $state(value);
 	let prevCountry = country;
 
 	/** Merge options into default opts, to be able to set just one config option. */
@@ -156,23 +193,27 @@
 		countryWatchInitRun = false;
 	};
 
-	$: countryChangeWatchFunction(country);
+	run(() => {
+		countryChangeWatchFunction(country);
+	});
 
 	// Generate placeholder based on the autoPlaceholder option
-	$: getPlaceholder =
-		combinedOptions.autoPlaceholder && country
+	let getPlaceholder =
+		$derived(combinedOptions.autoPlaceholder && country
 			? generatePlaceholder(country, {
 					format: combinedOptions.format,
 					spaces: combinedOptions.spaces
 				})
-			: placeholder;
+			: placeholder);
 
 	// Handle reset value only
-	$: if (value === null && inputValue !== null && detailedValue !== null) {
-		inputValue = null;
-		detailedValue = null;
-		dispatch('updateDetailedValue', detailedValue);
-	}
+	run(() => {
+		if (value === null && inputValue !== null && detailedValue !== null) {
+			inputValue = null;
+			detailedValue = null;
+			dispatch('updateDetailedValue', detailedValue);
+		}
+	});
 
 	export const updateValue = (
 		newValue: string | E164Number | null,
@@ -195,7 +236,7 @@
 </script>
 
 <input
-	{...$$restProps}
+	{...rest}
 	bind:this={el}
 	{autocomplete}
 	class={classes}
@@ -208,16 +249,16 @@
 	placeholder={getPlaceholder}
 	type="tel"
 	value={inputValue}
-	on:beforeinput
-	on:blur
-	on:change
-	on:click
-	on:focus
-	on:input
-	on:keydown
-	on:keypress
-	on:keyup
-	on:paste
+	onbeforeinput={bubble('beforeinput')}
+	onblur={bubble('blur')}
+	onchange={bubble('change')}
+	onclick={bubble('click')}
+	onfocus={bubble('focus')}
+	oninput={bubble('input')}
+	onkeydown={bubble('keydown')}
+	onkeypress={bubble('keypress')}
+	onkeyup={bubble('keyup')}
+	onpaste={bubble('paste')}
 	use:telInputAction={{
 		handler: handleInputAction,
 		spaces: combinedOptions.spaces,
