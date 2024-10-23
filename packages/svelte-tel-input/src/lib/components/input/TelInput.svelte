@@ -1,7 +1,5 @@
 <script lang="ts">
 	import { run, createBubbler } from 'svelte/legacy';
-
-	const bubble = createBubbler();
 	import { createEventDispatcher, onMount } from 'svelte';
 	import { parsePhoneNumberWithError, ParseError } from 'libphonenumber-js/max';
 	import {
@@ -11,7 +9,7 @@
 		telInputAction
 	} from '$lib/utils/index.js';
 	import type { DetailedValue, CountryCode, E164Number, TelInputOptions } from '$lib/types';
-
+	const bubble = createBubbler();
 	const dispatch = createEventDispatcher<{
 		updateCountry: CountryCode | null;
 		parseError: string;
@@ -28,27 +26,13 @@
 	} satisfies TelInputOptions;
 
 	/** You can set the classes of the input field*/
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	interface Props {
-		autocomplete?: string | null;
+		autocomplete?: AutoFill | null;
 		class?: string;
-		You can disable the component and set the disabled attribute of the input field
+		/** You can disable the component and set the disabled attribute of the input field */
 		disabled?: boolean;
-		You can set the id attribute of the input field
-		id?: any;
+		/** You can set the id attribute of the input field */
+		id?: string;
 		/** You can set the name attribute of the input field */
 		name?: string | null;
 		/** It will overwrite the autoPlaceholder ! */
@@ -65,20 +49,21 @@
 		country?: CountryCode | null | undefined;
 		/** Detailed parse of the E164 phone number */
 		detailedValue?: Partial<DetailedValue> | null;
-		Validity of the input based on the config settings.
+		/** Validity of the input based on the config settings. */
 		valid?: boolean;
 		/** You can turn on and off certain features by this object */
 		options?: TelInputOptions;
 		/** Binding to the underlying `<input>` element */
 		el?: HTMLInputElement | undefined;
-		[key: string]: any
 	}
 
 	let {
 		autocomplete = null,
 		class: classes = '',
 		disabled = false,
-		id = 'phone-input-' + new Date().getTime().toString(36) + Math.random().toString(36).slice(2),
+		id = 'phone-input-' +
+			new Date().getTime().toString(36) +
+			Math.random().toString(36).slice(2),
 		name = null,
 		placeholder = null,
 		readonly = null,
@@ -198,13 +183,14 @@
 	});
 
 	// Generate placeholder based on the autoPlaceholder option
-	let getPlaceholder =
-		$derived(combinedOptions.autoPlaceholder && country
+	let getPlaceholder = $derived(
+		combinedOptions.autoPlaceholder && country
 			? generatePlaceholder(country, {
 					format: combinedOptions.format,
 					spaces: combinedOptions.spaces
 				})
-			: placeholder);
+			: placeholder
+	);
 
 	// Handle reset value only
 	run(() => {
