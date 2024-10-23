@@ -3,14 +3,29 @@
 	import type { Thing, WithContext } from 'schema-dts';
 	import { jsonLdScript } from '$lib/utils/directives/seoJsonLdAction.js';
 
-	export let title: string | null = null;
-	export let noindex = false;
-	export let nofollow = false;
-	export let description: string | null = null;
-	export let canonical: string | null = null;
-	export let openGraph: OpenGraph | null = null;
-	export let twitter: Twitter | null = null;
-	export let jsonLd: (Thing | WithContext<Thing>)[] | null = null;
+	interface Props {
+		title?: string | null;
+		noindex?: boolean;
+		nofollow?: boolean;
+		description?: string | null;
+		canonical?: string | null;
+		openGraph?: OpenGraph | null;
+		twitter?: Twitter | null;
+		jsonLd?: (Thing | WithContext<Thing>)[] | null;
+		children?: import('svelte').Snippet;
+	}
+
+	const {
+		title = null,
+		noindex = false,
+		nofollow = false,
+		description = null,
+		canonical = null,
+		openGraph = null,
+		twitter = null,
+		jsonLd = null,
+		children
+	}: Props = $props();
 </script>
 
 <svelte:head>
@@ -133,5 +148,5 @@
 		<script use:jsonLdScript={jsonLd}></script>
 	{/if}
 
-	<slot />
+	{@render children?.()}
 </svelte:head>

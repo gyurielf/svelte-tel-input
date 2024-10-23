@@ -42,7 +42,7 @@ export default [
 				{
 					patterns: [
 						{
-							group: ['$app', '$app/*', '!./*', '!../*'],
+							group: ['!./*', '!../*'],
 							message: 'Please only use RELATIVE import paths instead.'
 						}
 					]
@@ -108,25 +108,23 @@ export default [
 	{
 		ignores: [
 			'**/*.cjs',
-			'build/',
 			'**/build/',
-			'.svelte-kit/',
 			'**/.svelte-kit/',
-			'node_modules',
 			'**/node_modules',
-			'coverage',
-			'static',
-			'storybook-static',
-			'*.test.svelte',
-			'package-lock.json',
+			'node_modules',
+			'**/coverage',
+			'**/static',
+			'**/storybook-static',
+			'**/*.test.svelte',
 			'**/package-lock.json',
-			'dist',
-			'**/dist/*',
-			'scripts/'
+			'package-lock.json',
+			'**/dist/',
+			'scripts/',
+			'**/scripts/'
 		]
 	},
 	{
-		files: ['src/tests/**/*.js', 'src/tests/**/*.ts', 'src/tests/**/*.svelte'],
+		files: ['**/src/tests/**/*.js', '**/src/tests/**/*.ts', '**/src/tests/**/*.svelte'],
 		rules: {
 			'no-console': 'off', // Disable the rule forbidding console.log for these files
 			'@typescript-eslint/no-explicit-any': 'off' // Turn off the rule that forbids use of the any type

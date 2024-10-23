@@ -3,11 +3,15 @@
 	import { jsonPrettyParser } from '$lib/utils/examples/exampleHelpers.js';
 	import { slide } from 'svelte/transition';
 
-	export let exampleData: DetailedValue | null;
-	export let value: E164Number | null;
-	export let valid: boolean;
-	export let country: CountryCode | null;
-	let isOpen = true;
+	interface Props {
+		exampleData: DetailedValue | null;
+		value: E164Number | null;
+		valid: boolean;
+		country: CountryCode | null;
+	}
+
+	const { exampleData, value, valid, country }: Props = $props();
+	let isOpen = $state(true);
 
 	const generateEntries = (data: DetailedValue | null | undefined) => {
 		if (data === null) {
@@ -19,14 +23,14 @@
 		}
 	};
 
-	$: exampleDataEntries = generateEntries(exampleData);
+	const exampleDataEntries = $derived(generateEntries(exampleData));
 </script>
 
 <div class="validation-table mt-5">
 	<button
 		class="w-full text-left dark:bg-gray-700 dark:hover:bg-gray-600 transition bg-gray-100 hover:bg-gray-200 p-3 rounded-t cursor-pointer"
 		class:rounded-b={!isOpen}
-		on:click={() => {
+		onclick={() => {
 			isOpen = !isOpen;
 		}}
 	>
@@ -127,8 +131,7 @@
 						<pre
 							lang="no-highlight"
 							class="whitespace-pre-wrap"
-							use:jsonPrettyParser={exampleData}
-						/>
+							use:jsonPrettyParser={exampleData}></pre>
 					{:else}
 						<pre lang="no-highlight" class="whitespace-pre-wrap">"{exampleData}"</pre>
 					{/if}

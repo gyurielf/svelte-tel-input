@@ -11,7 +11,7 @@
 		>
 			<div class="flex w-full items-center px-2">
 				<h1 class="text-2xl">SVELTE TEL INPUT</h1>
-				<div class="flex-1" />
+				<div class="flex-1"></div>
 				<div class="lg:hidden -mr-2 flex items-center">
 					<div class="relative inline-block text-left not-prose">
 						<button
@@ -37,8 +37,8 @@
 						</button>
 						<div
 							class="fixed top-0 left-0 bg-transparent backdrop-blur-sm dark:bg-transparent transition-opacity duration-75 pointer-events-auto z-40 w-screen h-screen opacity-0 invisible"
-						/>
-						<div hidden={null} />
+						></div>
+						<div hidden={null}></div>
 						<div
 							id="popover-1"
 							class="absolute -top-4 -right-5 min-w-[340px] p-5 pt-4 origin-top-right z-50 invisible transition transform ease-out duration-150 opacity-0 scale-95"
@@ -50,7 +50,7 @@
 								class="flex min-h-[60px] flex-col overflow-hidden rounded-md border border-gray-divider bg-gray-500 shadow-md"
 							>
 								<div class="flex items-center z-20">
-									<div class="flex-1" />
+									<div class="flex-1"></div>
 									<button
 										class="p-4 text-gray-soft hover:text-gray-inverse mt-[0.125rem] mr-[0.125rem] pointer-events-none"
 									>

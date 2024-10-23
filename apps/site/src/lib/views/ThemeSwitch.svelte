@@ -1,10 +1,13 @@
 <script lang="ts">
 	import { theme, toggleTheme } from '$lib/stores/DevExampleStores';
 
-	let classes = '';
-	export { classes as class };
+	interface Props {
+		class?: string;
+	}
 
-	$: isDarkModeEnabled = $theme === 'dark';
+	const { class: classes = '' }: Props = $props();
+
+	const isDarkModeEnabled = $derived($theme === 'dark');
 </script>
 
 <button
@@ -14,7 +17,7 @@
 	role="switch"
 	aria-label={$theme}
 	aria-checked={isDarkModeEnabled}
-	on:click={toggleTheme}
+	onclick={toggleTheme}
 >
 	<span
 		class="theme-switch__icon light-icon absolute transition-[transform,opacity] ease-out {isDarkModeEnabled

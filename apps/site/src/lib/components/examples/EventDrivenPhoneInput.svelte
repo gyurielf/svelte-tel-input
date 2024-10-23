@@ -7,19 +7,25 @@
 		TelInputOptions
 	} from 'svelte-tel-input/types';
 
-	// E164 formatted value, usually you should store and use this.
-	export let value: E164Number | null;
+	interface Props {
+		// E164 formatted value, usually you should store and use this.
+		value: E164Number | null;
+		// Selected country
+		country?: CountryCode | null;
+		// Validity
+		valid: boolean;
+		// Phone number details
+		detailedValue?: (DetailedValue | Partial<DetailedValue>) | null;
+		options: TelInputOptions;
+	}
 
-	// Selected country
-	export let country: CountryCode | null = null;
-
-	// Validity
-	export let valid: boolean;
-
-	// Phone number details
-	export let detailedValue: (DetailedValue | Partial<DetailedValue>) | null = null;
-
-	export let options: TelInputOptions;
+	let {
+		value = $bindable(),
+		country = $bindable(null),
+		valid = $bindable(),
+		detailedValue = $bindable(null),
+		options
+	}: Props = $props();
 
 	const handleValueUpdate = (e: CustomEvent<E164Number | null>) => {
 		value = e.detail ?? null;
@@ -84,7 +90,7 @@
 	/>
 	<button
 		class="ml-4 px-4 py-2 rounded bg-blue-500 text-white"
-		on:click={() => {
+		onclick={() => {
 			value = null;
 			country = null;
 			valid = true;

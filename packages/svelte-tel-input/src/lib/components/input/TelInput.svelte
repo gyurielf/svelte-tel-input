@@ -27,6 +27,7 @@
 
 	/** You can set the classes of the input field*/
 	interface Props {
+		// eslint-disable-next-line no-undef
 		autocomplete?: AutoFill | null;
 		class?: string;
 		/** You can disable the component and set the disabled attribute of the input field */
@@ -183,7 +184,7 @@
 	});
 
 	// Generate placeholder based on the autoPlaceholder option
-	let getPlaceholder = $derived(
+	const getPlaceholder = $derived(
 		combinedOptions.autoPlaceholder && country
 			? generatePlaceholder(country, {
 					format: combinedOptions.format,

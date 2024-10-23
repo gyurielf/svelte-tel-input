@@ -1,13 +1,17 @@
-<script context="module">
+<script module>
 	let counter = 0;
 </script>
 
 <script lang="ts">
 	import type { TelInputOptions } from 'svelte-tel-input/types';
 	import { slide } from 'svelte/transition';
-	export let options: TelInputOptions;
-	let isOpen = false;
-	let markupId = counter++;
+	interface Props {
+		options: TelInputOptions;
+	}
+
+	let { options = $bindable() }: Props = $props();
+	let isOpen = $state(false);
+	const markupId = counter++;
 </script>
 
 <div class="validation-table mt-5 rounded-t">
@@ -15,7 +19,7 @@
 		type="button"
 		class="w-full text-left dark:bg-gray-700 dark:hover:bg-gray-600 transition bg-gray-100 hover:bg-gray-200 p-3 rounded-t cursor-pointer"
 		class:rounded-b={!isOpen}
-		on:click={() => {
+		onclick={() => {
 			isOpen = !isOpen;
 		}}
 	>
@@ -69,13 +73,13 @@
 					value={options.spaces}
 					class="sr-only peer"
 					checked={options.spaces}
-					on:change={() => {
+					onchange={() => {
 						options.spaces = !options.spaces;
 					}}
 				/>
 				<div
 					class="w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"
-				/>
+				></div>
 				<span class="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">Spaces</span
 				>
 			</label>
@@ -89,13 +93,13 @@
 					value={options.autoPlaceholder}
 					class="sr-only peer"
 					checked={options.autoPlaceholder}
-					on:change={() => {
+					onchange={() => {
 						options.autoPlaceholder = !options.autoPlaceholder;
 					}}
 				/>
 				<div
 					class="w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"
-				/>
+				></div>
 				<span class="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300"
 					>Auto Placeholder</span
 				>
@@ -110,13 +114,13 @@
 					value={options.invalidateOnCountryChange}
 					class="sr-only peer"
 					checked={options.invalidateOnCountryChange}
-					on:change={() => {
+					onchange={() => {
 						options.invalidateOnCountryChange = !options.invalidateOnCountryChange;
 					}}
 				/>
 				<div
 					class="w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"
-				/>
+				></div>
 				<span class="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300"
 					>Invalidate on (manual) country change.</span
 				>

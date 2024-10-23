@@ -1,9 +1,15 @@
 <script lang="ts">
+	import type { Snippet } from 'svelte';
 	import { page } from '$app/stores';
-	export let href = '';
-	export { classes as class };
-	let classes = '';
-	export let external = false;
+
+	interface Props {
+		href?: string;
+		class?: string;
+		external?: boolean;
+		children?: Snippet;
+	}
+
+	const { href = '', class: classes = '', external = false, children }: Props = $props();
 
 	const normalizeHref = (currentHref: string) => {
 		if (currentHref.startsWith('#')) return currentHref;
@@ -11,13 +17,13 @@
 		if (currentHref.endsWith('/')) return currentHref;
 		return currentHref + '/';
 	};
-	$: active = $page.url.pathname === normalizeHref(href);
+	const active = $derived($page.url.pathname === normalizeHref(href));
 </script>
 
 {#if external}
-	<a {href} class={`${active ? 'underline' : ''} ${classes}`}><slot /></a>
+	<a {href} class={`${active ? 'underline' : ''} ${classes}`}>{@render children?.()}</a>
 {:else}
 	<a data-sveltekit-preload-data {href} class={`${active ? 'underline' : ''} ${classes}`}
-		><slot /></a
+		>{@render children?.()}</a
 	>
 {/if}

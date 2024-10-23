@@ -1,7 +1,9 @@
 import type { DetailedValue } from 'svelte-tel-input/types';
 
 export const jsonPrettyParser = (node: HTMLElement, data: DetailedValue | null) => {
-	data !== null && (node.innerHTML = `<code>${JSON.stringify(data, null, 2)}</code>`);
+	if (data) {
+		node.innerHTML = `<code>${JSON.stringify(data, null, 2)}</code>`;
+	}
 	return {
 		destroy: () => {
 			node.remove();

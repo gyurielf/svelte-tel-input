@@ -7,19 +7,25 @@
 		TelInputOptions
 	} from 'svelte-tel-input/types';
 
-	// E164 formatted value, usually you should store and use this.
-	export let value: E164Number | null;
+	interface Props {
+		// E164 formatted value, usually you should store and use this.
+		value: E164Number | null;
+		// Selected country
+		country?: CountryCode | null;
+		// Validity
+		valid: boolean;
+		// Phone number details
+		detailedValue?: DetailedValue | null;
+		options: TelInputOptions;
+	}
 
-	// Selected country
-	export let country: CountryCode | null = null;
-
-	// Validity
-	export let valid: boolean;
-
-	// Phone number details
-	export let detailedValue: DetailedValue | null = null;
-
-	export let options: TelInputOptions;
+	let {
+		value = $bindable(),
+		country = $bindable(null),
+		valid = $bindable(),
+		detailedValue = $bindable(null),
+		options
+	}: Props = $props();
 </script>
 
 <div class="flex">

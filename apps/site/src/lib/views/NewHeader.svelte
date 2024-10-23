@@ -1,17 +1,23 @@
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+
 	import { navigating } from '$app/stores';
 	import { clickOutsideAction } from '$lib/utils/directives/clickOutsideAction';
 	import NavLink from '$lib/components/NavLink.svelte';
 	import ThemeSwitch from './ThemeSwitch.svelte';
 
-	let mobileMenuIsOpen = false;
+	let mobileMenuIsOpen = $state(false);
 
 	const closeMobileMenu = () => {
 		if (!mobileMenuIsOpen) return;
 		mobileMenuIsOpen = false;
 	};
 
-	$: $navigating, (mobileMenuIsOpen = false);
+	run(() => {
+		if ($navigating) {
+			mobileMenuIsOpen = false;
+		}
+	});
 </script>
 
 <header
@@ -27,7 +33,7 @@
 			<div class="lg:hidden">
 				<button
 					class="text-gray-900 dark:text-gray-200 w-10 h-10 relative focus:outline-none"
-					on:click={() => {
+					onclick={() => {
 						mobileMenuIsOpen = !mobileMenuIsOpen;
 					}}
 				>
@@ -42,19 +48,19 @@
 							class="block absolute h-0.5 w-5 bg-current transform transition duration-500 ease-in-out {mobileMenuIsOpen
 								? 'rotate-45'
 								: '-translate-y-1.5'}"
-						/>
+						></span>
 						<span
 							aria-hidden="true"
 							class="block absolute h-0.5 w-5 bg-current transform transition duration-500 ease-in-out {mobileMenuIsOpen
 								? 'opacity-0'
 								: ''}"
-						/>
+						></span>
 						<span
 							aria-hidden="true"
 							class="block absolute h-0.5 w-5 bg-current transform transition duration-500 ease-in-out {mobileMenuIsOpen
 								? '-rotate-45'
 								: 'translate-y-1.5'}"
-						/>
+						></span>
 					</div>
 				</button>
 			</div>

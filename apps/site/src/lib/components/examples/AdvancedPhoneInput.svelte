@@ -12,20 +12,35 @@
 	} from 'svelte-tel-input/types';
 	import 'svelte-tel-input/styles/flags.css';
 
-	export let clickOutside = true;
-	export let closeOnClick = true;
-	export let disabled = false;
-	export let detailedValue: DetailedValue | null = null;
-	export let value: E164Number | null;
-	export let searchPlaceholder: string | null = 'Search';
-	export let selectedCountry: CountryCode | null;
-	export let valid: boolean;
-	export let options: TelInputOptions;
-	let searchText = '';
-	let isOpen = false;
+	interface Props {
+		clickOutside?: boolean;
+		closeOnClick?: boolean;
+		disabled?: boolean;
+		detailedValue?: DetailedValue | null;
+		value: E164Number | null;
+		searchPlaceholder?: string | null;
+		selectedCountry: CountryCode | null;
+		valid: boolean;
+		options: TelInputOptions;
+	}
 
-	$: selectedCountryDialCode =
-		normalizedCountries.find((el) => el.iso2 === selectedCountry)?.dialCode || null;
+	let {
+		clickOutside = true,
+		closeOnClick = true,
+		disabled = false,
+		detailedValue = $bindable(null),
+		value = $bindable(),
+		searchPlaceholder = 'Search',
+		selectedCountry = $bindable(),
+		valid = $bindable(),
+		options
+	}: Props = $props();
+	let searchText = $state('');
+	let isOpen = $state(false);
+
+	const selectedCountryDialCode = $derived(
+		normalizedCountries.find((el) => el.iso2 === selectedCountry)?.dialCode || null
+	);
 
 	const toggleDropDown = (e?: Event) => {
 		e?.preventDefault();
@@ -113,11 +128,12 @@
 			aria-controls="dropdown-countries"
 			aria-expanded="false"
 			aria-haspopup="false"
-			on:click={toggleDropDown}
+			onclick={toggleDropDown}
 		>
 			{#if selectedCountry && selectedCountry !== null}
 				<div class="inline-flex items-center text-left">
-					<span class="flag flag-{selectedCountry.toLowerCase()} flex-shrink-0 mr-3" />
+					<span class="flag flag-{selectedCountry.toLowerCase()} flex-shrink-0 mr-3"
+					></span>
 					{#if options.format === 'national'}
 						<span class=" text-gray-600 dark:text-gray-400"
 							>+{selectedCountryDialCode}</span
@@ -175,14 +191,14 @@
                             {isActive
 									? 'bg-gray-600 dark:text-white'
 									: 'dark:hover:text-white dark:text-gray-400'}"
-								on:click={(e) => {
+								onclick={(e) => {
 									handleSelect(country.iso2, e);
 								}}
 							>
 								<div class="inline-flex items-center text-left">
 									<span
 										class="flag flag-{country.iso2.toLowerCase()} flex-shrink-0 mr-3"
-									/>
+									></span>
 									<span class="mr-2">{country.name}</span>
 									<span class="text-gray-500">+{country.dialCode}</span>
 								</div>

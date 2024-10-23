@@ -6,15 +6,15 @@
 	import { onDestroy } from 'svelte';
 
 	const headlines = ['Parse', 'Format', 'Standardize', 'Sanitize', 'Normalize'];
-	let currentHeadline = 0;
-	$: headline = headlines[currentHeadline % headlines.length];
+	let currentHeadline = $state(0);
+	const headline = $derived(headlines[currentHeadline % headlines.length]);
 
 	const headlineTimeout = setInterval(() => {
 		currentHeadline++;
 	}, 3000);
 
 	onDestroy(() => {
-		headlineTimeout && clearInterval(headlineTimeout);
+		if (headlineTimeout) clearInterval(headlineTimeout);
 	});
 </script>
 

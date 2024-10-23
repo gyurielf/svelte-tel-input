@@ -10,7 +10,7 @@ export const getCurrentCountry = async () => {
 		}
 
 		return result.substring(2, 4);
-	} catch (error) {
+	} catch {
 		console.warn('Unable to fetch the country');
 		return;
 	}

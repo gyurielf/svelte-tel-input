@@ -1,6 +1,5 @@
 import { writable } from 'svelte/store';
-import { createLocalStorage, persist } from '@macfja/svelte-persistent-store';
-import type { PersistentStore } from '@macfja/svelte-persistent-store';
+import { createLocalStorage, persist, type PersistentStore } from '@macfja/svelte-persistent-store';
 import type { DetailedValue } from 'svelte-tel-input/types';
 
 export const exampleDataStore = writable<DetailedValue>();

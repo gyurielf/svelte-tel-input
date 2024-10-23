@@ -19,60 +19,60 @@
 	}
 
 	/* advanced example */
-	let advancedExampleProps = {
+	const advancedExampleProps = $state({
 		value: '+36201234567',
 		detailedValue: null,
 		valid: true,
 		country: null
-	} satisfies ExampleProps;
-	let advancedExampleOptions = {
+	} satisfies ExampleProps);
+	let advancedExampleOptions = $state({
 		autoPlaceholder: true,
 		spaces: true,
 		invalidateOnCountryChange: true,
 		format: 'national'
-	} satisfies TelInputOptions;
+	} satisfies TelInputOptions);
 
 	/* basicWithE164 example */
-	let basicExamplePropsWithE164 = {
+	const basicExamplePropsWithE164 = $state({
 		value: '+14842918723',
 		detailedValue: null,
 		valid: true,
 		country: null
-	} satisfies ExampleProps;
-	let basicExampleWithE164Options = {
+	} satisfies ExampleProps);
+	let basicExampleWithE164Options = $state({
 		autoPlaceholder: true,
 		spaces: true,
 		invalidateOnCountryChange: false,
 		format: 'national'
-	} satisfies TelInputOptions;
+	} satisfies TelInputOptions);
 
 	/* basicWithNull example */
-	let basicExamplePropsWithNull = {
+	const basicExamplePropsWithNull = $state({
 		value: null,
 		detailedValue: null,
 		valid: true,
 		country: null
-	} satisfies ExampleProps;
-	let basicExampleWithNullOptions = {
+	} satisfies ExampleProps);
+	let basicExampleWithNullOptions = $state({
 		autoPlaceholder: true,
 		spaces: true,
 		invalidateOnCountryChange: false,
 		format: 'national'
-	} satisfies TelInputOptions;
+	} satisfies TelInputOptions);
 
 	/* eventDriven example */
-	let eventDrivenExampleProps = {
+	const eventDrivenExampleProps = $state({
 		value: '+441234567988',
 		detailedValue: null,
 		valid: true,
 		country: null
-	} satisfies ExampleProps;
-	let eventDrivenExampleOptions = {
+	} satisfies ExampleProps);
+	let eventDrivenExampleOptions = $state({
 		autoPlaceholder: true,
 		spaces: true,
 		invalidateOnCountryChange: false,
 		format: 'national'
-	} satisfies TelInputOptions;
+	} satisfies TelInputOptions);
 </script>
 
 <div class="grid gap-y-10">
