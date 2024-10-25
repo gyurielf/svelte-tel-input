@@ -13,9 +13,11 @@ export interface Country {
 	label: string;
 	name: string;
 	iso2: CountryCode;
-	dialCode: string | number | string[];
-	priority: string | number | string[];
-	areaCodes: string | number | string[] | null;
+	/** International dial code */
+	dialCode: string;
+	/** Order (if >1 country with the same dial code) */
+	priority: number;
+	areaCodes: string[] | null;
 }
 
 export type CountrySelectEvents<T> = {
@@ -30,6 +32,8 @@ export type CountrySelectEvents<T> = {
 };
 
 export interface PhoneNumberError {
+	/** @new TODO - need to implement */
+	isPossible: boolean;
 	isValid: false;
 	error: PhoneNumberParseError;
 }
@@ -73,6 +77,7 @@ export interface TelInputOptions {
 	/**
 	 * Set validation to false if you change the country property.
 	 * @default false
+	 * @deprecated It became to the default behavior
 	 */
 	invalidateOnCountryChange?: boolean;
 }
