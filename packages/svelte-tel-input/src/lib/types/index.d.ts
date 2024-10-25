@@ -75,12 +75,6 @@ export interface TelInputOptions {
 	 * @default false
 	 */
 	invalidateOnCountryChange?: boolean;
-	/**
-	 *  "international": `+36 20 123 4567`,
-	 *  "default": `20 123 4567`
-	 * @default "national"
-	 */
-	format?: 'national' | 'international';
 }
 
 export type {

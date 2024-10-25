@@ -21,8 +21,7 @@
 	const defaultOptions = {
 		autoPlaceholder: true,
 		spaces: true,
-		invalidateOnCountryChange: false,
-		format: 'national'
+		invalidateOnCountryChange: false
 	} satisfies TelInputOptions;
 
 	/** You can set the classes of the input field*/
@@ -131,13 +130,10 @@
 				}
 			}
 
-			const formatOption = combinedOptions.format === 'national' ? 'nationalNumber' : 'e164';
-			const formattedValue =
-				combinedOptions.format === 'national' ? 'formatOriginal' : 'formatInternational';
-			if (combinedOptions.spaces && detailedValue?.[formattedValue]) {
-				inputValue = detailedValue[formattedValue] ?? null;
-			} else if (detailedValue?.[formatOption]) {
-				inputValue = detailedValue[formatOption] ?? null;
+			if (combinedOptions.spaces && detailedValue?.formatInternational) {
+				inputValue = detailedValue.formatInternational ?? null;
+			} else if (detailedValue?.e164) {
+				inputValue = detailedValue.e164 ?? null;
 			}
 
 			// keep the input value as value
@@ -187,7 +183,6 @@
 	const getPlaceholder = $derived(
 		combinedOptions.autoPlaceholder && country
 			? generatePlaceholder(country, {
-					format: combinedOptions.format,
 					spaces: combinedOptions.spaces
 				})
 			: placeholder

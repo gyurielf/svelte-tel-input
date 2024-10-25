@@ -10,7 +10,6 @@ export const clickOutsideAction = (
 			if (!node.contains(event.target as HTMLElement)) handler();
 		}
 	};
-
 	document.addEventListener('click', handleClick, true);
 	return {
 		destroy() {

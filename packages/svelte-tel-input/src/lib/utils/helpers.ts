@@ -13,6 +13,12 @@ import type {
 } from '$lib/types/index.js';
 import { examplePhoneNumbers } from '$lib/assets/index.js';
 
+const whiteSpaceRegex = new RegExp(
+	'[\\t\\n\\v\\f\\r \\u00a0\\u2000\\u2001\\u2002\\u2003\\u2004\\u2005\\u2006\\u2007\\u2008\\u2009\\u200a\\u200b\\u2028\\u2029\\u3000]',
+	'g'
+);
+const plusSignRegex = new RegExp('\\+', 'g');
+
 export const capitalize = (str: string) => {
 	if (!str) return '';
 	return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
@@ -67,29 +73,28 @@ export const normalizeTelInput = (input?: PhoneNumber) => {
 
 export const generatePlaceholder = (
 	country: CountryCode,
-	{ format, spaces }: { format: 'international' | 'national'; spaces: boolean } = {
-		format: 'national',
+	{ spaces }: { spaces: boolean } = {
 		spaces: true
 	}
 ) => {
 	const examplePhoneNumber = getExampleNumber(country, examplePhoneNumbers);
 	if (examplePhoneNumber) {
-		switch (format) {
-			case 'international':
-				return spaces
-					? examplePhoneNumber.formatInternational()
-					: examplePhoneNumber.number;
-			default:
-				return spaces
-					? examplePhoneNumber
-							.formatInternational()
-							.slice(examplePhoneNumber.countryCallingCode.length + 1)
-							.trim()
-					: examplePhoneNumber.nationalNumber;
-		}
+		return spaces
+			? examplePhoneNumber
+					.formatInternational()
+					.slice(examplePhoneNumber.countryCallingCode.length + 1)
+					.trim()
+			: examplePhoneNumber.nationalNumber;
 	} else {
 		throw new Error(`No country found with this country code: ${country}`);
 	}
+	// OLD
+	// const examplePhoneNumber = getExampleNumber(country, examplePhoneNumbers);
+	// if (examplePhoneNumber) {
+	// 	return spaces ? examplePhoneNumber.formatInternational() : examplePhoneNumber.number;
+	// } else {
+	// 	throw new Error(`No country found with this country code: ${country}`);
+	// }
 };
 
 export const isSelected = <
@@ -149,7 +154,6 @@ export const getMaxNumberLength = (country: CountryCode) => {
 	const newMetadata = new Metadata();
 	newMetadata.selectNumberingPlan(country);
 	// Return the last "possible length".
-
 	if (newMetadata.numberingPlan) {
 		return newMetadata.numberingPlan.possibleLengths()[
 			newMetadata.numberingPlan.possibleLengths().length - 1
@@ -167,6 +171,7 @@ export const getMaxNumberLength = (country: CountryCode) => {
  * @param {string?} country - Currently selected country.
  * @param {string[]?} countries - A list of available countries. If not passed then "all countries" are assumed.
  * @return {string?}
+ * @deprecated since version 4.0.0, it will be removed in 4.1
  */
 export const getCountryForPartialE164Number = (
 	partialE164Number: E164Number,
@@ -209,6 +214,7 @@ export const getCountryForPartialE164Number = (
  * Determines the country for a given (possibly incomplete) E.164 phone number.
  * @param  {string} number - A possibly incomplete E.164 phone number.
  * @return {string?}
+ * @deprecated since version 4.0.0, it will be removed in 4.1
  */
 export const getCountryFromPossiblyIncompleteInternationalPhoneNumber = (number: E164Number) => {
 	const formatter = new AsYouType();
@@ -235,9 +241,12 @@ export const getNationalSignificantNumberDigits = (number: E164Number, country: 
 	const formatter = new AsYouType(country);
 	// Input partial national phone number.
 	formatter.input(number);
+
 	// Return the parsed partial national phone number.
-	const phoneNumber = formatter.getNumber();
-	return phoneNumber && phoneNumber.nationalNumber;
+	// const phoneNumber = formatter.getNumber(); //TODO REMOVE
+	// return phoneNumber && phoneNumber.nationalNumber; //TODO REMOVE
+
+	return formatter.getNumber()?.nationalNumber;
 };
 
 /**
@@ -257,6 +266,11 @@ export const couldNumberBelongToCountry = (number: E164Number, country: CountryC
 	}
 	return true;
 };
+// TODO Replace the old to this if that's ready.
+// export const getInternationalPhoneNumberPrefix = (country: CountryCode) => {
+// 	// Standard international phone number prefix: "+" and "country calling code".
+// 	return '+' + getCountryCallingCode(country);
+// };
 
 export const isSupportedCountry = (country: CountryCode, metadata: MetadataJson) => {
 	return metadata.countries[country] !== undefined;
@@ -270,8 +284,9 @@ export const isSupportedCountry = (country: CountryCode, metadata: MetadataJson)
  */
 export const allowedCharacters = (
 	character: string,
-	{ spaces }: { spaces?: boolean } = {
-		spaces: true
+	{ spaces, plusSign }: { spaces?: boolean; plusSign?: boolean } = {
+		spaces: true,
+		plusSign: true
 	}
 ) => {
 	const DIGITS = {
@@ -316,44 +331,48 @@ export const allowedCharacters = (
 		'\u06F8': '8', // Eastern-Arabic digit 8
 		'\u06F9': '9' // Eastern-Arabic digit 9,
 	};
+	// Type Guard for index signature.
+	const isValidKey = (key: string): key is keyof typeof DIGITS => {
+		return key in DIGITS;
+	};
 
-	// Allow spaces
-	if (spaces) {
-		const regex = new RegExp(
-			'[\\t\\n\\v\\f\\r \\u00a0\\u2000\\u2001\\u2002\\u2003\\u2004\\u2005\\u2006\\u2007\\u2008\\u2009\\u200a\\u200b\\u2028\\u2029\\u3000]',
-			'g'
-		);
-		if (regex.test(character)) {
-			return character;
-		}
+	// Allow spaces && plus sign character
+	if (
+		(spaces && whiteSpaceRegex.test(character)) ||
+		(plusSign && plusSignRegex.test(character))
+	) {
+		return character;
 	}
-
-	// Allow digits
-	return DIGITS[character as keyof typeof DIGITS];
+	if (isValidKey(character)) return DIGITS[character];
 };
 
 export const inputParser = (
-	text: string,
+	input: string,
 	{
-		allowSpaces,
-		parseCharacter
+		allowSpaces
 	}: {
 		allowSpaces: boolean;
-		parseCharacter: (char: string, val: string, allowSpaces?: boolean) => string | undefined;
 	}
 ) => {
 	let value = '';
-
-	for (let index = 0; index < text.length; index++) {
-		const character = parseCharacter(text[index], value, allowSpaces);
-		if (character !== undefined) {
-			value += character;
+	for (let index = 0; index < input.length; index++) {
+		if (input[index] === '+' && !value) {
+			value += input[index];
+		} else {
+			const character = allowedCharacters(input[index], { spaces: allowSpaces });
+			if (character !== undefined) {
+				value += character;
+			}
 		}
 	}
 
+	// We force the + sign as a prefix for the number.
+	if (value.length > 0 && !value.startsWith('+')) {
+		value = '+' + value;
+	}
 	return value;
 };
-
+/** @deprecated TODO REMOVE */
 export const inspectAllowedChars = (character: string, value: string, allowSpaces?: boolean) => {
 	// Leading plus is allowed
 	if (character === '+') {
@@ -363,4 +382,11 @@ export const inspectAllowedChars = (character: string, value: string, allowSpace
 	}
 	// Allowed characters
 	return allowedCharacters(character, { spaces: allowSpaces });
+};
+
+export const isMacOS = () => {
+	if (typeof window === 'undefined') {
+		return false;
+	}
+	return window.navigator.userAgent.toLowerCase().includes('macintosh');
 };
