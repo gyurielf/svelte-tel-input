@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { createEventDispatcher } from 'svelte';
 	import { clickOutsideAction } from 'svelte-tel-input/utils';
-	import { TelInput, isSelected, normalizedCountries } from 'svelte-tel-input';
+	import { TelInput, isSelected, countries } from 'svelte-tel-input';
 	import type {
 		DetailedValue,
 		CountrySelectEvents,
@@ -38,9 +38,9 @@
 	let searchText = $state('');
 	let isOpen = $state(false);
 
-	const selectedCountryDialCode = $derived(
-		normalizedCountries.find((el) => el.iso2 === selectedCountry)?.dialCode || null
-	);
+	// const selectedCountryDialCode = $derived(
+	// 	countries.find((el) => el.iso2 === selectedCountry)?.dialCode || null
+	// );
 
 	const toggleDropDown = (e?: Event) => {
 		e?.preventDefault();
@@ -134,11 +134,6 @@
 				<div class="inline-flex items-center text-left">
 					<span class="flag flag-{selectedCountry.toLowerCase()} flex-shrink-0 mr-3"
 					></span>
-					{#if options.format === 'national'}
-						<span class=" text-gray-600 dark:text-gray-400"
-							>+{selectedCountryDialCode}</span
-						>
-					{/if}
 				</div>
 			{:else}
 				Please select
@@ -180,7 +175,7 @@
 						bind:value={searchText}
 						placeholder={searchPlaceholder}
 					/>
-					{#each sortCountries(normalizedCountries, searchText) as country (country.id)}
+					{#each sortCountries(countries, searchText) as country (country.id)}
 						{@const isActive = isSelected(country.iso2, selectedCountry)}
 						<div id="country-{country.iso2}" role="option" aria-selected={isActive}>
 							<button

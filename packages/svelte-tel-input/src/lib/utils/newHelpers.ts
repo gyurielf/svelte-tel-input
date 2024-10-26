@@ -7,7 +7,7 @@
 // 	getExampleNumber
 // } from 'libphonenumber-js/max';
 // import type { PhoneNumber, Countries, E164Number, CountryCode, Country } from '$lib/types/index.js';
-// import { examplePhoneNumbers, countries as normalizedCountries } from '$lib/assets/index.js';
+// import { examplePhoneNumbers, countries as countries } from '$lib/assets/index.js';
 
 // export const normalizeTelInput = (input?: PhoneNumber) => {
 // 	const result = {

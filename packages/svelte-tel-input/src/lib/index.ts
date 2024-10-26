@@ -9,4 +9,4 @@ export {
 	isSelected
 } from '$lib/utils/index.js';
 export { parsePhoneNumberWithError, ParseError } from 'libphonenumber-js/max';
-export { normalizedCountries } from '$lib/assets/index.js';
+export { countries } from '$lib/assets/index.js';

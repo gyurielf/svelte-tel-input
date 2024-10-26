@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { TelInput, normalizedCountries } from 'svelte-tel-input';
+	import { TelInput, countries } from 'svelte-tel-input';
 	import type {
 		DetailedValue,
 		E164Number,
@@ -45,7 +45,7 @@
 		bind:value={country}
 	>
 		<option value={null} hidden={country !== null}>Please select</option>
-		{#each normalizedCountries as currentCountry (currentCountry.id)}
+		{#each countries as currentCountry (currentCountry.id)}
 			<option
 				value={currentCountry.iso2}
 				selected={currentCountry.iso2 === country}

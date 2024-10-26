@@ -40,7 +40,7 @@ _Snippet would be too long_ - [Example](https://github.com/gyurielf/svelte-tel-i
 
 ```svelte
 <script lang="ts">
-  import { TelInput, normalizedCountries } from 'svelte-tel-input';
+  import { TelInput, countries } from 'svelte-tel-input';
   import type { DetailedValue, CountryCode, E164Number } from 'svelte-tel-input/types';
 
   // Any Country Code Alpha-2 (ISO 3166)
@@ -64,7 +64,7 @@ _Snippet would be too long_ - [Example](https://github.com/gyurielf/svelte-tel-i
     bind:value={selectedCountry}
   >
     <option value={null} hidden={country !== null}>Please select</option>
-    {#each normalizedCountries as currentCountry (currentCountry.id)}
+    {#each countries as currentCountry (currentCountry.id)}
       <option
         value={currentCountry.iso2}
         selected={currentCountry.iso2 === country}
