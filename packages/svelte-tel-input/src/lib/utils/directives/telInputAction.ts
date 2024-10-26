@@ -13,8 +13,6 @@ export const telInputAction = (
 		value: E164Number | null;
 	}
 ) => {
-	// TODO - remove old addListener
-	// node.addEventListener('input', onInput, true);
 	registerListeners(node, { handler, spaces });
 
 	return {
