@@ -8,7 +8,14 @@
 		generatePlaceholder,
 		telInputAction
 	} from '$lib/utils/index.js';
-	import type { DetailedValue, CountryCode, E164Number, TelInputOptions } from '$lib/types';
+	import type {
+		DetailedValue,
+		CountryCode,
+		E164Number,
+		TelInputOptions,
+		Props
+	} from '$lib/types';
+
 	const bubble = createBubbler();
 	const dispatch = createEventDispatcher<{
 		updateCountry: CountryCode | null;
@@ -23,39 +30,6 @@
 		spaces: true,
 		invalidateOnCountryChange: false
 	} satisfies TelInputOptions;
-
-	/** You can set the classes of the input field*/
-	interface Props {
-		// eslint-disable-next-line no-undef
-		autocomplete?: AutoFill | null;
-		class?: string;
-		/** You can disable the component and set the disabled attribute of the input field */
-		disabled?: boolean;
-		/** You can set the id attribute of the input field */
-		id?: string;
-		/** You can set the name attribute of the input field */
-		name?: string | null;
-		/** It will overwrite the autoPlaceholder ! */
-		placeholder?: string | null;
-		/** You can set the readonly attribute of the input field */
-		readonly?: boolean | null;
-		/** Set the required attribute on the input element */
-		required?: boolean | null;
-		/** You can set the size attribute of the input field */
-		size?: number | null;
-		/** The core value of the input, this is the only one what you can store. It's an E164 phone number.*/
-		value: E164Number | null;
-		/** It's accept any Country Code Alpha-2 (ISO 3166) */
-		country?: CountryCode | null | undefined;
-		/** Detailed parse of the E164 phone number */
-		detailedValue?: Partial<DetailedValue> | null;
-		/** Validity of the input based on the config settings. */
-		valid?: boolean;
-		/** You can turn on and off certain features by this object */
-		options?: TelInputOptions;
-		/** Binding to the underlying `<input>` element */
-		el?: HTMLInputElement | undefined;
-	}
 
 	let {
 		autocomplete = null,
