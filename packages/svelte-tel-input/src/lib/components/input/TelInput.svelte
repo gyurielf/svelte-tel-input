@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { run, createBubbler } from 'svelte/legacy';
+	import { createBubbler } from 'svelte/legacy';
 	import { createEventDispatcher, onMount } from 'svelte';
 	import { parsePhoneNumberWithError, ParseError } from 'libphonenumber-js/max';
 	import {
@@ -36,8 +36,8 @@
 		class: classes = '',
 		disabled = false,
 		id = 'phone-input-' +
-			new Date().getTime().toString(36) +
-			Math.random().toString(36).slice(2),
+			(crypto?.randomUUID() ||
+				new Date().getTime().toString(36) + Math.random().toString(36).slice(2)),
 		name = null,
 		placeholder = null,
 		readonly = null,
@@ -53,7 +53,7 @@
 	}: Props = $props();
 
 	let inputValue = $state(value);
-	let prevCountry = country;
+	let prevCountry = $state(country);
 
 	/** Merge options into default opts, to be able to set just one config option. */
 	const combinedOptions = {
@@ -141,15 +141,16 @@
 	};
 
 	// Watch user's country change.
-	let countryWatchInitRun = true;
+	let isInitialCountryChange = true;
 	const countryChangeWatchFunction = (current: CountryCode | null | undefined) => {
-		if (!countryWatchInitRun) {
+		if (!isInitialCountryChange) {
 			handleParsePhoneNumber(null, current);
 		}
-		countryWatchInitRun = false;
+		isInitialCountryChange = false;
 	};
 
-	run(() => {
+	// Watch for country changes
+	$effect(() => {
 		countryChangeWatchFunction(country);
 	});
 
@@ -162,8 +163,8 @@
 			: placeholder
 	);
 
-	// Handle reset value only
-	run(() => {
+	// Watch for value resets
+	$effect(() => {
 		if (value === null && inputValue !== null && detailedValue !== null) {
 			inputValue = null;
 			detailedValue = null;

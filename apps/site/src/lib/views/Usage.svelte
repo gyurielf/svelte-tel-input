@@ -1,9 +1,9 @@
 <script lang="ts">
-	import BasicPhoneInput from '$lib/components/examples/BasicPhoneInput.svelte';
+	// import BasicPhoneInput from '$lib/components/examples/BasicPhoneInput.svelte';
 	import AdvancedPhoneInput from '$lib/components/examples/AdvancedPhoneInput.svelte';
 	import PayloadBlock from '$lib/components/utils/PayloadBlock.svelte';
 	import OptionsPanel from './OptionsPanel.svelte';
-	import EventDrivenPhoneInput from '$lib/components/examples/EventDrivenPhoneInput.svelte';
+	// import EventDrivenPhoneInput from '$lib/components/examples/EventDrivenPhoneInput.svelte';
 	import type {
 		DetailedValue,
 		E164Number,
@@ -28,51 +28,50 @@
 	let advancedExampleOptions = $state({
 		autoPlaceholder: true,
 		spaces: true,
-		invalidateOnCountryChange: true,
-		format: 'national'
+		invalidateOnCountryChange: true
 	} satisfies TelInputOptions);
 
-	/* basicWithE164 example */
-	const basicExamplePropsWithE164 = $state({
-		value: '+14842918723',
-		detailedValue: null,
-		valid: true,
-		country: null
-	} satisfies ExampleProps);
-	let basicExampleWithE164Options = $state({
-		autoPlaceholder: true,
-		spaces: true,
-		invalidateOnCountryChange: false,
-		format: 'national'
-	} satisfies TelInputOptions);
+	// /* basicWithE164 example */
+	// const basicExamplePropsWithE164 = $state({
+	// 	value: '+14842918723',
+	// 	detailedValue: null,
+	// 	valid: true,
+	// 	country: null
+	// } satisfies ExampleProps);
+	// let basicExampleWithE164Options = $state({
+	// 	autoPlaceholder: true,
+	// 	spaces: true,
+	// 	invalidateOnCountryChange: false,
+	// 	format: 'national'
+	// } satisfies TelInputOptions);
 
-	/* basicWithNull example */
-	const basicExamplePropsWithNull = $state({
-		value: null,
-		detailedValue: null,
-		valid: true,
-		country: null
-	} satisfies ExampleProps);
-	let basicExampleWithNullOptions = $state({
-		autoPlaceholder: true,
-		spaces: true,
-		invalidateOnCountryChange: false,
-		format: 'national'
-	} satisfies TelInputOptions);
+	// /* basicWithNull example */
+	// const basicExamplePropsWithNull = $state({
+	// 	value: null,
+	// 	detailedValue: null,
+	// 	valid: true,
+	// 	country: null
+	// } satisfies ExampleProps);
+	// let basicExampleWithNullOptions = $state({
+	// 	autoPlaceholder: true,
+	// 	spaces: true,
+	// 	invalidateOnCountryChange: false,
+	// 	format: 'national'
+	// } satisfies TelInputOptions);
 
-	/* eventDriven example */
-	const eventDrivenExampleProps = $state({
-		value: '+441234567988',
-		detailedValue: null,
-		valid: true,
-		country: null
-	} satisfies ExampleProps);
-	let eventDrivenExampleOptions = $state({
-		autoPlaceholder: true,
-		spaces: true,
-		invalidateOnCountryChange: false,
-		format: 'national'
-	} satisfies TelInputOptions);
+	// /* eventDriven example */
+	// const eventDrivenExampleProps = $state({
+	// 	value: '+441234567988',
+	// 	detailedValue: null,
+	// 	valid: true,
+	// 	country: null
+	// } satisfies ExampleProps);
+	// let eventDrivenExampleOptions = $state({
+	// 	autoPlaceholder: true,
+	// 	spaces: true,
+	// 	invalidateOnCountryChange: false,
+	// 	format: 'national'
+	// } satisfies TelInputOptions);
 </script>
 
 <div class="grid gap-y-10">
@@ -119,7 +118,7 @@
 			country={advancedExampleProps.country}
 		/>
 	</div>
-	<hr class="my-5" />
+	<!-- <hr class="my-5" />
 	<div>
 		<div class="flex">
 			<h2 class="text-2xl mb-3">Basic Example with init value</h2>
@@ -250,5 +249,5 @@
 			valid={eventDrivenExampleProps.valid}
 			country={eventDrivenExampleProps.country}
 		/>
-	</div>
+	</div> -->
 </div>

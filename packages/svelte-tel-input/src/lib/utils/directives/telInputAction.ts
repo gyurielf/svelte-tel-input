@@ -14,7 +14,6 @@ export const telInputAction = (
 	}
 ) => {
 	registerListeners(node, { handler, spaces });
-
 	return {
 		update(params: {
 			handler: (val: string) => void;
@@ -64,7 +63,6 @@ const onInput = (
 	const node = event.currentTarget as HTMLInputElement | null;
 
 	if (node && node.contains(event.target as HTMLInputElement)) {
-		const cursorPositionAfterInput = node.selectionStart || 0;
 		// const newCursorPosition = getCursorPosition({
 		// 	cursorPositionAfterInput,
 		// 	phoneBeforeInput,
@@ -76,8 +74,58 @@ const onInput = (
 		// 	deletion
 		// });
 
-		const currentValue = (event.target as HTMLInputElement).value;
-		const formattedInput = inputParser(currentValue, {
+		// const inputType: string | undefined = event.inputType;
+		// const deletion = getDeletionType(inputType);
+		// const isInserted = !!inputType?.startsWith('insertFrom');
+		// const isTyped = inputType === 'insertText';
+
+		// const eventData: string | null | undefined = event?.data;
+		// Last char that user typed on a keyboard
+		// const lastTypedChar = eventData || undefined;
+		const inputValue = (event.target as HTMLInputElement).value;
+		const cursorPositionAfterInput = node.selectionStart ?? 0;
+
+		// // ignore user input if typed non-digit character
+		// if (
+		// 	isTyped &&
+		// 	!isNumeric(lastTypedChar) &&
+		// 	// allow type prefix when input value is empty
+		// 	inputValue !== prefix
+		// ) {
+		// 	return {
+		// 		inputValue: phoneBeforeInput,
+		// 		phone: toE164({
+		// 			phone: disableDialCodeAndPrefix
+		// 				? `${country.dialCode}${phoneBeforeInput}`
+		// 				: phoneBeforeInput,
+		// 			prefix
+		// 		}),
+		// 		cursorPosition: cursorPositionAfterInput - (lastTypedChar?.length ?? 0),
+		// 		country
+		// 	};
+		// }
+
+		// // forceDialCode: ignore dial code change (only if prefixed phone was not inserted)
+		// if (
+		// 	forceDialCode &&
+		// 	// dial code has been changed
+		// 	!userInput.startsWith(`${prefix}${country.dialCode}`) &&
+		// 	// was not inserted with ctrl+v
+		// 	!isInserted
+		// ) {
+		// 	const inputValue = userInput
+		// 		? phoneBeforeInput
+		// 		: `${prefix}${country.dialCode}${charAfterDialCode}`;
+
+		// 	return {
+		// 		inputValue,
+		// 		phone: toE164({ phone: inputValue, prefix }),
+		// 		cursorPosition: prefix.length + country.dialCode.length + charAfterDialCode.length, // set cursor position after dial code
+		// 		country
+		// 	};
+		// }
+
+		const formattedInput = inputParser(inputValue, {
 			allowSpaces: spaces
 		});
 
@@ -125,6 +173,7 @@ const onInput = (
 
 const onKeyDown = (e: KeyboardEvent) => {
 	if (!e.key) return;
+
 	const ctrlPressed = e.ctrlKey;
 	const metaPressed = e.metaKey;
 	const zPressed = e.key.toLowerCase() === 'z';

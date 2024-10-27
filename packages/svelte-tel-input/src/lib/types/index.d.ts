@@ -105,7 +105,7 @@ export interface Props {
 	/** It's accept any Country Code Alpha-2 (ISO 3166) */
 	country?: CountryCode | null | undefined;
 	/** Detailed parse of the E164 phone number */
-	detailedValue?: Partial<DetailedValue> | null;
+	detailedValue?: Readonly<Partial<DetailedValue> | null>;
 	/** Validity of the input based on the config settings. */
 	valid?: boolean;
 	/** You can turn on and off certain features by this object */

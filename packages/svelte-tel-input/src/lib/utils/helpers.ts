@@ -390,3 +390,10 @@ export const isMacOS = () => {
 	}
 	return window.navigator.userAgent.toLowerCase().includes('macintosh');
 };
+
+export const getDeletionType = (inputType?: string) => {
+	const isDeletion = inputType?.toLocaleLowerCase().includes('delete') ?? false;
+	if (!isDeletion) return undefined;
+
+	return inputType?.toLocaleLowerCase().includes('forward') ? 'forward' : 'backward';
+};
