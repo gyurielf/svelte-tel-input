@@ -1,11 +1,14 @@
 <script lang="ts">
-	import { createEventDispatcher, onMount } from 'svelte';
+	import { createEventDispatcher, onMount, tick } from 'svelte';
 	import { parsePhoneNumberWithError, ParseError } from 'libphonenumber-js/max';
 	import {
 		normalizeTelInput,
 		getCountryForPartialE164Number,
 		generatePlaceholder,
-		telInputAction
+		telInputAction,
+
+		allowedCharacters
+
 	} from '$lib/utils/index.js';
 	import type { DetailedValue, CountryCode, E164Number, TelInputOptions } from '$lib/types';
 
@@ -80,7 +83,31 @@
 		return country;
 	};
 
-	const handleParsePhoneNumber = (
+	const findNewCursorPosition = (
+		newValue: string,
+		formattedValue: string,
+		initialCursorPosition: number
+	) => {
+		let fvIndex = 0;
+		for(let nvIndex = 0; nvIndex < initialCursorPosition; nvIndex++) {
+
+			// Since newValue has not been normalized yet, we need to map any non standard digits.
+			const nvChar = allowedCharacters(newValue[nvIndex], {spaces: false});
+
+			// For each non-formatting character encountered in the value entered by the user,
+			// find the corresponding digit in the formatted value.
+			if(nvChar >= '0' && nvChar <= '9') {
+				while(!(formattedValue[fvIndex] >= '0' && formattedValue[fvIndex] <= '9') && fvIndex < formattedValue.length) {
+					fvIndex++;
+				}
+				fvIndex++;
+			}
+		}
+
+		return fvIndex;
+	}
+
+	const handleParsePhoneNumber = async (
 		rawInput: string | null,
 		currCountry: CountryCode | null = null
 	) => {
@@ -111,10 +138,27 @@
 			const formatOption = combinedOptions.format === 'national' ? 'nationalNumber' : 'e164';
 			const formattedValue =
 				combinedOptions.format === 'national' ? 'formatOriginal' : 'formatInternational';
+			const initialCursorPosition = el?.selectionStart || 0;
 			if (combinedOptions.spaces && detailedValue?.[formattedValue]) {
 				inputValue = detailedValue[formattedValue] ?? null;
+
+				// Need to wait for input element to update before cursor position can be restored
+				await tick();
+				if(el) {
+					const newCursorPosition = findNewCursorPosition(input, inputValue, initialCursorPosition)
+					el.selectionStart = newCursorPosition;
+					el.selectionEnd = newCursorPosition;
+				}
 			} else if (detailedValue?.[formatOption]) {
 				inputValue = detailedValue[formatOption] ?? null;
+
+				// Need to wait for input element to update before cursor position can be restored
+				await tick();
+				if(el) {
+					const newCursorPosition = findNewCursorPosition(input, inputValue, initialCursorPosition)
+					el.selectionStart = newCursorPosition;
+					el.selectionEnd = newCursorPosition;
+				}
 			}
 
 			// keep the input value as value
