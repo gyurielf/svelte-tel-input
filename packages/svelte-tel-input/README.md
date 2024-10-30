@@ -79,7 +79,7 @@ _Snippet would be too long_ - [Example](https://github.com/gyurielf/svelte-tel-i
     bind:value
     bind:valid
     bind:detailedValue
-    class="basic-tel-input {!isValid ? 'invalid' : ''}"
+    class="basic-tel-input {!valid ? 'invalid' : ''}"
   />
 </div>
 
