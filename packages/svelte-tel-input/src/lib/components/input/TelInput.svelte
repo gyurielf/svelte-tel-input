@@ -1,9 +1,8 @@
 <script lang="ts">
 	import { createBubbler } from 'svelte/legacy';
 	import { createEventDispatcher, onMount } from 'svelte';
-	import { parsePhoneNumberWithError, ParseError } from 'libphonenumber-js/max';
+	import { ParseError } from 'libphonenumber-js/max';
 	import {
-		normalizeTelInput,
 		getCountryForPartialE164Number,
 		generatePlaceholder,
 		telInputAction
@@ -15,6 +14,8 @@
 		TelInputOptions,
 		Props
 	} from '$lib/types';
+	import { newNormalizer } from '$lib/utils/newHelpers';
+	import { guessCountryByPartialNumber } from '$lib/utils/directives/countryHelpers';
 
 	const bubble = createBubbler();
 	const dispatch = createEventDispatcher<{
@@ -82,16 +83,17 @@
 	) => {
 		const input = rawInput as E164Number;
 		if (input !== null) {
-			const numberHasCountry = getCountryForPartialE164Number(input);
+			const { country: numberHasCountry } = guessCountryByPartialNumber({
+				partialE164Number: input,
+				currentCountryIso2: currCountry
+			});
 
-			if (numberHasCountry && numberHasCountry !== prevCountry) {
-				updateCountry(numberHasCountry);
+			if (numberHasCountry?.iso2 && numberHasCountry.iso2 !== prevCountry) {
+				updateCountry(numberHasCountry.iso2);
 			}
 
 			try {
-				detailedValue = normalizeTelInput(
-					parsePhoneNumberWithError(input, numberHasCountry ?? currCountry ?? undefined)
-				);
+				detailedValue = newNormalizer(input, numberHasCountry);
 			} catch (err) {
 				if (err instanceof ParseError) {
 					detailedValue = {
@@ -104,8 +106,8 @@
 				}
 			}
 
-			if (combinedOptions.spaces && detailedValue?.formatInternational) {
-				inputValue = detailedValue.formatInternational ?? null;
+			if (combinedOptions.spaces && detailedValue?.formattedNumber) {
+				inputValue = detailedValue.formattedNumber || null;
 			} else if (detailedValue?.e164) {
 				inputValue = detailedValue.e164 ?? null;
 			}
@@ -211,10 +213,6 @@
 	onchange={bubble('change')}
 	onclick={bubble('click')}
 	onfocus={bubble('focus')}
-	oninput={bubble('input')}
-	onkeydown={bubble('keydown')}
-	onkeypress={bubble('keypress')}
-	onkeyup={bubble('keyup')}
 	onpaste={bubble('paste')}
 	use:telInputAction={{
 		handler: handleInputAction,

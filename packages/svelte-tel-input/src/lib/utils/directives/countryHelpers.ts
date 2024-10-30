@@ -49,7 +49,7 @@ export const guessCountryByPartialNumber = ({
 	if (!partialPhone) {
 		return defaultResult;
 	}
-	// remove spaces and leading `+` sign
+	// Remove spaces and leading `+` sign
 	const phone = partialPhone.replace('+', '').replaceAll(whiteSpaceRegex, '');
 
 	if (!phone) {

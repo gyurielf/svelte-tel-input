@@ -40,6 +40,7 @@ export interface PhoneNumberError {
 
 export interface DetailedValue {
 	countryCode?: CountryCode | null;
+	isPossible: boolean;
 	isValid: boolean;
 	phoneNumber: string | null;
 	countryCallingCode: CountryCallingCode | null;

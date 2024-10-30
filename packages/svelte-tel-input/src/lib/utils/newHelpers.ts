@@ -41,3 +41,65 @@
 // 	}
 // 	return filteredResult;
 // };
+
+// newParse
+import type { Country, DetailedValue, E164Number } from '$lib/types';
+import { AsYouType, formatIncompletePhoneNumber } from 'libphonenumber-js/max';
+
+export const newNormalizer = (input: E164Number, country: Country | undefined): DetailedValue => {
+	// console.log('formatIncompletePhoneNumber - CA - ', formatIncompletePhoneNumber('+2123'));
+	// console.log('formatIncompletePhoneNumber - US - ', formatIncompletePhoneNumber('+212'));
+	// console.log('formatIncompletePhoneNumber - US - ', formatIncompletePhoneNumber('+23'));
+	// console.log('formatIncompletePhoneNumber - US - ', formatIncompletePhoneNumber('+1767132'));
+	// console.log('formatIncompletePhoneNumber - ', formatIncompletePhoneNumber(input));
+	// console.log('formatIncompletePhoneNumber - ', formatIncompletePhoneNumber(input));
+	// console.log(guessCountryByPartialNumber({ partialE164Number: input })?.country?.iso2);
+
+	const asYouType = new AsYouType({
+		defaultCountry: country?.iso2,
+		defaultCallingCode: country?.dialCode
+	});
+	asYouType.input(input);
+	const phone = asYouType.getNumber();
+	const countryCallingCode = asYouType.getCallingCode() || null;
+	const countryCode = asYouType.getCountry() || country?.iso2 || null;
+	const formatInternational = phone?.formatInternational() || null;
+	const formatNational = phone?.formatNational() || null;
+	const formattedNumber = formatIncompletePhoneNumber(input) || null;
+	const nationalNumber = phone?.formatNational() || null;
+	const phoneNumber = phone?.number || null;
+	const uri = phone?.getURI() || null;
+
+	// Should implement try catch<--
+	// try {
+	//     const asYouType = new libphonenumber.AsYouType(this.state.asYouTypeCountry)
+	//     text = asYouType.input(value)
+	//     template = asYouType.getTemplate()
+	// } catch (error) {
+	//     if (error.message.indexOf('Unknown country') === 0) {
+	//         text = value
+	//         template = value.replace(/./g, 'x')
+	//     } else {
+	//         throw error
+	//     }
+	// }
+	// return { text, template }
+
+	return {
+		countryCallingCode,
+		countryCode,
+		e164: phoneNumber,
+		formatInternational,
+		formatNational,
+		formatOriginal:
+			formatInternational && countryCallingCode
+				? formatInternational.slice(countryCallingCode.length + 1).trim()
+				: null,
+		formattedNumber,
+		isPossible: asYouType.isPossible(),
+		isValid: asYouType.isValid(),
+		nationalNumber,
+		phoneNumber,
+		uri
+	};
+};
