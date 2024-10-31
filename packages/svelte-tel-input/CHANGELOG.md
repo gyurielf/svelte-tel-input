@@ -1,5 +1,12 @@
 # svelte-tel-input
 
+## 3.5.2
+### Patch Changes
+
+
+
+- fix: support svelte v5 as peer dependency ([#233](https://github.com/gyurielf/svelte-tel-input/pull/233))
+
 ## 3.5.1
 ### Patch Changes
 

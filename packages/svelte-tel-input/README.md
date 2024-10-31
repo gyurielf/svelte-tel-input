@@ -67,8 +67,8 @@ _Snippet would be too long_ - [Example](https://github.com/gyurielf/svelte-tel-i
     {#each countries as currentCountry (currentCountry.id)}
       <option
         value={currentCountry.iso2}
-        selected={currentCountry.iso2 === country}
-        aria-selected={currentCountry.iso2 === country}
+        selected={currentCountry.iso2 === selectedCountry}
+        aria-selected={currentCountry.iso2 === selectedCountry}
       >
         {currentCountry.iso2} (+{currentCountry.dialCode})
       </option>
@@ -79,7 +79,7 @@ _Snippet would be too long_ - [Example](https://github.com/gyurielf/svelte-tel-i
     bind:value
     bind:valid
     bind:detailedValue
-    class="basic-tel-input {!isValid ? 'invalid' : ''}"
+    class="basic-tel-input {!valid ? 'invalid' : ''}"
   />
 </div>
 
