@@ -217,6 +217,7 @@
 	use:telInputAction={{
 		handler: handleInputAction,
 		spaces: combinedOptions.spaces,
-		value
+		value,
+		prevValue: inputValue
 	}}
 />

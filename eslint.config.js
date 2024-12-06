@@ -120,7 +120,8 @@ export default [
 			'package-lock.json',
 			'**/dist/',
 			'scripts/',
-			'**/scripts/'
+			'**/scripts/',
+			'**/reash/'
 		]
 	},
 	{

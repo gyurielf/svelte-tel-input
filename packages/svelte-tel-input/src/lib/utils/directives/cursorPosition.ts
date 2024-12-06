@@ -30,8 +30,8 @@ export const getCursorPosition = ({
 
 	let afterInputPointIndex: number | null = null;
 
-	// iterate from right to left and get first digit char
-	for (let index = cursorPositionAfterInput - 1; index >= 0; index -= 1) {
+	// Find last digit before cursor
+	for (let index = cursorPositionAfterInput - 1; index >= 0; index--) {
 		if (isNumeric(phoneAfterInput[index])) {
 			afterInputPointIndex = index;
 			break;
@@ -39,7 +39,7 @@ export const getCursorPosition = ({
 	}
 
 	if (afterInputPointIndex === null) {
-		for (let index = 0; index < phoneAfterInput.length; index += 1) {
+		for (let index = 0; index < phoneAfterInput.length; index++) {
 			if (isNumeric(phoneAfterFormatted[index])) {
 				return index;
 			}
@@ -47,37 +47,44 @@ export const getCursorPosition = ({
 		return phoneAfterInput.length;
 	}
 
-	// find "digit index" of new char (only digits count)
+	// Count digits up to cursor
 	let digitIndex = 0;
-	for (let index = 0; index < afterInputPointIndex; index += 1) {
+	for (let index = 0; index <= afterInputPointIndex; index++) {
 		if (isNumeric(phoneAfterInput[index])) {
-			digitIndex += 1;
+			digitIndex++;
 		}
 	}
 
-	// find cursor position by going over digits until we get digitIndex
+	// Find position in formatted string
 	let cursorPosition = 0;
 	let digitsCounter = 0;
-	for (let index = 0; index < phoneAfterFormatted.length; index += 1) {
-		cursorPosition += 1;
 
-		if (isNumeric(phoneAfterFormatted[index])) {
-			digitsCounter += 1;
+	// Key change: Track the last non-space position
+	let lastNonSpacePos = 0;
+
+	for (let index = 0; index < phoneAfterFormatted.length; index++) {
+		if (phoneAfterFormatted[index] !== ' ') {
+			lastNonSpacePos = index;
 		}
 
-		if (digitsCounter >= digitIndex + 1) {
-			break;
+		if (isNumeric(phoneAfterFormatted[index])) {
+			digitsCounter++;
+			if (digitsCounter === digitIndex) {
+				cursorPosition = index + 1;
+				break;
+			}
 		}
 	}
 
-	// set cursor before next digit (jump over mask chars on the right side)
-	if (deletion !== 'backward') {
-		while (
-			!isNumeric(phoneAfterFormatted[cursorPosition]) &&
-			cursorPosition < phoneAfterFormatted.length
-		) {
-			cursorPosition += 1;
-		}
+	// Don't move cursor if we're at a non-space position
+	if (phoneAfterFormatted[cursorPosition] !== ' ') {
+		return cursorPosition;
+	}
+
+	// If we landed on a space and it's a forward deletion,
+	// stay before the space
+	if (deletion === 'forward') {
+		return lastNonSpacePos + 1;
 	}
 
 	return cursorPosition;
@@ -97,21 +104,3 @@ export const setCursorPosition = (node: HTMLInputElement, cursorPosition: number
 		node?.setSelectionRange(cursorPosition, cursorPosition);
 	});
 };
-// const setCursorPosition = (cursorPosition: number) => {
-//     /**
-//      * HACK: should set cursor on the next tick to make sure that the phone value is updated
-//      * useTimeout with 0ms provides issues when two keys are pressed same time
-//      */
-//     Promise.resolve().then(() => {
-//       // workaround for safari autofocus bug:
-//       // Check if the input is focused before setting the cursor, otherwise safari sometimes autofocuses on setSelectionRange
-//       if (
-//         typeof window === 'undefined' ||
-//         inputRef.current !== document?.activeElement
-//       ) {
-//         return;
-//       }
-
-//       inputRef.current?.setSelectionRange(cursorPosition, cursorPosition);
-//     });
-//   };
