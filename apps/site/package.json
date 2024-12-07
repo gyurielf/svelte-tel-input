@@ -33,7 +33,7 @@
 	},
 	"dependencies": {
 		"svelte-tel-input": "workspace:*",
-		"svelte": "^5.7.1"
+		"svelte": "^5.8.1"
 	},
 	"devDependencies": {
 		"@macfja/svelte-persistent-store": "^2.4.2",

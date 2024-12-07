@@ -45,7 +45,7 @@
 		"lint:fix": "pnpm run eslint:fix && pnpm run prettier:fix",
 		"package": "pnpm -r package",
 		"package:watch": "pnpm -r package:watch",
-		"prepare": "husky install",
+		"prepare": "husky",
 		"sync": "pnpm -r sync",
 		"test": "pnpm test -r --filter=./packages/*"
 	},
@@ -71,5 +71,5 @@
 	},
 	"type": "module",
 	"license": "MIT",
-	"packageManager": "pnpm@9.14.4"
+	"packageManager": "pnpm@9.15.0"
 }
