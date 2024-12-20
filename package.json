@@ -47,29 +47,31 @@
 		"package:watch": "pnpm -r package:watch",
 		"prepare": "husky",
 		"sync": "pnpm -r sync",
-		"test": "pnpm test -r --filter=./packages/*"
+		"test": "pnpm --filter=./packages/* test",
+		"test:ui": "pnpm --filter=./packages/* test:ui ",
+		"test:watch": "pnpm --filter=./packages/* test:watch"
 	},
 	"devDependencies": {
-		"@changesets/cli": "^2.27.10",
+		"@changesets/cli": "^2.27.11",
 		"@changesets/get-github-info": "^0.6.0",
 		"@changesets/types": "^6.0.0",
-		"@eslint/js": "^9.16.0",
-		"@typescript-eslint/eslint-plugin": "^8.17.0",
-		"@typescript-eslint/parser": "^8.17.0",
+		"@eslint/js": "^9.17.0",
+		"@typescript-eslint/eslint-plugin": "^8.18.1",
+		"@typescript-eslint/parser": "^8.18.1",
 		"dotenv": "^16.4.7",
-		"eslint": "^9.16.0",
+		"eslint": "^9.17.0",
 		"eslint-config-prettier": "^9.1.0",
 		"eslint-plugin-import": "^2.31.0",
-		"eslint-plugin-n": "^17.14.0",
+		"eslint-plugin-n": "^17.15.1",
 		"eslint-plugin-svelte": "^2.46.1",
 		"eslint-plugin-unicorn": "^56.0.1",
-		"globals": "^15.13.0",
+		"globals": "^15.14.0",
 		"husky": "^9.1.7",
 		"prettier": "^3.4.2",
 		"prettier-plugin-svelte": "^3.3.2",
-		"typescript-eslint": "^8.17.0"
+		"typescript-eslint": "^8.18.1"
 	},
 	"type": "module",
 	"license": "MIT",
-	"packageManager": "pnpm@9.15.0"
+	"packageManager": "pnpm@9.15.1"
 }

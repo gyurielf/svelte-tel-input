@@ -1,11 +1,9 @@
 import { sveltekit } from '@sveltejs/kit/vite';
-import { defineConfig } from 'vite';
+import { defineConfig, type UserConfig } from 'vite';
+import { svelteTesting } from '@testing-library/svelte/vite';
 
-export default defineConfig(() => {
-	return {
-		plugins: [sveltekit()],
-		test: {
-			include: ['src/**/*.{test,spec}.{js,ts}']
-		}
-	};
-});
+const config: UserConfig = {
+	plugins: [sveltekit(), svelteTesting()]
+};
+
+export default defineConfig(config);
