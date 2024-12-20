@@ -113,6 +113,11 @@ export interface Props {
 	options?: TelInputOptions;
 	/** Binding to the underlying `<input>` element */
 	el?: HTMLInputElement | undefined;
+	onUpdateCountry?: (newCountry: CountryCode | null) => void;
+	onUpdateDetails?: (newDetails: Readonly<Partial<DetailedValue> | null>) => void;
+	onUpdateValid?: (newValidity: boolean) => void;
+	onUpdateValue?: (newValue: E164Number | null) => void;
+	onParseError?: (error: string) => void;
 }
 
 export type {

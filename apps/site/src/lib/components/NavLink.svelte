@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 
 	interface Props {
 		href?: string;
@@ -17,7 +17,7 @@
 		if (currentHref.endsWith('/')) return currentHref;
 		return currentHref + '/';
 	};
-	const active = $derived($page.url.pathname === normalizeHref(href));
+	const active = $derived(page.url.pathname === normalizeHref(href));
 </script>
 
 {#if external}

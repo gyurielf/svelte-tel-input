@@ -27,22 +27,22 @@
 		options
 	}: Props = $props();
 
-	const handleValueUpdate = (e: CustomEvent<E164Number | null>) => {
-		value = e.detail ?? null;
+	const handleValueUpdate = (newValue: E164Number | null) => {
+		value = newValue ?? null;
 	};
 
-	const handleCountryUpdate = (e: CustomEvent<CountryCode | null>) => {
-		country = e.detail;
+	const handleCountryUpdate = (newCountry: CountryCode | null) => {
+		country = newCountry;
 	};
 
-	const handleValidUpdate = (e: CustomEvent<boolean>) => {
-		valid = e.detail;
+	const handleValidUpdate = (newValidity: boolean) => {
+		valid = newValidity;
 	};
 
 	const handleDetailedValueUpdate = (
-		e: CustomEvent<(DetailedValue | Partial<DetailedValue>) | null>
+		newDetails: (DetailedValue | Partial<DetailedValue>) | null
 	) => {
-		detailedValue = e.detail;
+		detailedValue = newDetails;
 	};
 </script>
 
@@ -79,10 +79,10 @@
 		{country}
 		{valid}
 		options={{ ...options, invalidateOnCountryChange: true }}
-		on:updateValue={handleValueUpdate}
-		on:updateCountry={handleCountryUpdate}
-		on:updateValid={handleValidUpdate}
-		on:updateDetailedValue={handleDetailedValueUpdate}
+		onUpdateValue={handleValueUpdate}
+		onUpdateCountry={handleCountryUpdate}
+		onUpdateValid={handleValidUpdate}
+		onUpdateDetails={handleDetailedValueUpdate}
 		class="px-4 py-1 w-full bg-gray-50 dark:bg-gray-700 
         dark:placeholder-gray-400 dark:text-white text-gray-900 focus:outline-none rounded-r-lg {valid
 			? 'border border-gray-300 border-l-gray-100 dark:border-l-gray-700 dark:border-gray-600'

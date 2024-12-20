@@ -1,30 +1,14 @@
 <script lang="ts">
-	import { createBubbler } from 'svelte/legacy';
-	import { createEventDispatcher, onMount } from 'svelte';
+	import { onMount } from 'svelte';
 	import { ParseError } from 'libphonenumber-js/max';
 	import {
 		getCountryForPartialE164Number,
 		generatePlaceholder,
 		telInputAction
 	} from '$lib/utils/index.js';
-	import type {
-		DetailedValue,
-		CountryCode,
-		E164Number,
-		TelInputOptions,
-		Props
-	} from '$lib/types';
+	import type { CountryCode, E164Number, TelInputOptions, Props } from '$lib/types';
 	import { newNormalizer } from '$lib/utils/newHelpers';
 	import { guessCountryByPartialNumber } from '$lib/utils/directives/countryHelpers';
-
-	const bubble = createBubbler();
-	const dispatch = createEventDispatcher<{
-		updateCountry: CountryCode | null;
-		parseError: string;
-		updateDetailedValue: Partial<DetailedValue> | null;
-		updateValid: boolean;
-		updateValue: E164Number | null;
-	}>();
 
 	const defaultOptions = {
 		autoPlaceholder: true,
@@ -44,6 +28,11 @@
 		readonly = null,
 		required = null,
 		size = null,
+		onUpdateCountry,
+		onUpdateDetails,
+		onUpdateValid,
+		onUpdateValue,
+		onParseError,
 		value = $bindable(),
 		country = $bindable(undefined),
 		detailedValue = $bindable(null),
@@ -68,11 +57,11 @@
 	};
 
 	// Update the country and dispatch event
-	const updateCountry = (countryCode: CountryCode | null) => {
+	const countryUpdater = (countryCode: CountryCode | null) => {
 		if (countryCode !== country) {
 			country = countryCode;
 			prevCountry = country;
-			dispatch('updateCountry', country);
+			onUpdateCountry?.(country);
 		}
 		return country;
 	};
@@ -89,7 +78,7 @@
 			});
 
 			if (numberHasCountry?.iso2 && numberHasCountry.iso2 !== prevCountry) {
-				updateCountry(numberHasCountry.iso2);
+				countryUpdater(numberHasCountry.iso2);
 			}
 
 			try {
@@ -100,7 +89,7 @@
 						isValid: false,
 						error: err.message
 					};
-					dispatch('parseError', err.message);
+					onParseError?.(err.message);
 				} else {
 					throw err;
 				}
@@ -115,9 +104,12 @@
 			// keep the input value as value
 			value = detailedValue?.e164 ?? input ?? null;
 			valid = detailedValue?.isValid ?? false;
-			dispatch('updateValid', valid);
-			dispatch('updateValue', value);
-			dispatch('updateDetailedValue', detailedValue);
+			// dispatch('updateValid', valid);
+			// dispatch('updateValue', value);
+			// dispatch('updateDetailedValue', detailedValue);
+			onUpdateValue?.(value);
+			onUpdateValid?.(valid);
+			onUpdateDetails?.(detailedValue);
 		} else if (input === null && currCountry !== null) {
 			// If the user modifies the country, reset the input value and don't dispatch the country change event.
 			if (currCountry !== prevCountry) {
@@ -126,9 +118,9 @@
 				value = null;
 				inputValue = null;
 				detailedValue = null;
-				dispatch('updateValid', valid);
-				dispatch('updateValue', value);
-				dispatch('updateDetailedValue', detailedValue);
+				onUpdateValid?.(valid);
+				onUpdateValue?.(value);
+				onUpdateDetails?.(detailedValue);
 			}
 		} else {
 			// Otherwise, reset all values
@@ -136,8 +128,8 @@
 			value = null;
 			detailedValue = null;
 			prevCountry = currCountry;
-			dispatch('updateValid', valid);
-			dispatch('updateDetailedValue', detailedValue);
+			onUpdateValid?.(valid);
+			onUpdateDetails?.(detailedValue);
 			inputValue = null;
 		}
 	};
@@ -170,7 +162,7 @@
 		if (value === null && inputValue !== null && detailedValue !== null) {
 			inputValue = null;
 			detailedValue = null;
-			dispatch('updateDetailedValue', detailedValue);
+			onUpdateDetails?.(detailedValue);
 		}
 	});
 
@@ -207,13 +199,8 @@
 	{size}
 	placeholder={getPlaceholder}
 	type="tel"
+	data-testid="tel-input"
 	value={inputValue}
-	onbeforeinput={bubble('beforeinput')}
-	onblur={bubble('blur')}
-	onchange={bubble('change')}
-	onclick={bubble('click')}
-	onfocus={bubble('focus')}
-	onpaste={bubble('paste')}
 	use:telInputAction={{
 		handler: handleInputAction,
 		spaces: combinedOptions.spaces,
