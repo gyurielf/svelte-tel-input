@@ -5,6 +5,7 @@ interface GetCursorPositionProps {
 	cursorPositionAfterInput: number;
 	leftOffset?: number;
 	deletion?: 'forward' | 'backward' | undefined;
+	isReplacement?: boolean;
 }
 
 export const isNumeric = (str?: string) => {
@@ -18,7 +19,8 @@ export const getCursorPosition = ({
 	phoneAfterFormatted,
 	cursorPositionAfterInput,
 	leftOffset = 0,
-	deletion
+	deletion,
+	isReplacement
 }: GetCursorPositionProps) => {
 	if (cursorPositionAfterInput < leftOffset) {
 		return leftOffset;
@@ -58,6 +60,25 @@ export const getCursorPosition = ({
 	// Find position in formatted string
 	let cursorPosition = 0;
 	let digitsCounter = 0;
+
+	// For replacements, we want to position after the last replaced digit
+	if (isReplacement) {
+		for (let index = 0; index < phoneAfterFormatted.length; index++) {
+			if (isNumeric(phoneAfterFormatted[index])) {
+				digitsCounter++;
+				if (digitsCounter === digitIndex + 1) {
+					// +1 to move past the replaced digit
+					cursorPosition = index + 1;
+					break;
+				}
+			}
+		}
+		// Skip spaces after replacement
+		while (phoneAfterFormatted[cursorPosition] === ' ') {
+			cursorPosition++;
+		}
+		return cursorPosition;
+	}
 
 	// Key change: Track the last non-space position
 	let lastNonSpacePos = 0;
