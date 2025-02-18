@@ -21,3 +21,4 @@ static
 # Utility and CI tools
 zarf
 scripts
+**/reash/*

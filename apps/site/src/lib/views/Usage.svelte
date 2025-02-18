@@ -29,7 +29,8 @@
 		autoPlaceholder: true,
 		spaces: true,
 		invalidateOnCountryChange: true,
-		format: 'national'
+		format: 'national',
+		strictCountry: false
 	} satisfies TelInputOptions;
 
 	/* basicWithE164 example */
@@ -43,7 +44,8 @@
 		autoPlaceholder: true,
 		spaces: true,
 		invalidateOnCountryChange: false,
-		format: 'national'
+		format: 'national',
+		strictCountry: false
 	} satisfies TelInputOptions;
 
 	/* basicWithNull example */
@@ -57,7 +59,8 @@
 		autoPlaceholder: true,
 		spaces: true,
 		invalidateOnCountryChange: false,
-		format: 'national'
+		format: 'national',
+		strictCountry: false
 	} satisfies TelInputOptions;
 
 	/* eventDriven example */
@@ -71,7 +74,8 @@
 		autoPlaceholder: true,
 		spaces: true,
 		invalidateOnCountryChange: false,
-		format: 'national'
+		format: 'national',
+		strictCountry: false
 	} satisfies TelInputOptions;
 </script>
 
