@@ -76,6 +76,11 @@ export interface TelInputOptions {
 	 */
 	invalidateOnCountryChange?: boolean;
 	/**
+	 * Prevent automatic country parsing from the input value. It validates via the passed `country` property value.
+	 * @default false
+	 */
+	strictCountry?: boolean;
+	/**
 	 *  "international": `+36 20 123 4567`,
 	 *  "default": `20 123 4567`
 	 * @default "national"

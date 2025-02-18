@@ -6,9 +6,7 @@
 		getCountryForPartialE164Number,
 		generatePlaceholder,
 		telInputAction,
-
 		allowedCharacters
-
 	} from '$lib/utils/index.js';
 	import type { DetailedValue, CountryCode, E164Number, TelInputOptions } from '$lib/types';
 
@@ -79,6 +77,7 @@
 			country = countryCode;
 			prevCountry = country;
 			dispatch('updateCountry', country);
+			dispatch('updateDetailedValue', detailedValue);
 		}
 		return country;
 	};
@@ -89,15 +88,17 @@
 		initialCursorPosition: number
 	) => {
 		let fvIndex = 0;
-		for(let nvIndex = 0; nvIndex < initialCursorPosition; nvIndex++) {
-
+		for (let nvIndex = 0; nvIndex < initialCursorPosition; nvIndex++) {
 			// Since newValue has not been normalized yet, we need to map any non standard digits.
-			const nvChar = allowedCharacters(newValue[nvIndex], {spaces: false});
+			const nvChar = allowedCharacters(newValue[nvIndex], { spaces: false });
 
 			// For each non-formatting character encountered in the value entered by the user,
 			// find the corresponding digit in the formatted value.
-			if(nvChar >= '0' && nvChar <= '9') {
-				while(!(formattedValue[fvIndex] >= '0' && formattedValue[fvIndex] <= '9') && fvIndex < formattedValue.length) {
+			if (nvChar >= '0' && nvChar <= '9') {
+				while (
+					!(formattedValue[fvIndex] >= '0' && formattedValue[fvIndex] <= '9') &&
+					fvIndex < formattedValue.length
+				) {
 					fvIndex++;
 				}
 				fvIndex++;
@@ -105,7 +106,7 @@
 		}
 
 		return fvIndex;
-	}
+	};
 
 	const handleParsePhoneNumber = async (
 		rawInput: string | null,
@@ -113,15 +114,18 @@
 	) => {
 		const input = rawInput as E164Number;
 		if (input !== null) {
-			const numberHasCountry = getCountryForPartialE164Number(input);
+			const detectedCountry = getCountryForPartialE164Number(input);
+			const useCountry = options?.strictCountry
+				? currCountry
+				: detectedCountry ?? currCountry;
 
-			if (numberHasCountry && numberHasCountry !== prevCountry) {
-				updateCountry(numberHasCountry);
+			if (!options?.strictCountry && useCountry && useCountry !== prevCountry) {
+				updateCountry(useCountry);
 			}
 
 			try {
 				detailedValue = normalizeTelInput(
-					parsePhoneNumberWithError(input, numberHasCountry ?? currCountry ?? undefined)
+					parsePhoneNumberWithError(input, useCountry ?? undefined)
 				);
 			} catch (err) {
 				if (err instanceof ParseError) {
@@ -144,8 +148,12 @@
 
 				// Need to wait for input element to update before cursor position can be restored
 				await tick();
-				if(el) {
-					const newCursorPosition = findNewCursorPosition(input, inputValue, initialCursorPosition)
+				if (el) {
+					const newCursorPosition = findNewCursorPosition(
+						input,
+						inputValue,
+						initialCursorPosition
+					);
 					el.selectionStart = newCursorPosition;
 					el.selectionEnd = newCursorPosition;
 				}
@@ -154,8 +162,12 @@
 
 				// Need to wait for input element to update before cursor position can be restored
 				await tick();
-				if(el) {
-					const newCursorPosition = findNewCursorPosition(input, inputValue, initialCursorPosition)
+				if (el) {
+					const newCursorPosition = findNewCursorPosition(
+						input,
+						inputValue,
+						initialCursorPosition
+					);
 					el.selectionStart = newCursorPosition;
 					el.selectionEnd = newCursorPosition;
 				}
@@ -226,14 +238,19 @@
 		if (castedValue) {
 			handleParsePhoneNumber(
 				castedValue,
-				getCountryForPartialE164Number(castedValue) || newCountry
+				options?.strictCountry
+					? country
+					: getCountryForPartialE164Number(castedValue) || newCountry
 			);
 		}
 	};
 
 	onMount(() => {
 		if (value) {
-			handleParsePhoneNumber(value, getCountryForPartialE164Number(value) || country);
+			handleParsePhoneNumber(
+				value,
+				options?.strictCountry ? country : getCountryForPartialE164Number(value) || country
+			);
 		}
 	});
 </script>
