@@ -22,7 +22,8 @@
 		autoPlaceholder: true,
 		spaces: true,
 		invalidateOnCountryChange: false,
-		format: 'national'
+		format: 'national',
+		strictCountry: false
 	} satisfies TelInputOptions;
 
 	export let autocomplete: string | null = null;
@@ -282,6 +283,7 @@
 	use:telInputAction={{
 		handler: handleInputAction,
 		spaces: combinedOptions.spaces,
-		value
+		value,
+		strictCountryCode: combinedOptions.strictCountry
 	}}
 />

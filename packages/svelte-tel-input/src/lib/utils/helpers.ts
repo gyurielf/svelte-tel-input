@@ -48,16 +48,16 @@ export const normalizeTelInput = (input?: PhoneNumber) => {
 			isPossible: input ? input.isPossible() : false,
 			phoneNumber: input ? input.number : null,
 			countryCallingCode: input ? input.countryCallingCode : null,
-			formattedNumber: input ? (new AsYouType()).input(input.number) : null,
+			formattedNumber: input ? new AsYouType().input(input.number) : null,
 			nationalNumber: input ? input.nationalNumber : null,
-			formatInternational: input ? (new AsYouType()).input(input.number) : null,
+			formatInternational: input ? new AsYouType().input(input.number) : null,
 			formatOriginal: input
-				? (new AsYouType())
+				? new AsYouType()
 						.input(input.number)
 						.slice(input.countryCallingCode.length + 1)
 						.trim()
 				: null,
-			formatNational: input ? (new AsYouType(input.country)).input(input.number) : null,
+			formatNational: input ? new AsYouType(input.country).input(input.number) : null,
 			uri: input ? input.getURI() : null,
 			e164: input ? input.number : null
 		}).filter(([, value]) => value !== null)
@@ -336,16 +336,23 @@ export const inputParser = (
 	text: string,
 	{
 		allowSpaces,
-		parseCharacter
+		parseCharacter,
+		disallowPlusSign
 	}: {
 		allowSpaces: boolean;
-		parseCharacter: (char: string, val: string, allowSpaces?: boolean) => string | undefined;
+		disallowPlusSign: boolean;
+		parseCharacter: (
+			char: string,
+			val: string,
+			allowSpaces: boolean,
+			disallowPlusSign: boolean
+		) => string | undefined;
 	}
 ) => {
 	let value = '';
 
 	for (let index = 0; index < text.length; index++) {
-		const character = parseCharacter(text[index], value, allowSpaces);
+		const character = parseCharacter(text[index], value, allowSpaces, disallowPlusSign);
 		if (character !== undefined) {
 			value += character;
 		}
@@ -354,9 +361,14 @@ export const inputParser = (
 	return value;
 };
 
-export const inspectAllowedChars = (character: string, value: string, allowSpaces?: boolean) => {
+export const inspectAllowedChars = (
+	character: string,
+	value: string,
+	allowSpaces: boolean,
+	disallowPlusSign: boolean
+) => {
 	// Leading plus is allowed
-	if (character === '+') {
+	if (!disallowPlusSign && character === '+') {
 		if (!value) {
 			return character;
 		}
