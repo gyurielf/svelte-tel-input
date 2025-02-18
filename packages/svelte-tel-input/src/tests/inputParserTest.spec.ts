@@ -6,7 +6,8 @@ describe('Hello.svelte', () => {
 		const testValue = '+36 30 1aS 34 .9 ';
 		const resut = inputParser(testValue, {
 			allowSpaces: true,
-			parseCharacter: inspectAllowedChars
+			parseCharacter: inspectAllowedChars,
+			disallowPlusSign: false
 		});
 		expect(resut).toStrictEqual('+36 30 1 34 9 ');
 	});
@@ -15,7 +16,8 @@ describe('Hello.svelte', () => {
 		const testValue = '+36 30 1aS 34 .9 ';
 		const resut = inputParser(testValue, {
 			allowSpaces: true,
-			parseCharacter: inspectAllowedChars
+			parseCharacter: inspectAllowedChars,
+			disallowPlusSign: false
 		});
 		expect(resut).toStrictEqual('+36 30 1 34 9 ');
 	});
@@ -24,7 +26,8 @@ describe('Hello.svelte', () => {
 		const testValue = '+36 30 1a3 45 67';
 		const resut = inputParser(testValue, {
 			allowSpaces: true,
-			parseCharacter: inspectAllowedChars
+			parseCharacter: inspectAllowedChars,
+			disallowPlusSign: false
 		});
 		expect(resut).toStrictEqual('+36 30 13 45 67');
 	});
@@ -33,7 +36,8 @@ describe('Hello.svelte', () => {
 		const testValue = '+36a301234567';
 		const resut = inputParser(testValue, {
 			allowSpaces: false,
-			parseCharacter: inspectAllowedChars
+			parseCharacter: inspectAllowedChars,
+			disallowPlusSign: false
 		});
 		expect(resut).toStrictEqual('+36301234567');
 	});

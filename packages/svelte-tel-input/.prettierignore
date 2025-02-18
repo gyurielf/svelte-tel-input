@@ -22,3 +22,4 @@ yarn.lock
 zarf
 scripts
 examplePhoneNumbers.ts
+**/reash/*
