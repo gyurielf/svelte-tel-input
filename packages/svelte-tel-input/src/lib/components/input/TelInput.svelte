@@ -119,8 +119,8 @@
 				? currCountry
 				: detectedCountry ?? currCountry;
 
-			if (!options?.strictCountry && useCountry && useCountry !== prevCountry) {
-				updateCountry(useCountry);
+			if (!options?.strictCountry && detectedCountry && detectedCountry !== prevCountry) {
+				updateCountry(detectedCountry);
 			}
 
 			try {
