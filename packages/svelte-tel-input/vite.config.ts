@@ -1,9 +1,16 @@
+import tailwindcss from '@tailwindcss/vite';
 import { sveltekit } from '@sveltejs/kit/vite';
-import { defineConfig, type UserConfig } from 'vite';
-import { svelteTesting } from '@testing-library/svelte/vite';
+import { defineConfig } from 'vite';
 
-const config: UserConfig = {
-	plugins: [sveltekit(), svelteTesting()]
-};
-
-export default defineConfig(config);
+export default defineConfig({
+	plugins: [tailwindcss(), sveltekit()],
+	test: {
+		name: 'unit-tests',
+		// alias: [{ find: /^svelte$/, replacement: 'svelte/internal' }],
+		globals: true,
+		environment: 'jsdom',
+		setupFiles: ['./src/tests/vitest.setup.ts'],
+		include: ['src/tests/**/*.{test,spec}.{js,ts}'],
+		testTimeout: 8000
+	}
+});

@@ -1,4 +1,4 @@
-import type { Countries, E164Number, CountryCode, Country } from '$lib/types/index.js';
+import type { Countries, CountryCode, Country } from '$lib/types/index.js';
 import { countries as normalizedCountries } from '$lib/assets/index.js';
 
 const whiteSpaceRegex = new RegExp(
@@ -38,7 +38,7 @@ export const guessCountryByPartialNumber = ({
 	countries = normalizedCountries,
 	currentCountryIso2
 }: {
-	partialE164Number: E164Number;
+	partialE164Number: string;
 	countries?: Countries[];
 	currentCountryIso2?: CountryCode | null;
 }): CountryByPartialNumber => {
@@ -162,7 +162,7 @@ export const guessCountryByPartialNumber = ({
 };
 
 export const updateCountryByPartialNumber = (
-	input: E164Number,
+	input: string,
 	currentCountry: CountryCode | null,
 	previousCountry: CountryCode | null,
 	updateCountry: (newCountry: CountryCode | null) => CountryCode | null

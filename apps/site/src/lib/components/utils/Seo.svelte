@@ -2,6 +2,7 @@
 	import type { OpenGraph, Twitter } from './SeoTypes';
 	import type { Thing, WithContext } from 'schema-dts';
 	import { jsonLdScript } from '$lib/utils/directives/seoJsonLdAction.js';
+	import type { Snippet } from 'svelte';
 
 	interface Props {
 		title?: string | null;
@@ -12,7 +13,7 @@
 		openGraph?: OpenGraph | null;
 		twitter?: Twitter | null;
 		jsonLd?: (Thing | WithContext<Thing>)[] | null;
-		children?: import('svelte').Snippet;
+		children?: Snippet;
 	}
 
 	const {
@@ -88,20 +89,20 @@
 			{/if}
 
 			{#if openGraph.article.authors && openGraph.article.authors.length}
-				{#each openGraph.article.authors as author}
+				{#each openGraph.article.authors as author (author)}
 					<meta property="article:author" content={author} />
 				{/each}
 			{/if}
 
 			{#if openGraph.article.tags && openGraph.article.tags.length}
-				{#each openGraph.article.tags as tag}
+				{#each openGraph.article.tags as tag (tag)}
 					<meta property="article:tag" content={tag} />
 				{/each}
 			{/if}
 		{/if}
 
 		{#if openGraph.images && openGraph.images.length}
-			{#each openGraph.images as image}
+			{#each openGraph.images as image (image.url)}
 				<meta property="og:image" content={image.url} />
 				{#if image.alt}
 					<meta property="og:image:alt" content={image.alt} />

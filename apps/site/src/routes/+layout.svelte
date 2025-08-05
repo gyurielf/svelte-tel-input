@@ -1,10 +1,11 @@
 <script lang="ts">
 	import TheFooter from '$lib/views/TheFooter.svelte';
 	import TheHeader from '$lib/views/TheHeader.svelte';
+	import type { Snippet } from 'svelte';
 	import '../app.css';
 	import 'svelte-tel-input/styles/flags.css';
 	interface Props {
-		children?: import('svelte').Snippet;
+		children?: Snippet;
 	}
 
 	const { children }: Props = $props();

@@ -1,11 +1,4 @@
-import type {
-	CountryCallingCode,
-	CountryCode,
-	E164Number,
-	NationalNumber,
-	MetadataJson,
-	PhoneNumber
-} from 'libphonenumber-js';
+import type { CountryCallingCode, CountryCode, MetadataJson, PhoneNumber } from 'libphonenumber-js';
 import type { Countries } from 'libphonenumber-js/types';
 
 export interface Country {
@@ -43,14 +36,14 @@ export interface DetailedValue {
 	isPossible: boolean;
 	isValid: boolean;
 	phoneNumber: string | null;
-	countryCallingCode: CountryCallingCode | null;
-	formattedNumber: E164Number | null;
-	formatOriginal: E164Number | null;
-	nationalNumber: E164Number | null;
-	formatInternational: E164Number | null;
-	formatNational: E164Number | null;
+	countryCallingCode: string | null;
+	formattedNumber: string | null;
+	formatOriginal: string | null;
+	nationalNumber: string | null;
+	formatInternational: string | null;
+	formatNational: string | null;
 	uri: string | null;
-	e164: E164Number | null;
+	e164: string | null;
 	error?: string;
 }
 
@@ -102,7 +95,7 @@ export interface Props {
 	/** You can set the size attribute of the input field */
 	size?: number | null;
 	/** The core value of the input, this is the only one what you can store. It's an E164 phone number.*/
-	value: E164Number | null;
+	value: string | null;
 	/** It's accept any Country Code Alpha-2 (ISO 3166) */
 	country?: CountryCode | null | undefined;
 	/** Detailed parse of the E164 phone number */
@@ -116,16 +109,8 @@ export interface Props {
 	onUpdateCountry?: (newCountry: CountryCode | null) => void;
 	onUpdateDetails?: (newDetails: Readonly<Partial<DetailedValue> | null>) => void;
 	onUpdateValid?: (newValidity: boolean) => void;
-	onUpdateValue?: (newValue: E164Number | null) => void;
+	onUpdateValue?: (newValue: string | null) => void;
 	onParseError?: (error: string) => void;
 }
 
-export type {
-	CountryCallingCode,
-	CountryCode,
-	E164Number,
-	NationalNumber,
-	PhoneNumber,
-	Countries,
-	MetadataJson
-};
+export type { CountryCallingCode, CountryCode, PhoneNumber, Countries, MetadataJson };

@@ -4,13 +4,7 @@ import {
 	getCountryCallingCode,
 	getExampleNumber
 } from 'libphonenumber-js/max';
-import type {
-	PhoneNumber,
-	MetadataJson,
-	Countries,
-	E164Number,
-	CountryCode
-} from '$lib/types/index.js';
+import type { PhoneNumber, MetadataJson, Countries, CountryCode } from '$lib/types/index.js';
 import { examplePhoneNumbers } from '$lib/assets/index.js';
 
 const whiteSpaceRegex = new RegExp(
@@ -137,7 +131,7 @@ export const getInternationalPhoneNumberPrefix = (country: CountryCode) => {
  * @param  {string} country
  * @return {string} Can be empty.
  */
-export const trimNumber = (number: E164Number, country: CountryCode) => {
+export const trimNumber = (number: string, country: CountryCode) => {
 	const nationalSignificantNumberPart = getNationalSignificantNumberDigits(number, country);
 	if (nationalSignificantNumberPart) {
 		const overflowDigitsCount =
@@ -174,7 +168,7 @@ export const getMaxNumberLength = (country: CountryCode) => {
  * @deprecated since version 4.0.0, it will be removed in 4.1
  */
 export const getCountryForPartialE164Number = (
-	partialE164Number: E164Number,
+	partialE164Number: string,
 	{
 		country,
 		countries,
@@ -216,7 +210,7 @@ export const getCountryForPartialE164Number = (
  * @return {string?}
  * @deprecated since version 4.0.0, it will be removed in 4.1
  */
-export const getCountryFromPossiblyIncompleteInternationalPhoneNumber = (number: E164Number) => {
+export const getCountryFromPossiblyIncompleteInternationalPhoneNumber = (number: string) => {
 	const formatter = new AsYouType();
 	formatter.input(number);
 	// // `001` is a special "non-geograpical entity" code
@@ -236,7 +230,7 @@ export const getCountryFromPossiblyIncompleteInternationalPhoneNumber = (number:
  * @param {string?} country
  * @return {string} [result]
  */
-export const getNationalSignificantNumberDigits = (number: E164Number, country: CountryCode) => {
+export const getNationalSignificantNumberDigits = (number: string, country: CountryCode) => {
 	// Create "as you type" formatter.
 	const formatter = new AsYouType(country);
 	// Input partial national phone number.
@@ -255,7 +249,7 @@ export const getNationalSignificantNumberDigits = (number: E164Number, country: 
  * @param  {CountryCode} country
  * @return {boolean}
  */
-export const couldNumberBelongToCountry = (number: E164Number, country: CountryCode) => {
+export const couldNumberBelongToCountry = (number: string, country: CountryCode) => {
 	const intlPhoneNumberPrefix = getInternationalPhoneNumberPrefix(country);
 	let i = 0;
 	while (i < number.length && i < intlPhoneNumberPrefix.length) {

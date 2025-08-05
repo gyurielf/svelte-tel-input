@@ -1,12 +1,9 @@
 <script lang="ts">
-	import { createEventDispatcher } from 'svelte';
 	import { clickOutsideAction } from 'svelte-tel-input/utils';
 	import { TelInput, isSelected, countries } from 'svelte-tel-input';
 	import type {
 		DetailedValue,
-		CountrySelectEvents,
 		CountryCode,
-		E164Number,
 		TelInputOptions,
 		Country
 	} from 'svelte-tel-input/types';
@@ -17,11 +14,13 @@
 		closeOnClick?: boolean;
 		disabled?: boolean;
 		detailedValue?: DetailedValue | null;
-		value: E164Number | null;
+		value: string | null;
 		searchPlaceholder?: string | null;
 		selectedCountry: CountryCode | null;
 		valid: boolean;
 		options: TelInputOptions;
+		onSelectChange?: (details: CountryCode) => void;
+		onSelectSame?: (details: CountryCode) => void;
 	}
 
 	let {
@@ -33,7 +32,9 @@
 		searchPlaceholder = 'Search',
 		selectedCountry = $bindable(),
 		valid = $bindable(),
-		options
+		options,
+		onSelectChange,
+		onSelectSame
 	}: Props = $props();
 	let searchText = $state('');
 	let isOpen = $state(false);
@@ -98,18 +99,12 @@
 			(typeof selectedCountry === typeof val && selectedCountry !== val)
 		) {
 			selectedCountry = val;
-			onChange(val);
+			onSelectChange?.(val);
 			selectClick();
 		} else {
-			dispatch('same', { option: val });
+			onSelectSame?.(val);
 			selectClick();
 		}
-	};
-
-	const dispatch = createEventDispatcher<CountrySelectEvents<CountryCode>>();
-
-	const onChange = (selectedCountry: CountryCode) => {
-		dispatch('change', { option: selectedCountry });
 	};
 </script>
 

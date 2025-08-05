@@ -43,10 +43,10 @@
 // };
 
 // newParse
-import type { Country, DetailedValue, E164Number } from '$lib/types';
+import type { Country, DetailedValue } from '$lib/types';
 import { AsYouType, formatIncompletePhoneNumber } from 'libphonenumber-js/max';
 
-export const newNormalizer = (input: E164Number, country: Country | undefined): DetailedValue => {
+export const newNormalizer = (input: string, country: Country | undefined): DetailedValue => {
 	// console.log('formatIncompletePhoneNumber - CA - ', formatIncompletePhoneNumber('+2123'));
 	// console.log('formatIncompletePhoneNumber - US - ', formatIncompletePhoneNumber('+212'));
 	// console.log('formatIncompletePhoneNumber - US - ', formatIncompletePhoneNumber('+23'));

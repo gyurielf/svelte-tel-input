@@ -1,11 +1,11 @@
 <script lang="ts">
-	import type { CountryCode, E164Number, DetailedValue } from 'svelte-tel-input/types';
+	import type { CountryCode, DetailedValue } from 'svelte-tel-input/types';
 	import { jsonPrettyParser } from '$lib/utils/examples/exampleHelpers.js';
 	import { slide } from 'svelte/transition';
 
 	interface Props {
 		exampleData: DetailedValue | null;
-		value: E164Number | null;
+		value: string | null;
 		valid: boolean;
 		country: CountryCode | null;
 	}
@@ -113,13 +113,13 @@
 			<div class="grid grid-cols-2 break-words gap-x-2 md:gap-x-0">
 				<div>
 					<h3 class="text-lg font-bold">Key</h3>
-					{#each exampleDataEntries as [key, _]}
+					{#each exampleDataEntries as [key], i (`${i}-${key}`)}
 						<div>{key}</div>
 					{/each}
 				</div>
 				<div>
 					<h3 class="text-lg font-bold">Value</h3>
-					{#each exampleDataEntries as [_, val]}
+					{#each exampleDataEntries as [_, val], i (`${i}-${val}`)}
 						<div>{val}</div>
 					{/each}
 				</div>

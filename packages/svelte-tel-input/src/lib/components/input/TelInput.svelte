@@ -6,7 +6,7 @@
 		generatePlaceholder,
 		telInputAction
 	} from '$lib/utils/index.js';
-	import type { CountryCode, E164Number, TelInputOptions, Props } from '$lib/types';
+	import type { CountryCode, TelInputOptions, Props } from '$lib/types';
 	import { newNormalizer } from '$lib/utils/newHelpers';
 	import { guessCountryByPartialNumber } from '$lib/utils/directives/countryHelpers';
 
@@ -46,10 +46,10 @@
 	let prevCountry = $state(country);
 
 	/** Merge options into default opts, to be able to set just one config option. */
-	const combinedOptions = {
+	const combinedOptions = $derived({
 		...defaultOptions,
 		...options
-	};
+	});
 
 	const handleInputAction = (value: string) => {
 		if (disabled || readonly) return;
@@ -70,7 +70,7 @@
 		rawInput: string | null,
 		currCountry: CountryCode | null = null
 	) => {
-		const input = rawInput as E164Number;
+		const input = rawInput;
 		if (input !== null) {
 			const { country: numberHasCountry } = guessCountryByPartialNumber({
 				partialE164Number: input,
@@ -166,11 +166,8 @@
 		}
 	});
 
-	export const updateValue = (
-		newValue: string | E164Number | null,
-		newCountry?: CountryCode | null
-	) => {
-		const castedValue = newValue as E164Number;
+	export const updateValue = (newValue: string | null, newCountry?: CountryCode | null) => {
+		const castedValue = newValue;
 		if (castedValue) {
 			handleParsePhoneNumber(
 				castedValue,

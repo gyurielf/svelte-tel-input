@@ -180,7 +180,6 @@ The default export of the library is the main TelInput component. It has the fol
 ## Caveats
 
 - In order to reset `value` and/or `country` from outside (you must pass (or set if you binded) `null` for the property) have some side-effects:
-
   - Reseting the `value` will set (keep the `country` as is):
     - `detailedValue` to `null`
     - dispatch `updateDetailedValue` event

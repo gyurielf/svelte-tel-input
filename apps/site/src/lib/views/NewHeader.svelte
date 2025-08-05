@@ -1,7 +1,5 @@
 <script lang="ts">
-	import { run } from 'svelte/legacy';
-
-	import { navigating } from '$app/stores';
+	import { navigating } from '$app/state';
 	import { clickOutsideAction } from '$lib/utils/directives/clickOutsideAction';
 	import NavLink from '$lib/components/NavLink.svelte';
 	import ThemeSwitch from './ThemeSwitch.svelte';
@@ -13,8 +11,8 @@
 		mobileMenuIsOpen = false;
 	};
 
-	run(() => {
-		if ($navigating) {
+	$effect(() => {
+		if (navigating) {
 			mobileMenuIsOpen = false;
 		}
 	});

@@ -1,13 +1,12 @@
 import { inputParser } from '$lib/index.js';
-import type { E164Number } from 'libphonenumber-js';
 import { getCursorPosition, setCursorPosition } from './cursorPosition.js';
 import { tick } from 'svelte';
 
 interface TelInputActionParams {
 	handler: (val: string) => void;
-	prevValue: E164Number | null;
+	prevValue: string | null;
 	spaces: boolean;
-	value: E164Number | null;
+	value: string | null;
 }
 
 export const telInputAction = (node: HTMLInputElement, params: TelInputActionParams) => {

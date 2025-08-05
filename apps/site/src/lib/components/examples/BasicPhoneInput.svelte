@@ -1,15 +1,10 @@
 <script lang="ts">
 	import { TelInput, countries } from 'svelte-tel-input';
-	import type {
-		DetailedValue,
-		E164Number,
-		CountryCode,
-		TelInputOptions
-	} from 'svelte-tel-input/types';
+	import type { DetailedValue, CountryCode, TelInputOptions } from 'svelte-tel-input/types';
 
 	interface Props {
 		// E164 formatted value, usually you should store and use this.
-		value: E164Number | null;
+		value: string | null;
 		// Selected country
 		country?: CountryCode | null;
 		// Validity
