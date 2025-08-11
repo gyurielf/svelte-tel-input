@@ -1,11 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { ParseError } from 'libphonenumber-js/max';
-	import {
-		getCountryForPartialE164Number,
-		generatePlaceholder,
-		telInputAction
-	} from '$lib/utils/index.js';
+	import { generatePlaceholder, telInputAction } from '$lib/utils/index.js';
 	import type { CountryCode, TelInputOptions, Props } from '$lib/types';
 	import { newNormalizer } from '$lib/utils/newHelpers';
 	import { guessCountryByPartialNumber } from '$lib/utils/directives/countryHelpers';
@@ -169,16 +165,22 @@
 	export const updateValue = (newValue: string | null, newCountry?: CountryCode | null) => {
 		const castedValue = newValue;
 		if (castedValue) {
-			handleParsePhoneNumber(
-				castedValue,
-				getCountryForPartialE164Number(castedValue) || newCountry
-			);
+			const { country: numberHasCountry } = guessCountryByPartialNumber({
+				partialE164Number: castedValue,
+				currentCountryIso2: newCountry
+			});
+
+			handleParsePhoneNumber(castedValue, numberHasCountry?.iso2 || newCountry);
 		}
 	};
 
 	onMount(() => {
 		if (value) {
-			handleParsePhoneNumber(value, getCountryForPartialE164Number(value) || country);
+			const { country: numberHasCountry } = guessCountryByPartialNumber({
+				partialE164Number: value,
+				currentCountryIso2: country
+			});
+			handleParsePhoneNumber(value, numberHasCountry?.iso2 || country);
 		}
 	});
 </script>
