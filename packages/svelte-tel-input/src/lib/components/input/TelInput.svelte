@@ -88,6 +88,12 @@
 		formattedValue: string,
 		initialCursorPosition: number
 	) => {
+		// If cursor was at the end of the original input, keep it at the end of the formatted input
+		if (initialCursorPosition >= newValue.length) {
+			return formattedValue.length;
+		}
+
+		// For other cursor positions, use the existing logic to map cursor position
 		let fvIndex = 0;
 		for (let nvIndex = 0; nvIndex < initialCursorPosition; nvIndex++) {
 			// Since newValue has not been normalized yet, we need to map any non standard digits.
@@ -155,6 +161,7 @@
 						inputValue,
 						initialCursorPosition
 					);
+					
 					el.selectionStart = newCursorPosition;
 					el.selectionEnd = newCursorPosition;
 				}
@@ -169,6 +176,7 @@
 						inputValue,
 						initialCursorPosition
 					);
+					
 					el.selectionStart = newCursorPosition;
 					el.selectionEnd = newCursorPosition;
 				}
