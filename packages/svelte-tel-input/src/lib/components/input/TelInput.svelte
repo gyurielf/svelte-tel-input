@@ -161,7 +161,7 @@
 						inputValue,
 						initialCursorPosition
 					);
-					
+
 					el.selectionStart = newCursorPosition;
 					el.selectionEnd = newCursorPosition;
 				}
@@ -176,7 +176,7 @@
 						inputValue,
 						initialCursorPosition
 					);
-					
+
 					el.selectionStart = newCursorPosition;
 					el.selectionEnd = newCursorPosition;
 				}
