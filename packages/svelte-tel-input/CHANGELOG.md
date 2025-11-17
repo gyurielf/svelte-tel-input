@@ -1,5 +1,12 @@
 # svelte-tel-input
 
+## 3.6.1
+### Patch Changes
+
+
+
+- fix: cursor position ([#246](https://github.com/gyurielf/svelte-tel-input/pull/246))
+
 ## 3.6.0
 ### Minor Changes
 
