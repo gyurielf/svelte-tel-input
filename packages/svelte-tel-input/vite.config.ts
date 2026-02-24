@@ -1,12 +1,12 @@
 import tailwindcss from '@tailwindcss/vite';
+import { defineConfig } from 'vitest/config';
 import { sveltekit } from '@sveltejs/kit/vite';
-import { defineConfig } from 'vite';
+import { svelteTesting } from '@testing-library/svelte/vite';
 
 export default defineConfig({
-	plugins: [tailwindcss(), sveltekit()],
+	plugins: [tailwindcss(), sveltekit(), svelteTesting()],
 	test: {
 		name: 'unit-tests',
-		// alias: [{ find: /^svelte$/, replacement: 'svelte/internal' }],
 		globals: true,
 		environment: 'jsdom',
 		setupFiles: ['./src/tests/vitest.setup.ts'],

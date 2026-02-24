@@ -14,4 +14,6 @@
 	--breakpoint-lg: 64rem; /* 1024px */
 	--breakpoint-xl: 80rem; /* 1280px */
 	--breakpoint-2xl: 96rem; /* 1536px */
+
+	--animate-spin-fast: spin 0.75s linear infinite;
 }

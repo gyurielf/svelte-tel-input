@@ -53,7 +53,7 @@
 
 	<TelInput
 		{options}
-		bind:country
+		{country}
 		bind:valid
 		bind:value
 		bind:detailedValue

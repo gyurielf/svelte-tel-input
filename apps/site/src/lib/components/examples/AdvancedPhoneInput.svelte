@@ -8,6 +8,7 @@
 		Country
 	} from 'svelte-tel-input/types';
 	import 'svelte-tel-input/styles/flags.css';
+	import LoadingSpinner from '../LoadingSpinner.svelte';
 
 	interface Props {
 		clickOutside?: boolean;
@@ -38,6 +39,12 @@
 	}: Props = $props();
 	let searchText = $state('');
 	let isOpen = $state(false);
+	let initLoading = $state(true);
+	let telInputRef: TelInput | undefined = $state();
+
+	export const updateValue = (val: string | null) => {
+		telInputRef?.api.updateValue(val);
+	};
 
 	// const selectedCountryDialCode = $derived(
 	// 	countries.find((el) => el.iso2 === selectedCountry)?.dialCode || null
@@ -99,6 +106,7 @@
 			(typeof selectedCountry === typeof val && selectedCountry !== val)
 		) {
 			selectedCountry = val;
+			telInputRef?.api.updateCountry(selectedCountry);
 			onSelectChange?.(val);
 			selectClick();
 		} else {
@@ -117,35 +125,40 @@
 		<button
 			id="states-button"
 			data-dropdown-toggle="dropdown-states"
-			class="relative flex-shrink-0 overflow-hidden z-10 whitespace-nowrap inline-flex items-center py-2.5 px-4 text-sm font-medium text-center text-gray-500 bg-gray-100 border border-gray-300 rounded-l-lg hover:bg-gray-200 focus:outline-none dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-white dark:border-gray-600"
+			class="relative shrink-0 overflow-hidden z-10 whitespace-nowrap inline-flex items-center py-2.5 px-4 text-sm font-medium text-center text-gray-500 bg-gray-100 border border-gray-300 rounded-l-lg enabled:hover:bg-gray-200 focus:outline-none dark:bg-gray-700 enabled:dark:hover:bg-gray-600 dark:text-white dark:border-gray-600 enabled:cursor-pointer"
 			type="button"
 			role="combobox"
 			aria-controls="dropdown-countries"
 			aria-expanded="false"
 			aria-haspopup="false"
 			onclick={toggleDropDown}
+			disabled={initLoading || disabled}
 		>
-			{#if selectedCountry && selectedCountry !== null}
-				<div class="inline-flex items-center text-left">
-					<span class="flag flag-{selectedCountry.toLowerCase()} flex-shrink-0 mr-3"
-					></span>
-				</div>
+			{#if initLoading}
+				<LoadingSpinner size={20}></LoadingSpinner>
 			{:else}
-				Please select
+				{#if selectedCountry && selectedCountry !== null}
+					<div class="inline-flex items-center text-left">
+						<span class="flag flag-{selectedCountry.toLowerCase()} shrink-0 mr-3"
+						></span>
+					</div>
+				{:else}
+					Please select
+				{/if}
+				<svg
+					aria-hidden="true"
+					class="ml-1 w-4 h-4 {isOpen ? 'rotate-180' : ''}"
+					fill="currentColor"
+					viewBox="0 0 20 20"
+					xmlns="http://www.w3.org/2000/svg"
+				>
+					<path
+						fill-rule="evenodd"
+						d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+						clip-rule="evenodd"
+					/>
+				</svg>
 			{/if}
-			<svg
-				aria-hidden="true"
-				class="ml-1 w-4 h-4 {isOpen ? 'rotate-180' : ''}"
-				fill="currentColor"
-				viewBox="0 0 20 20"
-				xmlns="http://www.w3.org/2000/svg"
-			>
-				<path
-					fill-rule="evenodd"
-					d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-					clip-rule="evenodd"
-				/>
-			</svg>
 		</button>
 		{#if isOpen}
 			<div
@@ -177,7 +190,7 @@
 								value={country.iso2}
 								type="button"
 								class="inline-flex py-2 px-4 w-full text-sm hover:bg-gray-100 dark:hover:bg-gray-600
-                             active:bg-gray-800 dark:active:bg-gray-800 overflow-hidden
+                             active:bg-gray-800 dark:active:bg-gray-800 overflow-hidden cursor-pointer
                             {isActive
 									? 'bg-gray-600 dark:text-white'
 									: 'dark:hover:text-white dark:text-gray-400'}"
@@ -187,7 +200,7 @@
 							>
 								<div class="inline-flex items-center text-left">
 									<span
-										class="flag flag-{country.iso2.toLowerCase()} flex-shrink-0 mr-3"
+										class="flag flag-{country.iso2.toLowerCase()} shrink-0 mr-3"
 									></span>
 									<span class="mr-2">{country.name}</span>
 									<span class="text-gray-500">+{country.dialCode}</span>
@@ -201,13 +214,21 @@
 	</div>
 
 	<TelInput
-		bind:country={selectedCountry}
+		bind:this={telInputRef}
+		country={selectedCountry}
 		bind:detailedValue
 		bind:value
 		bind:valid
 		{options}
 		required
-		class="text-sm rounded-r-lg block w-full p-2.5 focus:outline-none border border-gray-300 border-l-gray-100 dark:border-l-gray-700 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 
-        dark:placeholder-gray-400 dark:text-white text-gray-900"
+		onInitialized={() => {
+			initLoading = false;
+		}}
+		onUpdateCountry={(detail) => {
+			selectedCountry = detail;
+		}}
+		name="phone-input"
+		class="text-sm rounded-r-lg block w-full px-1.25 h-10.25 leading-10.25 focus:outline-none border border-gray-300 border-l-gray-100 dark:border-l-gray-700 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 
+        dark:placeholder-gray-400 dark:text-white text-gray-900 box-border"
 	/>
 </div>

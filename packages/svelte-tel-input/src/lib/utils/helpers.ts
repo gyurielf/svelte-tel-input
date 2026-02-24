@@ -4,7 +4,7 @@ import {
 	getCountryCallingCode,
 	getExampleNumber
 } from 'libphonenumber-js/max';
-import type { PhoneNumber, MetadataJson, Countries, CountryCode } from '$lib/types/index.js';
+import type { PhoneNumber, Countries, CountryCode } from '$lib/types/index.js';
 import { examplePhoneNumbers } from '$lib/assets/index.js';
 
 const whiteSpaceRegex = new RegExp(
@@ -73,22 +73,11 @@ export const generatePlaceholder = (
 ) => {
 	const examplePhoneNumber = getExampleNumber(country, examplePhoneNumbers);
 	if (examplePhoneNumber) {
-		return spaces
-			? examplePhoneNumber
-					.formatInternational()
-					.slice(examplePhoneNumber.countryCallingCode.length + 1)
-					.trim()
-			: examplePhoneNumber.nationalNumber;
+		return spaces ? examplePhoneNumber.formatInternational().trim() : examplePhoneNumber.number;
 	} else {
-		throw new Error(`No country found with this country code: ${country}`);
+		console.error(`No country found with this country code: ${country}`);
+		return '';
 	}
-	// OLD
-	// const examplePhoneNumber = getExampleNumber(country, examplePhoneNumbers);
-	// if (examplePhoneNumber) {
-	// 	return spaces ? examplePhoneNumber.formatInternational() : examplePhoneNumber.number;
-	// } else {
-	// 	throw new Error(`No country found with this country code: ${country}`);
-	// }
 };
 
 export const isSelected = <
@@ -265,10 +254,6 @@ export const couldNumberBelongToCountry = (number: string, country: CountryCode)
 // 	// Standard international phone number prefix: "+" and "country calling code".
 // 	return '+' + getCountryCallingCode(country);
 // };
-
-export const isSupportedCountry = (country: CountryCode, metadata: MetadataJson) => {
-	return metadata.countries[country] !== undefined;
-};
 
 /**
  * These mappings map a character (key) to a specific digit that should

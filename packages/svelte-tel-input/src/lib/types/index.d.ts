@@ -96,7 +96,7 @@ export interface Props {
 	size?: number | null;
 	/** The core value of the input, this is the only one what you can store. It's an E164 phone number.*/
 	value: string | null;
-	/** It's accept any Country Code Alpha-2 (ISO 3166) */
+	/** It's accept any Country Code Alpha-2 (ISO 3166) -- DEFAULT COUNTRY */
 	country?: CountryCode | null | undefined;
 	/** Detailed parse of the E164 phone number */
 	detailedValue?: Readonly<Partial<DetailedValue> | null>;
@@ -111,6 +111,7 @@ export interface Props {
 	onUpdateValid?: (newValidity: boolean) => void;
 	onUpdateValue?: (newValue: string | null) => void;
 	onParseError?: (error: string) => void;
+	onInitialized?: () => void;
 }
 
 export type { CountryCallingCode, CountryCode, PhoneNumber, Countries, MetadataJson };

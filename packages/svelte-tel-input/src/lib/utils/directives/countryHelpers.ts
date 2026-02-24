@@ -1,11 +1,6 @@
 import type { Countries, CountryCode, Country } from '$lib/types/index.js';
 import { countries as normalizedCountries } from '$lib/assets/index.js';
 
-const whiteSpaceRegex = new RegExp(
-	'[\\t\\n\\v\\f\\r \\u00a0\\u2000\\u2001\\u2002\\u2003\\u2004\\u2005\\u2006\\u2007\\u2008\\u2009\\u200a\\u200b\\u2028\\u2029\\u3000]',
-	'g'
-);
-
 export const getCountry = ({
 	field,
 	value,
@@ -49,8 +44,8 @@ export const guessCountryByPartialNumber = ({
 	if (!partialPhone) {
 		return defaultResult;
 	}
-	// Remove spaces and leading `+` sign
-	const phone = partialPhone.replace('+', '').replaceAll(whiteSpaceRegex, '');
+	// Remove all non-digits (ignore formatting chars like spaces, parentheses, hyphens) and leading `+` sign
+	const phone = partialPhone.replace('+', '').replace(/[^0-9]/g, '');
 
 	if (!phone) {
 		return defaultResult;
@@ -159,20 +154,4 @@ export const guessCountryByPartialNumber = ({
 		}
 	}
 	return result;
-};
-
-export const updateCountryByPartialNumber = (
-	input: string,
-	currentCountry: CountryCode | null,
-	previousCountry: CountryCode | null,
-	updateCountry: (newCountry: CountryCode | null) => CountryCode | null
-) => {
-	const { country: resolvedCountry } = guessCountryByPartialNumber({
-		partialE164Number: input,
-		currentCountryIso2: currentCountry
-	});
-	if (resolvedCountry && resolvedCountry.iso2 !== previousCountry) {
-		return updateCountry(resolvedCountry.iso2);
-	}
-	return null;
 };

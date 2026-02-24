@@ -25,6 +25,7 @@
 		spaces: true,
 		invalidateOnCountryChange: true
 	} satisfies TelInputOptions);
+	let advancedExampleComponent: AdvancedPhoneInput | undefined = $state();
 
 	// /* basicWithE164 example */
 	// const basicExamplePropsWithE164 = $state({
@@ -96,8 +97,15 @@
 				</a>
 			</div>
 		</div>
+		<button
+			type="button"
+			onclick={() => {
+				advancedExampleComponent?.updateValue('+3613171377');
+			}}>UPDATE PHONE NUMBER</button
+		>
 		{#key advancedExampleOptions}
 			<AdvancedPhoneInput
+				bind:this={advancedExampleComponent}
 				options={advancedExampleOptions}
 				bind:value={advancedExampleProps.value}
 				bind:detailedValue={advancedExampleProps.detailedValue}
