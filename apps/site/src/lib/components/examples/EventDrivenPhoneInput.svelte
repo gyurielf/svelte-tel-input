@@ -22,8 +22,12 @@
 		options
 	}: Props = $props();
 
-	const handleValueUpdate = (newValue: string | null) => {
+	const handleValueUpdate = (
+		newValue: string | null,
+		newDetails?: (DetailedValue | Partial<DetailedValue>) | null
+	) => {
 		value = newValue ?? null;
+		detailedValue = newDetails ?? null;
 	};
 
 	const handleCountryUpdate = (newCountry: CountryCode | null) => {
@@ -32,12 +36,6 @@
 
 	const handleValidUpdate = (newValidity: boolean) => {
 		valid = newValidity;
-	};
-
-	const handleDetailedValueUpdate = (
-		newDetails: (DetailedValue | Partial<DetailedValue>) | null
-	) => {
-		detailedValue = newDetails;
 	};
 </script>
 
@@ -77,7 +75,6 @@
 		onValueChange={handleValueUpdate}
 		onCountryChange={handleCountryUpdate}
 		onValidityChange={handleValidUpdate}
-		onDetailsChange={handleDetailedValueUpdate}
 		class="px-4 py-1 w-full bg-gray-50 dark:bg-gray-700 
         dark:placeholder-gray-400 dark:text-white text-gray-900 focus:outline-none rounded-r-lg {valid
 			? 'border border-gray-300 border-l-gray-100 dark:border-l-gray-700 dark:border-gray-600'

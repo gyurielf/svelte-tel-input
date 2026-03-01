@@ -23,8 +23,10 @@
 	let advancedExampleOptions = $state({
 		autoPlaceholder: true,
 		spaces: true,
-		invalidateOnCountryChange: true
+		invalidateOnCountryChange: true,
+		validateOn: 'input'
 	} satisfies TelInputOptions);
+	let advancedExampleRequired = $state(true);
 	let advancedExampleComponent: AdvancedPhoneInput | undefined = $state();
 
 	// /* basicWithE164 example */
@@ -107,13 +109,17 @@
 			<AdvancedPhoneInput
 				bind:this={advancedExampleComponent}
 				options={advancedExampleOptions}
+				required={advancedExampleRequired}
 				bind:value={advancedExampleProps.value}
 				bind:detailedValue={advancedExampleProps.detailedValue}
 				bind:valid={advancedExampleProps.valid}
 				bind:selectedCountry={advancedExampleProps.country}
 			/>
 		{/key}
-		<OptionsPanel bind:options={advancedExampleOptions} />
+		<OptionsPanel
+			bind:options={advancedExampleOptions}
+			bind:required={advancedExampleRequired}
+		/>
 		<PayloadBlock
 			value={advancedExampleProps.value}
 			exampleData={advancedExampleProps.detailedValue}

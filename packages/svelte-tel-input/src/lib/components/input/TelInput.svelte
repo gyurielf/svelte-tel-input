@@ -9,7 +9,8 @@
 	const defaultOptions = {
 		autoPlaceholder: true,
 		spaces: true,
-		invalidateOnCountryChange: false
+		invalidateOnCountryChange: false,
+		validateOn: 'input'
 	} satisfies TelInputOptions;
 
 	let {
@@ -24,7 +25,6 @@
 		size = null,
 		onLoad,
 		onCountryChange,
-		onDetailsChange,
 		onValidityChange,
 		onValueChange,
 		onError,
@@ -82,7 +82,25 @@
 
 	const handleInputAction = (value: string) => {
 		if (disabled || readonly) return;
-		handleParsePhoneNumber(value, country);
+		handleParsePhoneNumber(value, country, combinedOptions.validateOn === 'input');
+	};
+
+	const handleBlur = (
+		e: FocusEvent & {
+			currentTarget: EventTarget & HTMLInputElement;
+		}
+	) => {
+		if (disabled || readonly || combinedOptions.validateOn !== 'blur') return;
+		if (inputValue === null || inputValue === '') {
+			valid = true;
+			onValidityChange?.(valid);
+			return;
+		}
+
+		valid = detailedValue?.isValid ?? false;
+		onValidityChange?.(valid);
+		const { onblur } = rest;
+		onblur?.(e);
 	};
 
 	// Update the country and dispatch event
@@ -100,7 +118,8 @@
 
 	const handleParsePhoneNumber = (
 		rawInput: string | null,
-		currCountry: CountryCode | null = null
+		currCountry: CountryCode | null = null,
+		shouldValidate = true
 	) => {
 		// Country-only change: reset state unless option says to keep valid.
 		if (rawInput === null && currCountry !== null) {
@@ -111,8 +130,7 @@
 				inputValue = null;
 				detailedValue = null;
 				onValidityChange?.(valid);
-				onValueChange?.(value);
-				onDetailsChange?.(detailedValue);
+				onValueChange?.(value, detailedValue);
 			}
 			return;
 		}
@@ -124,7 +142,6 @@
 			detailedValue = null;
 			prevCountry = currCountry;
 			onValidityChange?.(valid);
-			onDetailsChange?.(detailedValue);
 			inputValue = null;
 			return;
 		}
@@ -174,10 +191,12 @@
 
 		// `value` is the stored value (E.164 when possible).
 		value = detailedValue?.e164 ?? rawInput;
-		valid = detailedValue?.isValid ?? false;
-		onValueChange?.(value);
-		onValidityChange?.(valid);
-		onDetailsChange?.(detailedValue);
+		onValueChange?.(value, detailedValue);
+
+		if (shouldValidate) {
+			valid = detailedValue?.isValid ?? false;
+			onValidityChange?.(valid);
+		}
 	};
 
 	// Generate placeholder based on the autoPlaceholder option
@@ -194,7 +213,6 @@
 		if (value === null && inputValue !== null && detailedValue !== null) {
 			inputValue = null;
 			detailedValue = null;
-			onDetailsChange?.(detailedValue);
 		}
 	});
 
@@ -256,6 +274,7 @@
 	type="tel"
 	data-testid="tel-input"
 	value={inputValue}
+	onblur={handleBlur}
 	use:telInputAction={{
 		handler: handleInputAction,
 		spaces: combinedOptions.spaces,

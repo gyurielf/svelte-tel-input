@@ -96,17 +96,55 @@ describe('TelInput Component', () => {
 	});
 
 	describe('Callback Handling', () => {
-		it('should invoke value, validity and details callbacks with final parsed values', async () => {
-			const mockUpdateValue = vi.fn();
-			const mockUpdateValid = vi.fn();
-			const mockUpdateDetails = vi.fn();
+		it('should validate during typing when validateOn is input', async () => {
+			const mockValidityChange = vi.fn();
 			const { getByTestId } = render(TelInput, {
 				props: {
 					value: null,
 					country: 'US',
-					onUpdateValue: mockUpdateValue,
-					onUpdateValid: mockUpdateValid,
-					onUpdateDetails: mockUpdateDetails
+					options: { validateOn: 'input' },
+					onValidityChange: mockValidityChange
+				}
+			});
+			const input = getByTestId('tel-input') as HTMLInputElement;
+
+			await fireUserEvent.type(input, '2154567890');
+
+			expect(mockValidityChange).toHaveBeenCalled();
+			expect(mockValidityChange.mock.calls.at(-1)?.[0]).toBe(true);
+		});
+
+		it('should validate only on blur when validateOn is blur', async () => {
+			const mockValidityChange = vi.fn();
+			const { getByTestId } = render(TelInput, {
+				props: {
+					value: null,
+					country: 'US',
+					options: { validateOn: 'blur' },
+					onValidityChange: mockValidityChange
+				}
+			});
+			const input = getByTestId('tel-input') as HTMLInputElement;
+
+			await fireUserEvent.type(input, '2154567890');
+			expect(mockValidityChange).not.toHaveBeenCalled();
+
+			await fireUserEvent.tab();
+			expect(mockValidityChange).toHaveBeenCalled();
+			expect(mockValidityChange.mock.calls.at(-1)?.[0]).toBe(true);
+		});
+
+		it('should invoke value, validity and details callbacks with final parsed values', async () => {
+			const mockUpdateValue = vi.fn();
+			const mockUpdateValid = vi.fn();
+			const mockUpdateCountry = vi.fn();
+			const { getByTestId } = render(TelInput, {
+				props: {
+					value: null,
+					country: 'US',
+					onValueChange: mockUpdateValue,
+					onValidityChange: mockUpdateValid,
+					onCountryChange: mockUpdateCountry
 				}
 			});
 			const input = getByTestId('tel-input') as HTMLInputElement;
@@ -116,11 +154,11 @@ describe('TelInput Component', () => {
 			expect(input.value).toBe('(215) 456-7890');
 			expect(mockUpdateValue).toHaveBeenCalled();
 			expect(mockUpdateValid).toHaveBeenCalled();
-			expect(mockUpdateDetails).toHaveBeenCalled();
+			expect(mockUpdateCountry).not.toHaveBeenCalled();
 
 			expect(mockUpdateValue.mock.calls.at(-1)?.[0]).toBe('+12154567890');
 			expect(mockUpdateValid.mock.calls.at(-1)?.[0]).toBe(true);
-			expect(mockUpdateDetails.mock.calls.at(-1)?.[0]).toEqual(
+			expect(mockUpdateValue.mock.calls.at(-1)?.[1]).toEqual(
 				expect.objectContaining({
 					e164: '+12154567890',
 					isValid: true,
@@ -132,7 +170,7 @@ describe('TelInput Component', () => {
 		it('should not switch country on partial dial code but switch on full dial code match', async () => {
 			const mockUpdateCountry = vi.fn();
 			const { getByTestId } = render(TelInput, {
-				props: { value: null, country: 'US', onUpdateCountry: mockUpdateCountry }
+				props: { value: null, country: 'US', onCountryChange: mockUpdateCountry }
 			});
 			const input = getByTestId('tel-input') as HTMLInputElement;
 
@@ -156,7 +194,7 @@ describe('TelInput Component', () => {
 		it('should detect country from input', async () => {
 			const mockUpdateCountry = vi.fn();
 			const { getByTestId } = render(TelInput, {
-				props: { value: null, country: 'US', onUpdateCountry: mockUpdateCountry }
+				props: { value: null, country: 'US', onCountryChange: mockUpdateCountry }
 			});
 			const input = getByTestId('tel-input') as HTMLInputElement;
 
@@ -246,15 +284,13 @@ describe('TelInput Component', () => {
 			async ({ country, userTyped, expectedE164, replacementTyped, replacementE164 }) => {
 				const mockUpdateValue = vi.fn();
 				const mockUpdateValid = vi.fn();
-				const mockUpdateDetails = vi.fn();
 
 				const { getByTestId } = render(TelInput, {
 					props: {
 						value: null,
 						country,
-						onUpdateValue: mockUpdateValue,
-						onUpdateValid: mockUpdateValid,
-						onUpdateDetails: mockUpdateDetails
+						onValueChange: mockUpdateValue,
+						onValidityChange: mockUpdateValid
 					}
 				});
 				const input = getByTestId('tel-input') as HTMLInputElement;
@@ -262,7 +298,7 @@ describe('TelInput Component', () => {
 				await fireUserEvent.type(input, userTyped);
 				expect(mockUpdateValue.mock.calls.at(-1)?.[0]).toBe(expectedE164);
 				expect(mockUpdateValid.mock.calls.at(-1)?.[0]).toBe(true);
-				expect(mockUpdateDetails.mock.calls.at(-1)?.[0]).toEqual(
+				expect(mockUpdateValue.mock.calls.at(-1)?.[1]).toEqual(
 					expect.objectContaining({
 						countryCode: country,
 						isValid: true,
@@ -276,7 +312,7 @@ describe('TelInput Component', () => {
 
 				expect(mockUpdateValue.mock.calls.at(-1)?.[0]).toBe(replacementE164);
 				expect(mockUpdateValid.mock.calls.at(-1)?.[0]).toBe(true);
-				expect(mockUpdateDetails.mock.calls.at(-1)?.[0]).toEqual(
+				expect(mockUpdateValue.mock.calls.at(-1)?.[1]).toEqual(
 					expect.objectContaining({
 						countryCode: country,
 						isValid: true,
@@ -297,8 +333,8 @@ describe('TelInput Component', () => {
 					props: {
 						value: null,
 						country,
-						onUpdateValue: mockUpdateValue,
-						onUpdateValid: mockUpdateValid
+						onValueChange: mockUpdateValue,
+						onValidityChange: mockUpdateValid
 					}
 				});
 				const input = getByTestId('tel-input') as HTMLInputElement;

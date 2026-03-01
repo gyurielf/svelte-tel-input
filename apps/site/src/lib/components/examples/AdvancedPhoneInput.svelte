@@ -14,6 +14,7 @@
 		clickOutside?: boolean;
 		closeOnClick?: boolean;
 		disabled?: boolean;
+		required?: boolean;
 		detailedValue?: DetailedValue | null;
 		value: string | null;
 		searchPlaceholder?: string | null;
@@ -28,6 +29,7 @@
 		clickOutside = true,
 		closeOnClick = true,
 		disabled = false,
+		required = true,
 		detailedValue = $bindable(null),
 		value = $bindable(),
 		searchPlaceholder = 'Search',
@@ -220,7 +222,7 @@
 		bind:value
 		bind:valid
 		{options}
-		required
+		{required}
 		onLoad={() => {
 			initLoading = false;
 		}}

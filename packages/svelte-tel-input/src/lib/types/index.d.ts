@@ -1,5 +1,6 @@
 import type { CountryCallingCode, CountryCode, MetadataJson, PhoneNumber } from 'libphonenumber-js';
 import type { Countries } from 'libphonenumber-js/types';
+import type { HTMLInputAttributes } from 'svelte/elements';
 
 export interface Country {
 	id: string;
@@ -74,9 +75,14 @@ export interface TelInputOptions {
 	 * @deprecated It became to the default behavior
 	 */
 	invalidateOnCountryChange?: boolean;
+	/**
+	 * Control when validation is applied.
+	 * @default 'input'
+	 */
+	validateOn?: 'input' | 'blur';
 }
 
-export interface Props {
+export interface Props extends HTMLInputAttributes {
 	autocomplete?: AutoFill | null;
 	/** You can set the classes of the input field*/
 	class?: string;
@@ -107,9 +113,11 @@ export interface Props {
 	/** Binding to the underlying `<input>` element */
 	el?: HTMLInputElement | undefined;
 	onCountryChange?: (newCountry: CountryCode | null) => void;
-	onDetailsChange?: (newDetails: Readonly<Partial<DetailedValue> | null>) => void;
 	onValidityChange?: (newValidity: boolean) => void;
-	onValueChange?: (newValue: string | null) => void;
+	onValueChange?: (
+		newValue: string | null,
+		newDetails: Readonly<Partial<DetailedValue> | null>
+	) => void;
 	onError?: (error: string) => void;
 	onLoad?: () => void;
 }

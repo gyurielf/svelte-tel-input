@@ -7,9 +7,10 @@
 	import { slide } from 'svelte/transition';
 	interface Props {
 		options: TelInputOptions;
+		required?: boolean;
 	}
 
-	let { options = $bindable() }: Props = $props();
+	let { options = $bindable(), required = $bindable(false) }: Props = $props();
 	let isOpen = $state(false);
 	const markupId = counter++;
 </script>
@@ -78,7 +79,7 @@
 					}}
 				/>
 				<div
-					class="w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"
+					class="w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"
 				></div>
 				<span class="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">Spaces</span
 				>
@@ -98,10 +99,31 @@
 					}}
 				/>
 				<div
-					class="w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"
+					class="w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"
 				></div>
 				<span class="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300"
 					>Auto Placeholder</span
+				>
+			</label>
+			<label
+				for="required-{markupId}"
+				class="relative inline-flex items-center align-middle cursor-pointer"
+			>
+				<input
+					id="required-{markupId}"
+					type="checkbox"
+					value={required}
+					class="sr-only peer"
+					checked={required}
+					onchange={() => {
+						required = !required;
+					}}
+				/>
+				<div
+					class="w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"
+				></div>
+				<span class="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300"
+					>Required</span
 				>
 			</label>
 			<label
@@ -119,12 +141,31 @@
 					}}
 				/>
 				<div
-					class="w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"
+					class="w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"
 				></div>
 				<span class="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300"
 					>Invalidate on (manual) country change.</span
 				>
 			</label>
+			<div class="inline-flex items-center align-middle gap-3">
+				<label
+					for="validateOn-{markupId}"
+					class="text-sm font-medium text-gray-900 dark:text-gray-300">Validate on</label
+				>
+				<select
+					id="validateOn-{markupId}"
+					class="text-sm bg-gray-50 border border-gray-300 rounded-lg px-2 py-1 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+					value={options.validateOn ?? 'input'}
+					onchange={(e) => {
+						options.validateOn = (e.currentTarget as HTMLSelectElement).value as
+							| 'input'
+							| 'blur';
+					}}
+				>
+					<option value="input">input</option>
+					<option value="blur">blur</option>
+				</select>
+			</div>
 		</div>
 	{/if}
 </div>
