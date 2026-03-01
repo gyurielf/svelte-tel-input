@@ -32,21 +32,21 @@
 		"svelte-check": "svelte-kit sync && svelte-check --ignore 'dist,build,coverage,.svelte-kit,package' --fail-on-warnings --no-tsconfig"
 	},
 	"dependencies": {
-		"svelte": "^5.53.3",
+		"svelte": "^5.53.6",
 		"svelte-tel-input": "workspace:*"
 	},
 	"devDependencies": {
 		"@macfja/svelte-persistent-store": "^2.4.2",
 		"@playwright/test": "^1.58.2",
 		"@sveltejs/adapter-static": "^3.0.10",
-		"@sveltejs/kit": "^2.53.0",
+		"@sveltejs/kit": "^2.53.4",
 		"@sveltejs/vite-plugin-svelte": "^6.2.4",
 		"@tailwindcss/vite": "^4.2.1",
 		"@types/micromatch": "^4.0.10",
 		"dotenv": "^17.3.1",
 		"postcss": "^8.5.6",
 		"schema-dts": "^1.1.5",
-		"svelte-check": "^4.4.3",
+		"svelte-check": "^4.4.4",
 		"svelte2tsx": "^0.7.51",
 		"tailwind-merge": "^3.5.0",
 		"tailwindcss": "^4.2.1",

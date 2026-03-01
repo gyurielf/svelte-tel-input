@@ -42,11 +42,11 @@
 		"svelte": "^5.0.0"
 	},
 	"dependencies": {
-		"libphonenumber-js": "1.12.37"
+		"libphonenumber-js": "1.12.38"
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-auto": "7.0.1",
-		"@sveltejs/kit": "^2.53.0",
+		"@sveltejs/kit": "^2.53.4",
 		"@sveltejs/package": "^2.5.7",
 		"@sveltejs/vite-plugin-svelte": "^6.2.4",
 		"@tailwindcss/vite": "^4.2.1",
@@ -59,8 +59,8 @@
 		"micromatch": "^4.0.8",
 		"postcss": "^8.5.6",
 		"publint": "^0.3.17",
-		"svelte": "^5.53.3",
-		"svelte-check": "^4.4.3",
+		"svelte": "^5.53.6",
+		"svelte-check": "^4.4.4",
 		"svelte2tsx": "^0.7.51",
 		"tailwindcss": "^4.2.1",
 		"tslib": "^2.8.1",
