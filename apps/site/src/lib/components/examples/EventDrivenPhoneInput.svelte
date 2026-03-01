@@ -74,10 +74,10 @@
 		{country}
 		{valid}
 		options={{ ...options, invalidateOnCountryChange: true }}
-		onUpdateValue={handleValueUpdate}
-		onUpdateCountry={handleCountryUpdate}
-		onUpdateValid={handleValidUpdate}
-		onUpdateDetails={handleDetailedValueUpdate}
+		onValueChange={handleValueUpdate}
+		onCountryChange={handleCountryUpdate}
+		onValidityChange={handleValidUpdate}
+		onDetailsChange={handleDetailedValueUpdate}
 		class="px-4 py-1 w-full bg-gray-50 dark:bg-gray-700 
         dark:placeholder-gray-400 dark:text-white text-gray-900 focus:outline-none rounded-r-lg {valid
 			? 'border border-gray-300 border-l-gray-100 dark:border-l-gray-700 dark:border-gray-600'

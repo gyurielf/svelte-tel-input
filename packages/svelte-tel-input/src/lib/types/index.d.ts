@@ -106,12 +106,12 @@ export interface Props {
 	options?: TelInputOptions;
 	/** Binding to the underlying `<input>` element */
 	el?: HTMLInputElement | undefined;
-	onUpdateCountry?: (newCountry: CountryCode | null) => void;
-	onUpdateDetails?: (newDetails: Readonly<Partial<DetailedValue> | null>) => void;
-	onUpdateValid?: (newValidity: boolean) => void;
-	onUpdateValue?: (newValue: string | null) => void;
-	onParseError?: (error: string) => void;
-	onInitialized?: () => void;
+	onCountryChange?: (newCountry: CountryCode | null) => void;
+	onDetailsChange?: (newDetails: Readonly<Partial<DetailedValue> | null>) => void;
+	onValidityChange?: (newValidity: boolean) => void;
+	onValueChange?: (newValue: string | null) => void;
+	onError?: (error: string) => void;
+	onLoad?: () => void;
 }
 
 export type { CountryCallingCode, CountryCode, PhoneNumber, Countries, MetadataJson };

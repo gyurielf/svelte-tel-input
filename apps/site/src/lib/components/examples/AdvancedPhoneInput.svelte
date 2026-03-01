@@ -43,7 +43,7 @@
 	let telInputRef: TelInput | undefined = $state();
 
 	export const updateValue = (val: string | null) => {
-		telInputRef?.api.updateValue(val);
+		telInputRef?.api.setValue(val);
 	};
 
 	// const selectedCountryDialCode = $derived(
@@ -106,7 +106,7 @@
 			(typeof selectedCountry === typeof val && selectedCountry !== val)
 		) {
 			selectedCountry = val;
-			telInputRef?.api.updateCountry(selectedCountry);
+			telInputRef?.api.setCountry(selectedCountry);
 			onSelectChange?.(val);
 			selectClick();
 		} else {
@@ -221,10 +221,10 @@
 		bind:valid
 		{options}
 		required
-		onInitialized={() => {
+		onLoad={() => {
 			initLoading = false;
 		}}
-		onUpdateCountry={(detail) => {
+		onCountryChange={(detail) => {
 			selectedCountry = detail;
 		}}
 		name="phone-input"

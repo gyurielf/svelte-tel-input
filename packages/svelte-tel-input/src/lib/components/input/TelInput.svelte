@@ -22,12 +22,12 @@
 		readonly = null,
 		required = null,
 		size = null,
-		onInitialized,
-		onUpdateCountry,
-		onUpdateDetails,
-		onUpdateValid,
-		onUpdateValue,
-		onParseError,
+		onLoad,
+		onCountryChange,
+		onDetailsChange,
+		onValidityChange,
+		onValueChange,
+		onError,
 		value = $bindable(null),
 		country,
 		detailedValue = $bindable(null),
@@ -39,7 +39,11 @@
 
 	// Avoid SSR/client hydration mismatches: only generate a random id after mount.
 	// Treat empty/whitespace id as "not provided".
-	let generatedId = $state<string | null>(null);
+	let generatedId = $state<string | null>(
+		'phone-input-' +
+			(crypto?.randomUUID?.() ||
+				new Date().getTime().toString(36) + Math.random().toString(36).slice(2))
+	);
 	const id = $derived.by(() => (idProp && idProp.trim() ? idProp : generatedId));
 
 	// Initialize country immediately if value exists
@@ -86,7 +90,7 @@
 		if (countryCode !== country) {
 			country = countryCode;
 			prevCountry = country;
-			onUpdateCountry?.(country);
+			onCountryChange?.(country);
 		}
 		return country;
 	};
@@ -106,9 +110,9 @@
 				value = null;
 				inputValue = null;
 				detailedValue = null;
-				onUpdateValid?.(valid);
-				onUpdateValue?.(value);
-				onUpdateDetails?.(detailedValue);
+				onValidityChange?.(valid);
+				onValueChange?.(value);
+				onDetailsChange?.(detailedValue);
 			}
 			return;
 		}
@@ -119,8 +123,8 @@
 			value = null;
 			detailedValue = null;
 			prevCountry = currCountry;
-			onUpdateValid?.(valid);
-			onUpdateDetails?.(detailedValue);
+			onValidityChange?.(valid);
+			onDetailsChange?.(detailedValue);
 			inputValue = null;
 			return;
 		}
@@ -157,7 +161,7 @@
 		} catch (err) {
 			if (err instanceof ParseError) {
 				detailedValue = { isValid: false, error: err.message };
-				onParseError?.(err.message);
+				onError?.(err.message);
 			} else {
 				throw err;
 			}
@@ -171,9 +175,9 @@
 		// `value` is the stored value (E.164 when possible).
 		value = detailedValue?.e164 ?? rawInput;
 		valid = detailedValue?.isValid ?? false;
-		onUpdateValue?.(value);
-		onUpdateValid?.(valid);
-		onUpdateDetails?.(detailedValue);
+		onValueChange?.(value);
+		onValidityChange?.(valid);
+		onDetailsChange?.(detailedValue);
 	};
 
 	// Generate placeholder based on the autoPlaceholder option
@@ -190,7 +194,7 @@
 		if (value === null && inputValue !== null && detailedValue !== null) {
 			inputValue = null;
 			detailedValue = null;
-			onUpdateDetails?.(detailedValue);
+			onDetailsChange?.(detailedValue);
 		}
 	});
 
@@ -207,10 +211,10 @@
 			handleParsePhoneNumber(value, currentCountry);
 		}
 		// isInitialized = true;
-		onInitialized?.();
+		onLoad?.();
 	});
 
-	const updateValue = (newValue: string | null, newCountry?: CountryCode | null) => {
+	const setValue = (newValue: string | null, newCountry?: CountryCode | null) => {
 		const castedValue = newValue;
 		if (castedValue) {
 			const { country: numberHasCountry, fullDialCodeMatch } = guessCountryByPartialNumber({
@@ -225,15 +229,15 @@
 		}
 	};
 
-	const updateCountry = (newCountry: CountryCode | null) => {
+	const setCountry = (newCountry: CountryCode | null) => {
 		countryUpdater(newCountry);
 		handleParsePhoneNumber(null, newCountry);
 		el?.focus();
 	};
 
 	export const api = {
-		updateValue,
-		updateCountry
+		setValue,
+		setCountry
 	};
 </script>
 
