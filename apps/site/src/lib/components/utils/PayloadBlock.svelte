@@ -84,7 +84,7 @@
 					>
 				</div>
 			</div>
-			<div class="grid grid-cols-2 break-words gap-x-2 md:gap-x-0">
+			<div class="grid grid-cols-2 wrap-break-word gap-x-2 md:gap-x-0">
 				<div>
 					<h3 class="text-lg font-bold">Key</h3>
 					<div>value</div>
@@ -110,7 +110,7 @@
 					>
 				</div>
 			</div>
-			<div class="grid grid-cols-2 break-words gap-x-2 md:gap-x-0">
+			<div class="grid grid-cols-2 wrap-break-word gap-x-2 md:gap-x-0">
 				<div>
 					<h3 class="text-lg font-bold">Key</h3>
 					{#each exampleDataEntries as [key], i (`${i}-${key}`)}
@@ -147,7 +147,7 @@
 					>
 				</div>
 			</div>
-			<div class="grid grid-cols-2 break-words gap-x-2 md:gap-x-0">
+			<div class="grid grid-cols-2 wrap-break-word gap-x-2 md:gap-x-0">
 				<div>
 					<h3 class="text-lg font-bold">Key</h3>
 					<div>valid</div>
@@ -173,7 +173,7 @@
 					>
 				</div>
 			</div>
-			<div class="grid grid-cols-2 break-words gap-x-2 md:gap-x-0">
+			<div class="grid grid-cols-2 wrap-break-word gap-x-2 md:gap-x-0">
 				<div>
 					<h3 class="text-lg font-bold">Key</h3>
 					<div>country</div>

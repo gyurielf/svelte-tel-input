@@ -9,8 +9,7 @@
 	const defaultOptions = {
 		autoPlaceholder: true,
 		spaces: true,
-		invalidateOnCountryChange: false,
-		validateOn: 'input'
+		validateOn: 'always'
 	} satisfies TelInputOptions;
 
 	let {
@@ -82,23 +81,25 @@
 
 	const handleInputAction = (value: string) => {
 		if (disabled || readonly) return;
-		handleParsePhoneNumber(value, country, combinedOptions.validateOn === 'input');
+		handleParsePhoneNumber(value, country, combinedOptions.validateOn !== 'blur');
 	};
+
+	const getEmptyValidity = () => !required;
 
 	const handleBlur = (
 		e: FocusEvent & {
 			currentTarget: EventTarget & HTMLInputElement;
 		}
 	) => {
-		if (disabled || readonly || combinedOptions.validateOn !== 'blur') return;
-		if (inputValue === null || inputValue === '') {
-			valid = true;
-			onValidityChange?.(valid);
-			return;
+		if (!disabled && !readonly && combinedOptions.validateOn !== 'input') {
+			if (inputValue === null || inputValue === '') {
+				valid = getEmptyValidity();
+				onValidityChange?.(valid);
+			} else {
+				valid = detailedValue?.isValid ?? false;
+				onValidityChange?.(valid);
+			}
 		}
-
-		valid = detailedValue?.isValid ?? false;
-		onValidityChange?.(valid);
 		const { onblur } = rest;
 		onblur?.(e);
 	};
@@ -107,7 +108,6 @@
 	const countryUpdater = (countryCode: CountryCode | null) => {
 		if (countryCode !== country) {
 			country = countryCode;
-			prevCountry = country;
 			onCountryChange?.(country);
 		}
 		return country;
@@ -125,7 +125,7 @@
 		if (rawInput === null && currCountry !== null) {
 			if (currCountry !== prevCountry) {
 				prevCountry = currCountry;
-				valid = !options.invalidateOnCountryChange;
+				valid = getEmptyValidity();
 				value = null;
 				inputValue = null;
 				detailedValue = null;
@@ -137,12 +137,28 @@
 
 		// Full reset.
 		if (rawInput === null) {
-			valid = true;
+			if (shouldValidate) {
+				valid = getEmptyValidity();
+				onValidityChange?.(valid);
+			}
 			value = null;
 			detailedValue = null;
 			prevCountry = currCountry;
-			onValidityChange?.(valid);
 			inputValue = null;
+			return;
+		}
+
+		// Treat input with no digits and no '+' as empty (e.g. "", whitespace-only, letters-only)
+		const isEffectivelyEmpty = !/[0-9+]/.test(rawInput);
+		if (isEffectivelyEmpty) {
+			if (shouldValidate) {
+				valid = getEmptyValidity();
+				onValidityChange?.(valid);
+			}
+			value = null;
+			detailedValue = null;
+			inputValue = '';
+			onValueChange?.(value, detailedValue);
 			return;
 		}
 
@@ -157,7 +173,7 @@
 				})
 			: { country: undefined, fullDialCodeMatch: false };
 
-		// Match intl-tel-input behavior: only switch country when we have a FULL dial-code match.
+		// Only switch country when we have a FULL dial-code match.
 		// This prevents switching on partial prefixes like "+3" while backspacing.
 		if (
 			startsWithPlus &&
@@ -253,13 +269,26 @@
 		el?.focus();
 	};
 
+	const checkValidity = () => {
+		if (inputValue === null || inputValue === '') {
+			valid = getEmptyValidity();
+			onValidityChange?.(valid);
+			return valid;
+		}
+
+		handleParsePhoneNumber(inputValue, country, true);
+		return valid;
+	};
+
 	export const api = {
 		setValue,
-		setCountry
+		setCountry,
+		checkValidity
 	};
 </script>
 
 <input
+	data-testid="tel-input"
 	{...rest}
 	bind:this={el}
 	{autocomplete}
@@ -272,7 +301,6 @@
 	{size}
 	placeholder={getPlaceholder}
 	type="tel"
-	data-testid="tel-input"
 	value={inputValue}
 	onblur={handleBlur}
 	use:telInputAction={{

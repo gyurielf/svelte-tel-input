@@ -70,16 +70,16 @@ export interface TelInputOptions {
 	 */
 	spaces?: boolean;
 	/**
-	 * Set validation to false if you change the country property.
-	 * @default false
-	 * @deprecated It became to the default behavior
+	 * @deprecated This option is no longer used. Country-change validity is now
+	 * determined by the `required` prop: empty input after a country change is
+	 * invalid when `required` is set, valid otherwise.
 	 */
 	invalidateOnCountryChange?: boolean;
 	/**
-	 * Control when validation is applied.
-	 * @default 'input'
+	 * Control when validation is triggered.
+	 * @default 'always'
 	 */
-	validateOn?: 'input' | 'blur';
+	validateOn?: 'input' | 'blur' | 'always';
 }
 
 export interface Props extends HTMLInputAttributes {

@@ -50,7 +50,7 @@ const capToMaxValidLength = (input: string, defaultCountryIso2?: string): string
 	return capped;
 };
 
-const formatNanpInternationalLikeIntlTelInput = (e164ish: string): string => {
+const formatNanp = (e164ish: string): string => {
 	// Input like +1XXXXXXXXXX (possibly incomplete). Output like +1 AAA-BBB-CCCC
 	if (!e164ish.startsWith('+1')) return e164ish;
 	const digits = e164ish.replace(/[^0-9]/g, '');
@@ -80,7 +80,7 @@ export const newNormalizer = (input: string, country: Country | undefined): Deta
 	});
 	asYouType.input(capped);
 	const phone = asYouType.getNumber();
-	const countryCallingCode = asYouType.getCallingCode() || null;
+	const countryCallingCode = asYouType.getCallingCode() || phone?.countryCallingCode || null;
 	const countryCode = asYouType.getCountry() || country?.iso2 || null;
 	const formatInternational = phone?.formatInternational() || null;
 	const formatNational = phone?.formatNational() || null;
@@ -88,13 +88,23 @@ export const newNormalizer = (input: string, country: Country | undefined): Deta
 	if (capped) {
 		if (capped.startsWith('+')) {
 			formattedNumber = formatIncompletePhoneNumber(capped) || capped;
-			// Match intl-tel-input's NANP-ish formatting for +1...
+			// NANP-ish formatting for +1...
 			if (countryCallingCode === '1' && (countryCode === 'US' || countryCode === 'CA')) {
-				formattedNumber = formatNanpInternationalLikeIntlTelInput(capped);
+				formattedNumber = formatNanp(capped);
 			}
 		} else if (defaultCountryIso2) {
-			formattedNumber =
-				formatIncompletePhoneNumber(capped, defaultCountryIso2 as CountryCode) || capped;
+			const formatted = formatIncompletePhoneNumber(
+				capped,
+				defaultCountryIso2 as CountryCode
+			);
+			// If libphonenumber couldn't apply any formatting (e.g. national number without trunk
+			// prefix like "13171377" for HU which expects "06..."), fall back to the national part
+			// of the international format when the number is fully valid.
+			if (formatted === capped && formatInternational && countryCallingCode) {
+				formattedNumber = formatInternational.slice(countryCallingCode.length + 1).trim();
+			} else {
+				formattedNumber = formatted || capped;
+			}
 		} else {
 			formattedNumber = capped;
 		}

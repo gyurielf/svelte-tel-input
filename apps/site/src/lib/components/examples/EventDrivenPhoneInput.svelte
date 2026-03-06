@@ -71,7 +71,7 @@
 		{value}
 		{country}
 		{valid}
-		options={{ ...options, invalidateOnCountryChange: true }}
+		{options}
 		onValueChange={handleValueUpdate}
 		onCountryChange={handleCountryUpdate}
 		onValidityChange={handleValidUpdate}

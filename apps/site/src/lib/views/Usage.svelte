@@ -23,7 +23,6 @@
 	let advancedExampleOptions = $state({
 		autoPlaceholder: true,
 		spaces: true,
-		invalidateOnCountryChange: true,
 		validateOn: 'input'
 	} satisfies TelInputOptions);
 	let advancedExampleRequired = $state(true);

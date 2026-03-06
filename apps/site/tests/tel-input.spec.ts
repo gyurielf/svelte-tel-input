@@ -6,6 +6,14 @@ async function clearTelInput(input: ReturnType<import('@playwright/test').Page['
 	await input.press('Backspace');
 }
 
+async function toggleRequiredCheckbox(page: import('@playwright/test').Page) {
+	await page.evaluate(() => {
+		const el = document.querySelector('input[id^="required-"]') as HTMLInputElement | null;
+		if (!el) throw new Error('Required checkbox not found');
+		el.click();
+	});
+}
+
 async function openOptionsPanel(page: import('@playwright/test').Page) {
 	const optionsButton = page.getByRole('button', { name: 'Options' });
 	await optionsButton.click();
@@ -196,9 +204,7 @@ test.describe('TelInput (demo)', () => {
 		await expect(input).toHaveValue('+12154567890');
 	});
 
-	test('invalidateOnCountryChange shows invalid styling on manual country change', async ({
-		page
-	}) => {
+	test('country change shows invalid styling when required is set', async ({ page }) => {
 		const input = page.getByTestId('tel-input');
 		await clearTelInput(input);
 		await input.pressSequentially('+12154567890', { delay: 30 });
@@ -207,7 +213,8 @@ test.describe('TelInput (demo)', () => {
 		const countryButton = page.locator('#states-button');
 		await expect(countryButton).toBeEnabled();
 
-		// Manual country change (demo default sets invalidateOnCountryChange=true).
+		// Manual country change clears input; demo default has required=true,
+		// so the empty input should be invalid.
 		await countryButton.click();
 		await page.locator('#dropdown-countries button[value="US"]').click();
 		await countryButton.click();
@@ -222,4 +229,228 @@ test.describe('TelInput (demo)', () => {
 			.first();
 		await expect(wrapper).toHaveClass(/ring-pink-500/);
 	});
+});
+
+test.describe('Validation behavior', () => {
+	test.beforeEach(async ({ page }) => {
+		await page.goto('/');
+		await expect(page.locator('#states-button')).toBeEnabled();
+		await expect(page.getByTestId('tel-input')).toBeVisible();
+	});
+
+	test('empty input is valid when required is off', async ({ page }) => {
+		const input = page.getByTestId('tel-input');
+		const countryButton = page.locator('#states-button');
+		const wrapper = countryButton
+			.locator('xpath=ancestor::div[contains(@class,"rounded-lg")]')
+			.first();
+
+		// Open options and disable required
+		await openOptionsPanel(page);
+		const requiredCheckbox = page.locator('input[id^="required-"]');
+		if (await requiredCheckbox.isChecked()) {
+			await toggleRequiredCheckbox(page);
+			await expect(requiredCheckbox).not.toBeChecked();
+		}
+
+		// Clear input, verify it's empty, then blur
+		await clearTelInput(input);
+		await expect(input).toHaveValue('');
+		await input.press('Tab');
+
+		// Should NOT show invalid styling
+		await expect(wrapper).not.toHaveClass(/ring-pink-500/);
+	});
+
+	test('empty input is invalid when required is on', async ({ page }) => {
+		const input = page.getByTestId('tel-input');
+		const countryButton = page.locator('#states-button');
+		const wrapper = countryButton
+			.locator('xpath=ancestor::div[contains(@class,"rounded-lg")]')
+			.first();
+
+		// Ensure required is ON
+		await openOptionsPanel(page);
+		const requiredCheckbox = page.locator('input[id^="required-"]');
+		if (!(await requiredCheckbox.isChecked())) {
+			await toggleRequiredCheckbox(page);
+			await expect(requiredCheckbox).toBeChecked();
+		}
+
+		// Clear input and blur
+		await clearTelInput(input);
+		await expect(input).toHaveValue('');
+		await input.press('Tab');
+
+		// Should show invalid styling
+		await expect(wrapper).toHaveClass(/ring-pink-500/);
+	});
+
+	test('partial number is invalid regardless of required setting', async ({ page }) => {
+		const input = page.getByTestId('tel-input');
+		const countryButton = page.locator('#states-button');
+		const wrapper = countryButton
+			.locator('xpath=ancestor::div[contains(@class,"rounded-lg")]')
+			.first();
+
+		// Disable required
+		await openOptionsPanel(page);
+		const requiredCheckbox = page.locator('input[id^="required-"]');
+		if (await requiredCheckbox.isChecked()) {
+			await toggleRequiredCheckbox(page);
+			await expect(requiredCheckbox).not.toBeChecked();
+		}
+
+		// Type partial number
+		await clearTelInput(input);
+		await input.pressSequentially('215', { delay: 50 });
+		await input.press('Tab');
+
+		// Should show invalid styling because partial numbers are always invalid
+		await expect(wrapper).toHaveClass(/ring-pink-500/);
+	});
+
+	test('validateOn=always validates during typing and on blur', async ({ page }) => {
+		const input = page.getByTestId('tel-input');
+		const countryButton = page.locator('#states-button');
+		const wrapper = countryButton
+			.locator('xpath=ancestor::div[contains(@class,"rounded-lg")]')
+			.first();
+
+		// Open options and set validateOn to always
+		await openOptionsPanel(page);
+		const validateOnSelect = page.locator('select[id^="validateOn-"]');
+		await validateOnSelect.selectOption('always');
+
+		// Ensure required is OFF
+		const requiredCheckbox = page.locator('input[id^="required-"]');
+		if (await requiredCheckbox.isChecked()) {
+			await toggleRequiredCheckbox(page);
+		}
+
+		// Wait for potential {#key} re-mount to settle
+		await expect(page.locator('#states-button')).toBeEnabled();
+		await expect(page.getByTestId('tel-input')).toBeVisible();
+
+		// Select a country to start with
+		await countryButton.click();
+		await page.locator('#dropdown-countries button[value="US"]').click();
+
+		// Type a partial number — should show invalid during typing
+		await clearTelInput(input);
+		await input.pressSequentially('215', { delay: 50 });
+		await expect(wrapper).toHaveClass(/ring-pink-500/);
+
+		// Complete the number — should become valid
+		await input.pressSequentially('4567890', { delay: 50 });
+		await expect(wrapper).not.toHaveClass(/ring-pink-500/);
+
+		// Clear and verify empty is valid (required is off)
+		await clearTelInput(input);
+		await expect(input).toHaveValue('');
+		await expect(wrapper).not.toHaveClass(/ring-pink-500/);
+	});
+
+	test('validateOn=blur does not show invalid while typing, only after blur', async ({
+		page
+	}) => {
+		const input = page.getByTestId('tel-input');
+		const countryButton = page.locator('#states-button');
+		const wrapper = countryButton
+			.locator('xpath=ancestor::div[contains(@class,"rounded-lg")]')
+			.first();
+
+		// Open options and set validateOn to blur
+		await openOptionsPanel(page);
+		const validateOnSelect = page.locator('select[id^="validateOn-"]');
+		await validateOnSelect.selectOption('blur');
+
+		// Ensure required is OFF
+		const requiredCheckbox = page.locator('input[id^="required-"]');
+		if (await requiredCheckbox.isChecked()) {
+			await toggleRequiredCheckbox(page);
+		}
+
+		// Wait for potential {#key} re-mount to settle
+		await expect(page.locator('#states-button')).toBeEnabled();
+		await expect(page.getByTestId('tel-input')).toBeVisible();
+
+		// Select a country to start with
+		await countryButton.click();
+		await page.locator('#dropdown-countries button[value="US"]').click();
+
+		// Clear existing value first
+		await clearTelInput(input);
+		await expect(input).toHaveValue('');
+		// Blur to clear any prior validation state, then refocus
+		await input.press('Tab');
+		await input.click();
+
+		// Type a partial number — should NOT show invalid during typing
+		await input.pressSequentially('215', { delay: 50 });
+		await expect(wrapper).not.toHaveClass(/ring-pink-500/);
+
+		// Blur — NOW should show invalid
+		await input.press('Tab');
+		await expect(wrapper).toHaveClass(/ring-pink-500/);
+	});
+});
+
+const inputFormatsMatrix = [
+	{
+		country: 'HU',
+		variants: [
+			{ typed: '+3613171377', displayedAs: '+36 1 317 1377', e164: '+3613171377' },
+			{ typed: '3613171377', displayedAs: '36 1 317 1377', e164: '+3613171377' },
+			{ typed: '0613171377', displayedAs: '(06 1) 317 1377', e164: '+3613171377' },
+			{ typed: '13171377', displayedAs: '1 317 1377', e164: '+3613171377' }
+		]
+	},
+	{
+		country: 'US',
+		variants: [
+			{ typed: '+12154567890', displayedAs: '+1 215-456-7890', e164: '+12154567890' },
+			{ typed: '12154567890', displayedAs: '1 (215) 456-7890', e164: '+12154567890' },
+			{ typed: '2154567890', displayedAs: '(215) 456-7890', e164: '+12154567890' }
+		]
+	},
+	{
+		country: 'GB',
+		variants: [
+			{ typed: '+447947123456', displayedAs: '+44 7947 123456', e164: '+447947123456' },
+			{ typed: '07947123456', displayedAs: '7947 123456', e164: '+447947123456' },
+			{ typed: '7947123456', displayedAs: '7947 123456', e164: '+447947123456' }
+		]
+	}
+] as const;
+
+test.describe('Input Format Variants', () => {
+	test.beforeEach(async ({ page }) => {
+		await page.goto('/');
+		await expect(page.locator('#states-button')).toBeEnabled();
+		await expect(page.getByTestId('tel-input')).toBeVisible();
+	});
+
+	for (const { country, variants } of inputFormatsMatrix) {
+		for (const { typed, displayedAs, e164 } of variants) {
+			test(`country=${country} typed="${typed}" → display="${displayedAs}" e164=${e164}`, async ({
+				page
+			}) => {
+				const countryButton = page.locator('#states-button');
+				await countryButton.click();
+				await page.locator(`#dropdown-countries button[value="${country}"]`).click();
+
+				const input = page.getByTestId('tel-input');
+				await clearTelInput(input);
+				await input.pressSequentially(typed, { delay: 50 });
+
+				await expect(input).toHaveValue(displayedAs);
+
+				// Verify the stored e164 value appears in the payload block
+				await expect(
+					page.locator('div.validation-table.mt-5:not(.rounded-t)')
+				).toContainText(e164);
+			});
+		}
+	}
 });
