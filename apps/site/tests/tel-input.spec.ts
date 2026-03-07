@@ -204,6 +204,68 @@ test.describe('TelInput (demo)', () => {
 		await expect(input).toHaveValue('+12154567890');
 	});
 
+	test('toggling spaces off reformats existing value without spaces', async ({ page }) => {
+		// Ensure spaces is ON first
+		await openOptionsPanel(page);
+		const spacesToggle = page.getByRole('checkbox', { name: 'Spaces' });
+		if (!(await spacesToggle.isChecked())) {
+			await page.evaluate(() => {
+				const el = document.querySelector(
+					'input[id^="spaces-"]'
+				) as HTMLInputElement | null;
+				if (!el) throw new Error('Spaces checkbox not found');
+				el.click();
+			});
+			await expect(spacesToggle).toBeChecked();
+		}
+
+		// Type a number with spaces enabled — should be formatted
+		const input = page.getByTestId('tel-input');
+		await clearTelInput(input);
+		await input.pressSequentially('+12154567890', { delay: 30 });
+		await expect(input).toHaveValue('+1 215-456-7890');
+
+		// Now toggle spaces OFF — existing value should reformat immediately
+		await page.evaluate(() => {
+			const el = document.querySelector('input[id^="spaces-"]') as HTMLInputElement | null;
+			if (!el) throw new Error('Spaces checkbox not found');
+			el.click();
+		});
+		await expect(spacesToggle).not.toBeChecked();
+		await expect(input).toHaveValue('+12154567890');
+	});
+
+	test('toggling spaces on reformats existing value with spaces', async ({ page }) => {
+		// Ensure spaces is OFF first
+		await openOptionsPanel(page);
+		const spacesToggle = page.getByRole('checkbox', { name: 'Spaces' });
+		if (await spacesToggle.isChecked()) {
+			await page.evaluate(() => {
+				const el = document.querySelector(
+					'input[id^="spaces-"]'
+				) as HTMLInputElement | null;
+				if (!el) throw new Error('Spaces checkbox not found');
+				el.click();
+			});
+			await expect(spacesToggle).not.toBeChecked();
+		}
+
+		// Type a number with spaces disabled — should be unformatted
+		const input = page.getByTestId('tel-input');
+		await clearTelInput(input);
+		await input.pressSequentially('+12154567890', { delay: 30 });
+		await expect(input).toHaveValue('+12154567890');
+
+		// Now toggle spaces ON — existing value should reformat immediately
+		await page.evaluate(() => {
+			const el = document.querySelector('input[id^="spaces-"]') as HTMLInputElement | null;
+			if (!el) throw new Error('Spaces checkbox not found');
+			el.click();
+		});
+		await expect(spacesToggle).toBeChecked();
+		await expect(input).toHaveValue('+1 215-456-7890');
+	});
+
 	test('country change shows invalid styling when required is set', async ({ page }) => {
 		const input = page.getByTestId('tel-input');
 		await clearTelInput(input);

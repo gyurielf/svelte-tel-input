@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
+	import { onMount, untrack } from 'svelte';
 	import { ParseError } from 'libphonenumber-js/max';
 	import { generatePlaceholder, telInputAction } from '$lib/utils/index.js';
 	import type { CountryCode, TelInputOptions, Props } from '$lib/types';
@@ -36,13 +36,9 @@
 		...rest
 	}: Props = $props();
 
-	// Avoid SSR/client hydration mismatches: only generate a random id after mount.
-	// Treat empty/whitespace id as "not provided".
-	let generatedId = $state<string | null>(
-		'phone-input-' +
-			(crypto?.randomUUID?.() ||
-				new Date().getTime().toString(36) + Math.random().toString(36).slice(2))
-	);
+	// Fix: initialize to null so server and client start with an identical render.
+	// The ID is generated only in onMount (client-only), avoiding UUID hydration mismatches.
+	let generatedId = $state<string | null>(null);
 	const id = $derived.by(() => (idProp && idProp.trim() ? idProp : generatedId));
 
 	// Initialize country immediately if value exists
@@ -58,14 +54,43 @@
 		return null;
 	});
 
-	// Use the derived initial country
+	// Apply the detected country to the mutable prop (client-only, via $effect).
 	$effect(() => {
 		if (country === undefined && initialCountry !== null) {
 			country = initialCountry;
 		}
 	});
 
-	let inputValue = $state(value);
+	/**
+	 * Compute the initial formatted display value synchronously.
+	 * Runs on both server and client at initialization time, so SSR renders the
+	 * formatted number and the client's first render matches — no hydration mismatch.
+	 */
+	const computeInitialDisplayValue = (): string | null => {
+		if (!value) return value;
+		let effectiveCountryIso2: CountryCode | null = null;
+		if (country !== undefined && country !== null) {
+			effectiveCountryIso2 = country;
+		} else if (country === undefined) {
+			const { country: detected, fullDialCodeMatch } = guessCountryByPartialNumber({
+				partialE164Number: value,
+				currentCountryIso2: null
+			});
+			if (fullDialCodeMatch) effectiveCountryIso2 = detected?.iso2 ?? null;
+		}
+		const countryObj = effectiveCountryIso2
+			? getCountry({ field: 'iso2', value: effectiveCountryIso2 })
+			: undefined;
+		try {
+			const details = newNormalizer(value, countryObj);
+			const spaces = options?.spaces ?? defaultOptions.spaces;
+			return spaces ? (details.formattedNumber ?? value) : value;
+		} catch {
+			return value;
+		}
+	};
+
+	let inputValue = $state(computeInitialDisplayValue());
 	let prevCountry = $state<CountryCode | null | undefined>(undefined);
 	$effect(() => {
 		// Initialize once (we don't want to mirror country forever; we want "previous")
@@ -215,10 +240,12 @@
 		}
 	};
 
-	// Generate placeholder based on the autoPlaceholder option
+	// Generate placeholder based on the autoPlaceholder option.
+	// Uses initialCountry (a $derived) so SSR renders the correct placeholder even
+	// when country is auto-detected from the value prop rather than explicitly provided.
 	const getPlaceholder = $derived(
-		combinedOptions.autoPlaceholder && country
-			? generatePlaceholder(country, {
+		combinedOptions.autoPlaceholder && initialCountry
+			? generatePlaceholder(initialCountry, {
 					spaces: combinedOptions.spaces
 				})
 			: placeholder
@@ -232,8 +259,22 @@
 		}
 	});
 
+	// Re-format displayed value when spaces option changes
+	$effect(() => {
+		const spaces = combinedOptions.spaces;
+		untrack(() => {
+			if (inputValue !== null && detailedValue) {
+				inputValue = spaces
+					? (detailedValue.formattedNumber ?? inputValue)
+					: (detailedValue.e164 ?? inputValue);
+			}
+		});
+	});
+
 	onMount(() => {
-		if (!idProp?.trim() && generatedId === null) {
+		// generatedId is null on the server; assign here so both server and client
+		// agree on the initial render (null → no id attr), then the DOM gets the id after mount.
+		if (!idProp?.trim()) {
 			generatedId =
 				'phone-input-' +
 				(crypto?.randomUUID?.() ||

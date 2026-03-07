@@ -121,7 +121,8 @@ export default [
 			'**/dist/',
 			'scripts/',
 			'**/scripts/',
-			'**/reash/'
+			'**/reash/',
+			'**/.astro'
 		]
 	},
 	{

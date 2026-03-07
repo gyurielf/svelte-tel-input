@@ -690,6 +690,54 @@ describe('TelInput Component', () => {
 			await fireUserEvent.type(input, '+12154567890');
 			expect(input.value).toBe('+12154567890');
 		});
+
+		it('should reformat existing value when spaces is toggled off', async () => {
+			const { container, rerender } = render(TelInput, {
+				props: {
+					options: { spaces: true },
+					value: '+12154567890',
+					country: 'US'
+				}
+			});
+			const input = container.querySelector('input') as HTMLInputElement;
+
+			expect(input.value).toBe('+1 215-456-7890');
+
+			await rerender({ options: { spaces: false } });
+			expect(input.value).toBe('+12154567890');
+		});
+
+		it('should reformat existing value when spaces is toggled on', async () => {
+			const { container, rerender } = render(TelInput, {
+				props: {
+					options: { spaces: false },
+					value: '+12154567890',
+					country: 'US'
+				}
+			});
+			const input = container.querySelector('input') as HTMLInputElement;
+
+			expect(input.value).toBe('+12154567890');
+
+			await rerender({ options: { spaces: true } });
+			expect(input.value).toBe('+1 215-456-7890');
+		});
+
+		it('should reformat HU number when spaces toggled off', async () => {
+			const { container, rerender } = render(TelInput, {
+				props: {
+					options: { spaces: true },
+					value: '+36301234567',
+					country: 'HU'
+				}
+			});
+			const input = container.querySelector('input') as HTMLInputElement;
+
+			expect(input.value).toContain(' ');
+
+			await rerender({ options: { spaces: false } });
+			expect(input.value).toBe('+36301234567');
+		});
 	});
 
 	describe('Selection and Cursor Behavior', () => {
