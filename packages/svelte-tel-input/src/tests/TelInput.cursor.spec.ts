@@ -8,7 +8,7 @@ describe('TelInput - Cursor Positioning Integration Tests', () => {
 
 	describe('Typing and Insertion', () => {
 		it('should maintain cursor position when typing digits', async () => {
-			const { getByTestId } = render(TelInput, { props: { value: null, country: 'US' } });
+			const { getByTestId } = render(TelInput, { props: { value: '', country: 'US' } });
 			const input = getByTestId('tel-input') as HTMLInputElement;
 
 			await user.type(input, '2');
@@ -26,7 +26,7 @@ describe('TelInput - Cursor Positioning Integration Tests', () => {
 
 		it('should skip spaces when they are auto-inserted', async () => {
 			const { getByTestId } = render(TelInput, {
-				props: { value: null, country: 'US', options: { spaces: true } }
+				props: { value: '', country: 'US', options: { spaces: true } }
 			});
 			const input = getByTestId('tel-input') as HTMLInputElement;
 
@@ -36,7 +36,7 @@ describe('TelInput - Cursor Positioning Integration Tests', () => {
 		});
 
 		it('should handle typing full phone number', async () => {
-			const { getByTestId } = render(TelInput, { props: { value: null, country: 'US' } });
+			const { getByTestId } = render(TelInput, { props: { value: '', country: 'US' } });
 			const input = getByTestId('tel-input') as HTMLInputElement;
 
 			await user.type(input, '2154567890');
@@ -208,7 +208,7 @@ describe('TelInput - Cursor Positioning Integration Tests', () => {
 
 	describe('Paste Operations', () => {
 		it('should handle paste with formatted number', async () => {
-			const { getByTestId } = render(TelInput, { props: { value: null, country: 'US' } });
+			const { getByTestId } = render(TelInput, { props: { value: '', country: 'US' } });
 			const input = getByTestId('tel-input') as HTMLInputElement;
 
 			await user.click(input);
@@ -237,7 +237,7 @@ describe('TelInput - Cursor Positioning Integration Tests', () => {
 
 	describe('Edge Cases', () => {
 		it('should handle rapid typing', async () => {
-			const { getByTestId } = render(TelInput, { props: { value: null, country: 'US' } });
+			const { getByTestId } = render(TelInput, { props: { value: '', country: 'US' } });
 			const input = getByTestId('tel-input') as HTMLInputElement;
 
 			// Type digits
@@ -295,7 +295,7 @@ describe('TelInput - Cursor Positioning Integration Tests', () => {
 
 	describe('Cross-browser Compatibility', () => {
 		it('should handle IME input (composition)', async () => {
-			const { getByTestId } = render(TelInput, { props: { value: null, country: 'US' } });
+			const { getByTestId } = render(TelInput, { props: { value: '', country: 'US' } });
 			const input = getByTestId('tel-input') as HTMLInputElement;
 
 			// Simulate composition events (e.g., for Asian languages)
@@ -312,7 +312,7 @@ describe('TelInput - Cursor Positioning Integration Tests', () => {
 		});
 
 		it('should handle touch input', async () => {
-			const { getByTestId } = render(TelInput, { props: { value: null, country: 'US' } });
+			const { getByTestId } = render(TelInput, { props: { value: '', country: 'US' } });
 			const input = getByTestId('tel-input') as HTMLInputElement;
 
 			// Simulate touch-like typing (with focus/blur)

@@ -1054,4 +1054,136 @@ describe('TelInput Component', () => {
 			}
 		);
 	});
+
+	describe('Prop type validation', () => {
+		const badPropMsg = (prop: string) => new RegExp(`<TelInput> invalid prop "${prop}"`);
+
+		it('should throw when value is an object', () => {
+			expect(() =>
+				render(TelInput, { props: { value: {} as unknown as string, country: 'US' } })
+			).toThrow(badPropMsg('value'));
+		});
+
+		it('should throw when value is an array', () => {
+			expect(() =>
+				render(TelInput, { props: { value: [] as unknown as string, country: 'US' } })
+			).toThrow(badPropMsg('value'));
+		});
+
+		it('should throw when value is a number', () => {
+			expect(() =>
+				render(TelInput, { props: { value: 123 as unknown as string, country: 'US' } })
+			).toThrow(badPropMsg('value'));
+		});
+
+		it('should throw when country is an object', () => {
+			expect(() =>
+				render(TelInput, { props: { value: '', country: {} as unknown as null } })
+			).toThrow(badPropMsg('country'));
+		});
+
+		it('should throw when name is an object', () => {
+			expect(() =>
+				render(TelInput, {
+					props: { value: '', country: 'US', name: {} as unknown as string }
+				})
+			).toThrow(badPropMsg('name'));
+		});
+
+		it('should throw when placeholder is an array', () => {
+			expect(() =>
+				render(TelInput, {
+					props: { value: '', country: 'US', placeholder: [] as unknown as string }
+				})
+			).toThrow(badPropMsg('placeholder'));
+		});
+
+		it('should throw when disabled is a string', () => {
+			expect(() =>
+				render(TelInput, {
+					props: { value: '', country: 'US', disabled: 'yes' as unknown as boolean }
+				})
+			).toThrow(badPropMsg('disabled'));
+		});
+
+		it('should throw when readonly is a number', () => {
+			expect(() =>
+				render(TelInput, {
+					props: { value: '', country: 'US', readonly: 1 as unknown as boolean }
+				})
+			).toThrow(badPropMsg('readonly'));
+		});
+
+		it('should throw when required is a string', () => {
+			expect(() =>
+				render(TelInput, {
+					props: { value: '', country: 'US', required: 'true' as unknown as boolean }
+				})
+			).toThrow(badPropMsg('required'));
+		});
+
+		it('should throw when size is a string', () => {
+			expect(() =>
+				render(TelInput, {
+					props: { value: '', country: 'US', size: '10' as unknown as number }
+				})
+			).toThrow(badPropMsg('size'));
+		});
+
+		it('should throw when options is an array', () => {
+			expect(() =>
+				// eslint-disable-next-line @typescript-eslint/no-explicit-any
+				render(TelInput, { props: { value: '', country: 'US', options: [] as any } })
+			).toThrow(badPropMsg('options'));
+		});
+
+		it('should throw when options is a string', () => {
+			expect(() =>
+				// eslint-disable-next-line @typescript-eslint/no-explicit-any
+				render(TelInput, { props: { value: '', country: 'US', options: 'blur' as any } })
+			).toThrow(badPropMsg('options'));
+		});
+
+		it('should include the received type in the error message', () => {
+			expect(() =>
+				render(TelInput, { props: { value: 42 as unknown as string, country: 'US' } })
+			).toThrow(/received number/);
+		});
+
+		it('should include object key hints in the error message when an object is passed', () => {
+			expect(() =>
+				render(TelInput, {
+					props: { value: { foo: 1, bar: 2 } as unknown as string, country: 'US' }
+				})
+			).toThrow(/object \{ foo, bar \}/);
+		});
+
+		it('should not throw for valid props', () => {
+			expect(() =>
+				render(TelInput, {
+					props: {
+						value: '',
+						country: 'US',
+						name: 'phone',
+						disabled: false,
+						required: true
+					}
+				})
+			).not.toThrow();
+		});
+
+		it('should not throw when optional props are null or undefined', () => {
+			expect(() =>
+				render(TelInput, {
+					props: {
+						value: '',
+						country: null,
+						name: null,
+						placeholder: null,
+						required: null
+					}
+				})
+			).not.toThrow();
+		});
+	});
 });

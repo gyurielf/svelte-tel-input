@@ -36,6 +36,43 @@
 		...rest
 	}: Props = $props();
 
+	untrack(() => {
+		const badProp = (prop: string, expected: string, got: unknown): never => {
+			const gotDesc =
+				got !== null && typeof got === 'object'
+					? Array.isArray(got)
+						? 'array'
+						: `object { ${Object.keys(got as object)
+								.slice(0, 4)
+								.join(', ')}${Object.keys(got as object).length > 4 ? ', …' : ''} }`
+					: typeof got;
+			throw new TypeError(
+				`<TelInput> invalid prop "${prop}": expected ${expected}, but received ${gotDesc}.`
+			);
+		};
+
+		if (typeof value !== 'string') badProp('value', 'string', value);
+		if (country !== null && country !== undefined && typeof country !== 'string')
+			badProp('country', 'CountryCode | null | undefined', country);
+		if (name !== null && name !== undefined && typeof name !== 'string')
+			badProp('name', 'string | null', name);
+		if (placeholder !== null && placeholder !== undefined && typeof placeholder !== 'string')
+			badProp('placeholder', 'string | null', placeholder);
+		if (disabled !== undefined && disabled !== null && typeof disabled !== 'boolean')
+			badProp('disabled', 'boolean', disabled);
+		if (readonly !== null && readonly !== undefined && typeof readonly !== 'boolean')
+			badProp('readonly', 'boolean | null', readonly);
+		if (required !== null && required !== undefined && typeof required !== 'boolean')
+			badProp('required', 'boolean | null', required);
+		if (size !== null && size !== undefined && typeof size !== 'number')
+			badProp('size', 'number | null', size);
+		if (
+			options !== undefined &&
+			(typeof options !== 'object' || options === null || Array.isArray(options))
+		)
+			badProp('options', 'TelInputOptions object', options);
+	});
+
 	// Fix: initialize to null so server and client start with an identical render.
 	// The ID is generated only in onMount (client-only), avoiding UUID hydration mismatches.
 	let generatedId = $state<string | null>(null);
