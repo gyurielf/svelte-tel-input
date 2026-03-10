@@ -1,6 +1,6 @@
 import type { CountryCode } from '$lib/types/index.js';
 import { getCountry } from '$lib/utils/directives/countryHelpers.js';
-import { newNormalizer } from '$lib/utils/newHelpers.js';
+import { newNormalizer } from '$lib/utils/helpers.js';
 import { calculateCursorPosition } from './cursorPosition.js';
 
 interface TelInputActionParams {

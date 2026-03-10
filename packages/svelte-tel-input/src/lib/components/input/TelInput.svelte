@@ -1,9 +1,8 @@
 <script lang="ts">
 	import { onMount, untrack } from 'svelte';
 	import { ParseError } from 'libphonenumber-js/max';
-	import { generatePlaceholder, telInputAction } from '$lib/utils/index.js';
+	import { generatePlaceholder, newNormalizer, telInputAction } from '$lib/utils/index.js';
 	import type { CountryCode, TelInputOptions, Props } from '$lib/types';
-	import { newNormalizer } from '$lib/utils/newHelpers';
 	import { getCountry, guessCountryByPartialNumber } from '$lib/utils/directives/countryHelpers';
 
 	const defaultOptions = {

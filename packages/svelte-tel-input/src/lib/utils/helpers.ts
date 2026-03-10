@@ -1,10 +1,11 @@
 import {
 	AsYouType,
-	Metadata,
-	getCountryCallingCode,
-	getExampleNumber
+	getExampleNumber,
+	formatIncompletePhoneNumber,
+	validatePhoneNumberLength
 } from 'libphonenumber-js/max';
-import type { PhoneNumber, Countries, CountryCode } from '$lib/types/index.js';
+import type { Country, DetailedValue } from '$lib/types/index.js';
+import type { CountryCode } from 'libphonenumber-js';
 import { examplePhoneNumbers } from '$lib/assets/index.js';
 
 const whiteSpaceRegex = new RegExp(
@@ -12,49 +13,6 @@ const whiteSpaceRegex = new RegExp(
 	'g'
 );
 const plusSignRegex = new RegExp('\\+', 'g');
-
-// Use carefully, it can be rate limited.
-export const getCurrentCountry = async () => {
-	try {
-		const response = await (await fetch('https://ip2c.org/s')).text();
-		const result = (response || '').toString();
-
-		if (!result || result[0] !== '1') {
-			console.warn('Unable to fetch the country');
-			return;
-		}
-
-		return result.substring(2, 4);
-	} catch {
-		console.warn('Unable to fetch the country');
-		return;
-	}
-};
-
-export const normalizeTelInput = (input?: PhoneNumber) => {
-	const filteredResult = Object.fromEntries(
-		Object.entries({
-			countryCode: input ? input.country : null,
-			isValid: input ? input.isValid() : false,
-			isPossible: input ? input.isPossible() : false,
-			phoneNumber: input ? input.number : null,
-			countryCallingCode: input ? input.countryCallingCode : null,
-			formattedNumber: input ? new AsYouType().input(input.number) : null,
-			nationalNumber: input ? input.nationalNumber : null,
-			formatInternational: input ? new AsYouType().input(input.number) : null,
-			formatOriginal: input
-				? new AsYouType()
-						.input(input.number)
-						.slice(input.countryCallingCode.length + 1)
-						.trim()
-				: null,
-			formatNational: input ? new AsYouType(input.country).input(input.number) : null,
-			uri: input ? input.getURI() : null,
-			e164: input ? input.number : null
-		}).filter(([, value]) => value !== null)
-	);
-	return filteredResult;
-};
 
 export const generatePlaceholder = (
 	country: CountryCode,
@@ -88,102 +46,6 @@ export const isSelected = <
 	}
 
 	return itemToSelect === selectedItem;
-};
-
-export const getInternationalPhoneNumberPrefix = (country: CountryCode) => {
-	const ONLY_DIGITS_REGEXP = /^\d+$/;
-	// Standard international phone number prefix: "+" and "country calling code".
-	let prefix = '+' + getCountryCallingCode(country);
-	// Get "leading digits" for a phone number of the country.
-	// If there're "leading digits" then they can be part of the prefix too.
-	const newMetadata = new Metadata();
-	const leadingDigits = newMetadata.numberingPlan?.leadingDigits();
-	if (leadingDigits && ONLY_DIGITS_REGEXP.test(leadingDigits)) {
-		prefix += leadingDigits;
-	}
-	return prefix;
-};
-
-/**
- * If the phone number being input is an international one
- * then tries to derive the country from the phone number.
- * (regardless of whether there's any country currently selected)
- * @param {string} partialE164Number - A possibly incomplete E.164 phone number.
- * @param {string?} country - Currently selected country.
- * @param {string[]?} countries - A list of available countries. If not passed then "all countries" are assumed.
- * @return {string?}
- * @deprecated since version 4.0.0, it will be removed in 4.1
- */
-export const getCountryForPartialE164Number = (
-	partialE164Number: string,
-	{
-		country,
-		countries,
-		required
-	}: {
-		country?: CountryCode;
-		countries?: Countries[];
-		required?: boolean;
-	} = {}
-) => {
-	if (partialE164Number === '+') {
-		// Don't change the currently selected country yet.
-		return country;
-	}
-
-	const derived_country =
-		getCountryFromPossiblyIncompleteInternationalPhoneNumber(partialE164Number);
-
-	// If a phone number is being input in international form
-	// and the country can already be derived from it,
-	// then select that country.
-	if (derived_country && (!countries || countries.indexOf(derived_country as Countries) >= 0)) {
-		return derived_country;
-	}
-	// If "International" country option has not been disabled
-	// and the international phone number entered doesn't correspond
-	// to the currently selected country then reset the currently selected country.
-	else if (country && !required && !couldNumberBelongToCountry(partialE164Number, country)) {
-		return undefined;
-	}
-
-	// Don't change the currently selected country.
-	return country;
-};
-
-/**
- * Determines the country for a given (possibly incomplete) E.164 phone number.
- * @param  {string} number - A possibly incomplete E.164 phone number.
- * @return {string?}
- * @deprecated since version 4.0.0, it will be removed in 4.1
- */
-export const getCountryFromPossiblyIncompleteInternationalPhoneNumber = (number: string) => {
-	const formatter = new AsYouType();
-	formatter.input(number);
-	// // `001` is a special "non-geograpical entity" code
-	// // in Google's `libphonenumber` library.
-	// if (formatter.getCountry() === '001') {
-	// 	return
-	// }
-	return formatter.getCountry();
-};
-
-/**
- * Checks if a partially entered E.164 phone number could belong to a country.
- * @param  {string} number
- * @param  {CountryCode} country
- * @return {boolean}
- */
-export const couldNumberBelongToCountry = (number: string, country: CountryCode) => {
-	const intlPhoneNumberPrefix = getInternationalPhoneNumberPrefix(country);
-	let i = 0;
-	while (i < number.length && i < intlPhoneNumberPrefix.length) {
-		if (number[i] !== intlPhoneNumberPrefix[i]) {
-			return false;
-		}
-		i++;
-	}
-	return true;
 };
 /**
  * These mappings map a character (key) to a specific digit that should
@@ -281,19 +143,120 @@ export const inputParser = (
 	}
 	return value;
 };
-/** @deprecated TODO REMOVE */
-export const inspectAllowedChars = (
-	character: string,
-	value: string,
-	allowSpaces: boolean,
-	disallowPlusSign: boolean
-) => {
-	// Leading plus is allowed
-	if (!disallowPlusSign && character === '+') {
-		if (!value) {
-			return character;
+
+// ---------------------------------------------------------------------------
+// Phone-number normalizer (merged from newHelpers.ts)
+// ---------------------------------------------------------------------------
+
+const normalizeForLibphonenumber = (input: string): string => {
+	let value = '';
+	for (let i = 0; i < input.length; i++) {
+		const ch = input[i];
+		if (ch >= '0' && ch <= '9') {
+			value += ch;
+			continue;
+		}
+		if (ch === '+' && value.length === 0) {
+			value += ch;
 		}
 	}
-	// Allowed characters
-	return allowedCharacters(character, { spaces: allowSpaces });
+	return value;
+};
+
+const capToMaxValidLength = (input: string, defaultCountryIso2?: string): string => {
+	let capped = input;
+
+	const hasPlus = capped.startsWith('+');
+	const digitsOnly = capped.replace(/[^0-9]/g, '');
+	if (digitsOnly.length > 15) {
+		const first15 = digitsOnly.slice(0, 15);
+		capped = hasPlus ? `+${first15}` : first15;
+	}
+
+	for (let i = 0; i < capped.length; i++) {
+		const res = defaultCountryIso2
+			? validatePhoneNumberLength(capped, defaultCountryIso2 as CountryCode)
+			: validatePhoneNumberLength(capped);
+		if (res !== 'TOO_LONG') return capped;
+		if (capped.length <= 1) return capped;
+		capped = capped.slice(0, -1);
+		if (capped === '+') return capped;
+	}
+	return capped;
+};
+
+const formatNanp = (e164ish: string): string => {
+	if (!e164ish.startsWith('+1')) return e164ish;
+	const digits = e164ish.replace(/[^0-9]/g, '');
+	const national = digits.slice(1);
+	const a = national.slice(0, 3);
+	const b = national.slice(3, 6);
+	const c = national.slice(6, 10);
+	let rest = '';
+	if (national.length <= 3) rest = a;
+	else if (national.length <= 6) rest = `${a}-${b}`;
+	else rest = `${a}-${b}-${c}`;
+	return `+1 ${rest}`.trimEnd();
+};
+
+export const newNormalizer = (input: string, country: Country | undefined): DetailedValue => {
+	const normalized = normalizeForLibphonenumber(input);
+	const defaultCountryIso2 = country?.iso2;
+	const capped = capToMaxValidLength(
+		normalized,
+		normalized.startsWith('+') ? undefined : defaultCountryIso2
+	);
+
+	const asYouType = new AsYouType({
+		defaultCountry: country?.iso2,
+		defaultCallingCode: country?.dialCode
+	});
+	asYouType.input(capped);
+	const phone = asYouType.getNumber();
+	const countryCallingCode = asYouType.getCallingCode() || phone?.countryCallingCode || null;
+	const countryCode = asYouType.getCountry() || country?.iso2 || null;
+	const formatInternational = phone?.formatInternational() || null;
+	const formatNational = phone?.formatNational() || null;
+	let formattedNumber: string | null = null;
+	if (capped) {
+		if (capped.startsWith('+')) {
+			formattedNumber = formatIncompletePhoneNumber(capped) || capped;
+			if (countryCallingCode === '1' && (countryCode === 'US' || countryCode === 'CA')) {
+				formattedNumber = formatNanp(capped);
+			}
+		} else if (defaultCountryIso2) {
+			const formatted = formatIncompletePhoneNumber(
+				capped,
+				defaultCountryIso2 as CountryCode
+			);
+			if (formatted === capped && formatInternational && countryCallingCode) {
+				formattedNumber = formatInternational.slice(countryCallingCode.length + 1).trim();
+			} else {
+				formattedNumber = formatted || capped;
+			}
+		} else {
+			formattedNumber = capped;
+		}
+	}
+	const phoneNumber = phone?.number || null;
+	const nationalNumber = phone?.nationalNumber || null;
+	const uri = phone?.getURI() || null;
+
+	return {
+		countryCallingCode,
+		countryCode,
+		e164: phoneNumber,
+		formatInternational,
+		formatNational,
+		formatOriginal:
+			formatInternational && countryCallingCode
+				? formatInternational.slice(countryCallingCode.length + 1).trim()
+				: null,
+		formattedNumber,
+		isPossible: asYouType.isPossible(),
+		isValid: asYouType.isValid(),
+		nationalNumber,
+		phoneNumber,
+		uri
+	};
 };
