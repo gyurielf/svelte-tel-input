@@ -1,0 +1,14 @@
+@import 'tailwindcss';
+
+/* Starlight overrides */
+:root {
+	--sl-color-accent-low: #4c1d95;
+	--sl-color-accent: #7c3aed;
+	--sl-color-accent-high: #ddd6fe;
+}
+
+:root[data-theme='light'] {
+	--sl-color-accent-low: #ddd6fe;
+	--sl-color-accent: #7c3aed;
+	--sl-color-accent-high: #4c1d95;
+}

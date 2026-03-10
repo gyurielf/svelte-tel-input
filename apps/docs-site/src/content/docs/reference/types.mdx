@@ -1,0 +1,117 @@
+---
+title: Types
+description: TypeScript type definitions exported by svelte-tel-input.
+---
+
+All types are importable from `svelte-tel-input/types`:
+
+```typescript
+import type {
+  CountryCode,
+  Country,
+  DetailedValue,
+  TelInputOptions,
+  Props
+} from 'svelte-tel-input/types';
+```
+
+## `CountryCode`
+
+ISO 3166 Alpha-2 country code string. Re-exported from `libphonenumber-js`.
+
+```typescript
+type CountryCode = 'US' | 'GB' | 'HU' | 'DE' | /* ... all ISO 3166 codes */;
+```
+
+## `Country`
+
+Represents a country entry in the `countries` array:
+
+```typescript
+interface Country {
+  id: string;
+  label: string;
+  name: string;
+  iso2: CountryCode;
+  dialCode: string;
+  priority: number;
+  areaCodes: string[] | null;
+}
+```
+
+## `DetailedValue`
+
+The full parsed result returned via `bind:detailedValue`:
+
+```typescript
+interface DetailedValue {
+  countryCode?: CountryCode | null;
+  isPossible: boolean;
+  isValid: boolean;
+  phoneNumber: string | null;
+  countryCallingCode: string | null;
+  formattedNumber: string | null;
+  formatOriginal: string | null;
+  nationalNumber: string | null;
+  formatInternational: string | null;
+  formatNational: string | null;
+  uri: string | null;
+  e164: string | null;
+  error?: string;
+}
+```
+
+### Field descriptions
+
+| Field | Example | Description |
+|-------|---------|-------------|
+| `e164` | `+36301234567` | E.164 formatted number (storage format) |
+| `isValid` | `true` | Whether the number is valid for its country |
+| `isPossible` | `true` | Whether the number has the right length |
+| `countryCode` | `'HU'` | Detected ISO country code |
+| `countryCallingCode` | `'36'` | Numeric calling code |
+| `nationalNumber` | `'301234567'` | Number without country calling code |
+| `formatInternational` | `'+36 30 123 4567'` | Internationally formatted |
+| `formatNational` | `'(06 30) 123 4567'` | Nationally formatted |
+| `formattedNumber` | `'+36 30 123 4567'` | Display-formatted number |
+| `formatOriginal` | `'30 123 4567'` | International format without calling code prefix |
+| `uri` | `'tel:+36301234567'` | `tel:` URI for links |
+| `phoneNumber` | `'+36301234567'` | Same as `e164` |
+| `error` | `'TOO_SHORT'` | Parse error message (when invalid) |
+
+## `TelInputOptions`
+
+Configuration object for the `options` prop:
+
+```typescript
+interface TelInputOptions {
+  autoPlaceholder?: boolean;  // default: true
+  spaces?: boolean;           // default: true
+  validateOn?: 'input' | 'blur' | 'always';  // default: 'always'
+  /** @deprecated No longer used */
+  invalidateOnCountryChange?: boolean;
+}
+```
+
+See [Options](/reference/options/) for details.
+
+## `Props`
+
+The full component props interface. Extends Svelte's `HTMLInputAttributes`:
+
+```typescript
+interface Props extends HTMLInputAttributes {
+  value: string;
+  country?: CountryCode | null | undefined;
+  valid?: boolean;
+  detailedValue?: DetailedValue | null;
+  options?: TelInputOptions;
+  el?: HTMLInputElement | undefined;
+  onValueChange?: (value: string, details: DetailedValue | null) => void;
+  onCountryChange?: (country: CountryCode | null) => void;
+  onValidityChange?: (valid: boolean) => void;
+  onError?: (error: string) => void;
+  onLoad?: () => void;
+  // ... plus all HTML input attributes
+}
+```

@@ -1,0 +1,77 @@
+---
+title: Events
+description: Callback props for reacting to TelInput state changes.
+---
+
+`TelInput` uses callback props (not Svelte dispatched events) for communicating state changes. All callbacks are optional.
+
+## Callbacks
+
+| Callback | Signature | Fires when |
+|----------|-----------|------------|
+| `onValueChange` | `(value: string, details: DetailedValue \| null) => void` | The parsed E.164 value or detailed value changes |
+| `onCountryChange` | `(country: CountryCode \| null) => void` | The country is auto-detected from a dial code typed by the user |
+| `onValidityChange` | `(valid: boolean) => void` | The validity state changes |
+| `onError` | `(error: string) => void` | A parse error occurs |
+| `onLoad` | `() => void` | The component has initialized (fires once after mount) |
+
+## Usage
+
+```svelte
+<script lang="ts">
+  import { TelInput } from 'svelte-tel-input';
+  import type { DetailedValue, CountryCode } from 'svelte-tel-input/types';
+
+  const handleValueChange = (value: string, details: DetailedValue | null) => {
+    console.log('E.164:', value);
+    console.log('Details:', details);
+  };
+
+  const handleCountryChange = (country: CountryCode | null) => {
+    console.log('Country detected:', country);
+  };
+
+  const handleValidityChange = (valid: boolean) => {
+    console.log('Valid:', valid);
+  };
+</script>
+
+<TelInput
+  onValueChange={handleValueChange}
+  onCountryChange={handleCountryChange}
+  onValidityChange={handleValidityChange}
+  onError={(err) => console.error('Parse error:', err)}
+  onLoad={() => console.log('TelInput ready')}
+/>
+```
+
+## Callbacks vs. bindings
+
+You can use both approaches simultaneously:
+
+- **Bindings** (`bind:value`, `bind:valid`, etc.) — for reactive state in the parent
+- **Callbacks** — for side effects (logging, analytics, form submission, API calls)
+
+```svelte
+<script>
+  let value = $state('');
+  let valid = $state(true);
+</script>
+
+<!-- Both bind and callback work together -->
+<TelInput
+  bind:value
+  bind:valid
+  onValueChange={(v) => {
+    // Side effect: save to server
+    savePhoneNumber(v);
+  }}
+/>
+```
+
+## When does `onCountryChange` fire?
+
+Only when the country is **auto-detected from the user's input** (e.g. typing `+44` switches to `GB`). It does **not** fire when:
+
+- You set `country` programmatically via binding
+- The `reset()` API method is called

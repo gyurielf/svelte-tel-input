@@ -1,0 +1,67 @@
+---
+title: Options
+description: Configuration options for TelInput behavior.
+---
+
+The `options` prop accepts a `TelInputOptions` object. All fields are optional — any omitted field uses its default.
+
+```svelte
+<TelInput
+  options={{
+    autoPlaceholder: true,
+    spaces: true,
+    validateOn: 'always'
+  }}
+/>
+```
+
+## Available options
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `autoPlaceholder` | `boolean` | `true` | Generates a country-specific placeholder automatically. E.g. for `US`: `+1 201 555 0123`. Overridden by the `placeholder` prop. |
+| `spaces` | `boolean` | `true` | Include spaces in formatted output. When `false`, displays the raw E.164 number without formatting separators. |
+| `validateOn` | `'input' \| 'blur' \| 'always'` | `'always'` | Controls when validation runs. See below. |
+| `invalidateOnCountryChange` | `boolean` | `false` | **Deprecated.** No longer used. Country-change validity is now determined by the `required` prop. |
+
+## Validation modes
+
+The `validateOn` option controls *when* the `valid` prop updates:
+
+### `'always'` (default)
+Validates on every keystroke **and** on blur. The `valid` prop updates in real-time as the user types.
+
+### `'input'`
+Validates on every keystroke only. Same as `'always'` for most use cases.
+
+### `'blur'`
+Validates only when the input loses focus. While the user is typing, `valid` stays at its previous value — no red/invalid state flashing during input. Best for forms where you don't want to show errors mid-typing.
+
+## Toggling spaces at runtime
+
+You can change `spaces` dynamically. The displayed value reformats instantly:
+
+```svelte
+<script>
+  let opts = $state({ autoPlaceholder: true, spaces: true });
+</script>
+
+<label>
+  <input type="checkbox" bind:checked={opts.spaces} />
+  Spaces
+</label>
+
+<TelInput options={opts} />
+```
+
+## TypeScript
+
+```typescript
+import type { TelInputOptions } from 'svelte-tel-input/types';
+
+const options: TelInputOptions = {
+  autoPlaceholder: true,
+  spaces: true,
+  validateOn: 'blur'
+};
+```

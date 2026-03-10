@@ -10,6 +10,7 @@
 		"test:e2e": "playwright test"
 	},
 	"dependencies": {
+		"@astrojs/starlight": "^0.37.7",
 		"@astrojs/svelte": "^7.2.5",
 		"@tailwindcss/vite": "^4.2.1",
 		"astro": "^5.18.0",

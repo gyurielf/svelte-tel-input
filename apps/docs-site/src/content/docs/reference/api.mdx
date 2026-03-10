@@ -1,0 +1,63 @@
+---
+title: API Methods
+description: Component API methods exposed via the api export.
+---
+
+`TelInput` exposes an `api` object with imperative methods. Access it via `bind:this`:
+
+```svelte
+<script>
+  import { TelInput } from 'svelte-tel-input';
+
+  let telInput: TelInput;
+</script>
+
+<TelInput bind:this={telInput} />
+
+<button onclick={() => telInput.api.reset()}>Reset</button>
+<button onclick={() => console.log(telInput.api.checkValidity())}>
+  Check validity
+</button>
+```
+
+## Methods
+
+### `checkValidity(): boolean`
+
+Triggers validation immediately and returns the result.
+
+- If the input is **empty** and `required` is not set → returns `true`
+- If the input is **empty** and `required` is set → returns `false`
+- If the input contains a **valid** phone number → returns `true`
+- If the input contains an **invalid/partial** number → returns `false`
+
+Also updates the `valid` binding and fires `onValidityChange`.
+
+```svelte
+<button onclick={() => {
+  const isValid = telInput.api.checkValidity();
+  if (!isValid) {
+    alert('Please enter a valid phone number');
+  }
+}}>
+  Submit
+</button>
+```
+
+### `reset(): void`
+
+Resets the component to its empty state:
+
+- `value` → `''`
+- `country` → `null`
+- `detailedValue` → `null`
+- `valid` → `true` (or `false` if `required` is set)
+- Input display → cleared
+
+Fires the corresponding change callbacks (`onValueChange`, `onValidityChange`).
+
+```svelte
+<button onclick={() => telInput.api.reset()}>
+  Clear phone number
+</button>
+```

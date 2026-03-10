@@ -1,0 +1,52 @@
+---
+title: Installation
+description: How to install and set up svelte-tel-input in your Svelte 5 project.
+---
+
+## Prerequisites
+
+- **Svelte 5** (peer dependency)
+- **Node.js** >= 22
+- **pnpm** >= 10 (or npm/yarn)
+
+## Install
+
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs>
+  <TabItem label="pnpm">
+    ```bash
+    pnpm add svelte-tel-input
+    ```
+  </TabItem>
+  <TabItem label="npm">
+    ```bash
+    npm install svelte-tel-input
+    ```
+  </TabItem>
+  <TabItem label="yarn">
+    ```bash
+    yarn add svelte-tel-input
+    ```
+  </TabItem>
+</Tabs>
+
+## Peer dependency
+
+`svelte-tel-input` requires **Svelte 5** as a peer dependency. Make sure your project is running Svelte 5+.
+
+## What's included
+
+The package ships:
+
+| Export | Description |
+|--------|-------------|
+| `TelInput` | The main phone input component |
+| `countries` | Array of all supported countries with dial codes |
+| `parsePhoneNumberWithError` | Re-export from `libphonenumber-js` |
+| `ParseError` | Re-export from `libphonenumber-js` |
+| `inputParser` | Utility to parse raw input strings |
+| `isSelected` | Helper for country list selection |
+| `newNormalizer` | Phone number normalizer |
+
+Types are available from `svelte-tel-input/types` and flag CSS from `svelte-tel-input/styles/flags.css`.

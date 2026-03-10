@@ -1,0 +1,62 @@
+---
+title: Quick Start
+description: Get a phone input running in minutes.
+---
+
+## Basic example
+
+The simplest usage — a `<select>` for the country and `TelInput` for the phone number:
+
+```svelte
+<script lang="ts">
+  import { TelInput, countries } from 'svelte-tel-input';
+  import type { DetailedValue, CountryCode } from 'svelte-tel-input/types';
+
+  let selectedCountry: CountryCode | null = $state('HU');
+  let value: string = $state('+36301234567');
+  let valid: boolean = $state(true);
+  let detailedValue: DetailedValue | null = $state(null);
+</script>
+
+<select bind:value={selectedCountry} aria-label="Country">
+  <option value={null}>Select country</option>
+  {#each countries as country (country.id)}
+    <option value={country.iso2}>
+      {country.name} (+{country.dialCode})
+    </option>
+  {/each}
+</select>
+
+<TelInput
+  bind:country={selectedCountry}
+  bind:value
+  bind:valid
+  bind:detailedValue
+  class="tel-input"
+/>
+
+{#if !valid}
+  <p role="alert">Please enter a valid phone number.</p>
+{/if}
+```
+
+## How it works
+
+1. The user types a phone number, with or without a leading `+`.
+2. `TelInput` parses the input using [libphonenumber-js](https://gitlab.com/catamphetamine/libphonenumber-js), auto-detects the country from the dial code when possible, and formats the display value.
+3. The `value` binding always holds the phone number in **E.164** format (e.g. `+36301234567`), which is the standard for storage and APIs.
+4. `valid` reflects whether the current input is a valid phone number for the detected/selected country.
+5. `detailedValue` gives you the full parsed breakdown — national number, calling code, formatted variants, URI, etc.
+
+## Country auto-detection
+
+If you provide a `value` that starts with `+` and contains enough digits to identify a country, `TelInput` will automatically set the `country` binding. For example, typing `+44` will detect `GB`.
+
+If you explicitly set `country`, the component uses that country for formatting and validation. When the user then types a number with a different dial code, the country switches to match.
+
+## Next steps
+
+- [Props reference](/reference/props/) — all available props
+- [Options](/reference/options/) — configuration options
+- [API methods](/reference/api/) — `checkValidity()` and `reset()`
+- [Playground](/playground/) — interactive demo

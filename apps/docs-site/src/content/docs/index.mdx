@@ -1,0 +1,41 @@
+---
+title: Svelte Tel Input
+description: Lightweight Svelte 5 phone input component with international formatting, parsing, and validation.
+template: splash
+hero:
+  tagline: Parse, format, and validate phone numbers with a single Svelte 5 component. Store in E.164, display beautifully.
+  actions:
+    - text: Get Started
+      link: /getting-started/installation/
+      icon: right-arrow
+      variant: primary
+    - text: Playground
+      link: /playground/
+      variant: minimal
+      icon: rocket
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+
+## Features
+
+<CardGrid>
+  <Card title="E.164 Storage" icon="document">
+    Always stores phone numbers in [E.164](https://en.wikipedia.org/wiki/E.164) format — the international standard for phone number storage and APIs.
+  </Card>
+  <Card title="Auto-detect Country" icon="magnifier">
+    Automatically detects the country from the dial code as the user types. Type `+44` and it switches to GB.
+  </Card>
+  <Card title="Smart Formatting" icon="pencil">
+    Formats numbers according to international standards with proper spacing. Handles copy-paste and strips invalid characters.
+  </Card>
+  <Card title="Validation" icon="approve-check-circle">
+    Built-in validation powered by [libphonenumber-js](https://gitlab.com/catamphetamine/libphonenumber-js). Configurable validation timing.
+  </Card>
+  <Card title="SSR/SSG Compatible" icon="laptop">
+    Works with server-side rendering and static site generation. No hydration mismatches.
+  </Card>
+  <Card title="Svelte 5 Runes" icon="seti:svelte">
+    Built with Svelte 5 runes — `$props()`, `$state`, `$derived`, `$effect`. Bindable props for seamless integration.
+  </Card>
+</CardGrid>

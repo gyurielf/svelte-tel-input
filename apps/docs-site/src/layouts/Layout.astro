@@ -2,6 +2,12 @@
 import '../styles/global.css';
 import TheFooter from '../views/TheFooter.svelte';
 import TheHeader from '../views/TheHeader.astro';
+
+interface Props {
+	title?: string;
+}
+
+const { title = 'Svelte Tel Input' } = Astro.props;
 ---
 
 <!doctype html>
@@ -12,7 +18,7 @@ import TheHeader from '../views/TheHeader.astro';
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<link rel="icon" href="/favicon.ico" />
 		<meta name="generator" content={Astro.generator} />
-		<title>Astro Basics</title>
+		<title>{title}</title>
 		<script>
 			try {
 				const prefersDark =
