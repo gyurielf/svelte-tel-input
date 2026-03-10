@@ -13,11 +13,6 @@ const whiteSpaceRegex = new RegExp(
 );
 const plusSignRegex = new RegExp('\\+', 'g');
 
-export const capitalize = (str: string) => {
-	if (!str) return '';
-	return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
-};
-
 // Use carefully, it can be rate limited.
 export const getCurrentCountry = async () => {
 	try {
@@ -34,10 +29,6 @@ export const getCurrentCountry = async () => {
 		console.warn('Unable to fetch the country');
 		return;
 	}
-};
-
-export const isNumber = (value: number) => {
-	return typeof value === 'number' && isFinite(value);
 };
 
 export const normalizeTelInput = (input?: PhoneNumber) => {
@@ -114,39 +105,6 @@ export const getInternationalPhoneNumberPrefix = (country: CountryCode) => {
 };
 
 /**
- * Trims phone number digits if they exceed the maximum possible length
- * for a national (significant) number for the country.
- * @param  {string} number - A possibly incomplete phone number digits string. Can be a possibly incomplete E.164 phone number.
- * @param  {string} country
- * @return {string} Can be empty.
- */
-export const trimNumber = (number: string, country: CountryCode) => {
-	const nationalSignificantNumberPart = getNationalSignificantNumberDigits(number, country);
-	if (nationalSignificantNumberPart) {
-		const overflowDigitsCount =
-			nationalSignificantNumberPart.length - getMaxNumberLength(country);
-		if (overflowDigitsCount > 0) {
-			return number.slice(0, number.length - overflowDigitsCount);
-		}
-	}
-	return number;
-};
-
-export const getMaxNumberLength = (country: CountryCode) => {
-	// Get "possible lengths" for a phone number of the country.
-	const newMetadata = new Metadata();
-	newMetadata.selectNumberingPlan(country);
-	// Return the last "possible length".
-	if (newMetadata.numberingPlan) {
-		return newMetadata.numberingPlan.possibleLengths()[
-			newMetadata.numberingPlan.possibleLengths().length - 1
-		];
-	} else {
-		throw new Error('There is no metadata object.');
-	}
-};
-
-/**
  * If the phone number being input is an international one
  * then tries to derive the country from the phone number.
  * (regardless of whether there's any country currently selected)
@@ -211,28 +169,6 @@ export const getCountryFromPossiblyIncompleteInternationalPhoneNumber = (number:
 };
 
 /**
- * Parses a partially entered national phone number digits
- * (or a partially entered E.164 international phone number)
- * and returns the national significant number part.
- * National significant number returned doesn't come with a national prefix.
- * @param {string} number - National number digits. Or possibly incomplete E.164 phone number.
- * @param {string?} country
- * @return {string} [result]
- */
-export const getNationalSignificantNumberDigits = (number: string, country: CountryCode) => {
-	// Create "as you type" formatter.
-	const formatter = new AsYouType(country);
-	// Input partial national phone number.
-	formatter.input(number);
-
-	// Return the parsed partial national phone number.
-	// const phoneNumber = formatter.getNumber(); //TODO REMOVE
-	// return phoneNumber && phoneNumber.nationalNumber; //TODO REMOVE
-
-	return formatter.getNumber()?.nationalNumber;
-};
-
-/**
  * Checks if a partially entered E.164 phone number could belong to a country.
  * @param  {string} number
  * @param  {CountryCode} country
@@ -249,12 +185,6 @@ export const couldNumberBelongToCountry = (number: string, country: CountryCode)
 	}
 	return true;
 };
-// TODO Replace the old to this if that's ready.
-// export const getInternationalPhoneNumberPrefix = (country: CountryCode) => {
-// 	// Standard international phone number prefix: "+" and "country calling code".
-// 	return '+' + getCountryCallingCode(country);
-// };
-
 /**
  * These mappings map a character (key) to a specific digit that should
  * replace it for normalization purposes.
@@ -361,18 +291,4 @@ export const inspectAllowedChars = (character: string, value: string, allowSpace
 	}
 	// Allowed characters
 	return allowedCharacters(character, { spaces: allowSpaces });
-};
-
-export const isMacOS = () => {
-	if (typeof window === 'undefined') {
-		return false;
-	}
-	return window.navigator.userAgent.toLowerCase().includes('macintosh');
-};
-
-export const getDeletionType = (inputType?: string) => {
-	const isDeletion = inputType?.toLocaleLowerCase().includes('delete') ?? false;
-	if (!isDeletion) return undefined;
-
-	return inputType?.toLocaleLowerCase().includes('forward') ? 'forward' : 'backward';
 };

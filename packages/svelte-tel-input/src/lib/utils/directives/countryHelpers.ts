@@ -1,4 +1,4 @@
-import type { Countries, CountryCode, Country } from '$lib/types/index.js';
+import type { CountryCode, Country } from '$lib/types/index.js';
 import { countries as normalizedCountries } from '$lib/assets/index.js';
 
 export const getCountry = ({
@@ -34,7 +34,7 @@ export const guessCountryByPartialNumber = ({
 	currentCountryIso2
 }: {
 	partialE164Number: string;
-	countries?: Countries[];
+	countries?: Country[];
 	currentCountryIso2?: CountryCode | null;
 }): CountryByPartialNumber => {
 	const defaultResult: CountryByPartialNumber = {

@@ -27,8 +27,8 @@
 		onValidityChange,
 		onValueChange,
 		onError,
-		value = $bindable(null),
-		country,
+		value = $bindable(''),
+		country = $bindable(null),
 		detailedValue = $bindable(null),
 		valid = $bindable(true),
 		options = defaultOptions,
@@ -58,6 +58,9 @@
 	$effect(() => {
 		if (country === undefined && initialCountry !== null) {
 			country = initialCountry;
+			// Stamp the shadow so the external country watcher doesn't treat this
+			// auto-detection as an incoming change from the parent.
+			_lastWrittenCountry = initialCountry;
 		}
 	});
 
@@ -66,8 +69,8 @@
 	 * Runs on both server and client at initialization time, so SSR renders the
 	 * formatted number and the client's first render matches — no hydration mismatch.
 	 */
-	const computeInitialDisplayValue = (): string | null => {
-		if (!value) return value;
+	const computeInitialDisplayValue = (): string => {
+		if (!value) return '';
 		let effectiveCountryIso2: CountryCode | null = null;
 		if (country !== undefined && country !== null) {
 			effectiveCountryIso2 = country;
@@ -96,6 +99,16 @@
 		// Initialize once (we don't want to mirror country forever; we want "previous")
 		if (prevCountry === undefined) prevCountry = country;
 	});
+
+	/**
+	 * Shadow trackers — record every value this component writes internally so the
+	 * external-change watchers below can distinguish "we set it" vs "parent set it".
+	 * Plain let (not $state) because they are only ever read inside untrack(), never
+	 * as reactive dependencies.
+	 * Initialized to the incoming prop values so the first render never false-fires.
+	 */
+	let _lastWrittenValue: string = value;
+	let _lastWrittenCountry: CountryCode | null | undefined = untrack(() => country);
 	// let isInitialized = $state(false);
 
 	/** Merge options into default opts, to be able to set just one config option. */
@@ -117,7 +130,7 @@
 		}
 	) => {
 		if (!disabled && !readonly && combinedOptions.validateOn !== 'input') {
-			if (inputValue === null || inputValue === '') {
+			if (inputValue === '') {
 				valid = getEmptyValidity();
 				onValidityChange?.(valid);
 			} else {
@@ -129,11 +142,13 @@
 		onblur?.(e);
 	};
 
-	// Update the country and dispatch event
+	// Update the internal country state and stamp the shadow tracker.
+	// onCountryChange is intentionally NOT called here; it is fired explicitly
+	// only when the country is auto-detected from dial-code parsing.
 	const countryUpdater = (countryCode: CountryCode | null) => {
 		if (countryCode !== country) {
 			country = countryCode;
-			onCountryChange?.(country);
+			_lastWrittenCountry = countryCode; // stamp — internal write
 		}
 		return country;
 	};
@@ -151,8 +166,9 @@
 			if (currCountry !== prevCountry) {
 				prevCountry = currCountry;
 				valid = getEmptyValidity();
-				value = null;
-				inputValue = null;
+				value = '';
+				_lastWrittenValue = ''; // stamp
+				inputValue = '';
 				detailedValue = null;
 				onValidityChange?.(valid);
 				onValueChange?.(value, detailedValue);
@@ -166,10 +182,14 @@
 				valid = getEmptyValidity();
 				onValidityChange?.(valid);
 			}
-			value = null;
+			value = '';
+			_lastWrittenValue = ''; // stamp
 			detailedValue = null;
 			prevCountry = currCountry;
-			inputValue = null;
+			inputValue = '';
+			countryUpdater(null);
+			onCountryChange?.(null);
+			onValueChange?.('', null);
 			return;
 		}
 
@@ -180,7 +200,8 @@
 				valid = getEmptyValidity();
 				onValidityChange?.(valid);
 			}
-			value = null;
+			value = '';
+			_lastWrittenValue = ''; // stamp
 			detailedValue = null;
 			inputValue = '';
 			onValueChange?.(value, detailedValue);
@@ -207,6 +228,10 @@
 			numberHasCountry.iso2 !== prevCountry
 		) {
 			countryUpdater(numberHasCountry.iso2);
+			// Fire the callback only here — when the country is inferred from the
+			// user's input (dial-code parsing). reset() and external prop changes
+			// do NOT fire onCountryChange.
+			onCountryChange?.(numberHasCountry.iso2);
 		}
 
 		// If dial code is incomplete (e.g. "+3"), keep using the currently selected country
@@ -232,6 +257,7 @@
 
 		// `value` is the stored value (E.164 when possible).
 		value = detailedValue?.e164 ?? rawInput;
+		_lastWrittenValue = value; // stamp
 		onValueChange?.(value, detailedValue);
 
 		if (shouldValidate) {
@@ -251,22 +277,43 @@
 			: placeholder
 	);
 
-	// Watch for value resets
-	$effect(() => {
-		if (value === null && inputValue !== null && detailedValue !== null) {
-			inputValue = null;
-			detailedValue = null;
-		}
-	});
-
 	// Re-format displayed value when spaces option changes
 	$effect(() => {
 		const spaces = combinedOptions.spaces;
 		untrack(() => {
-			if (inputValue !== null && detailedValue) {
+			if (inputValue !== '' && detailedValue) {
 				inputValue = spaces
 					? (detailedValue.formattedNumber ?? inputValue)
 					: (detailedValue.e164 ?? inputValue);
+			}
+		});
+	});
+
+	/**
+	 * Detect externally driven value changes (e.g. parent sets bind:value, or resets to null).
+	 * The shadow `_lastWrittenValue` is stamped on every internal write inside
+	 * handleParsePhoneNumber, so any difference here means the parent changed it.
+	 */
+	$effect(() => {
+		const currentValue = value;
+		untrack(() => {
+			if (currentValue !== _lastWrittenValue) {
+				handleParsePhoneNumber(currentValue, country ?? null);
+			}
+		});
+	});
+
+	/**
+	 * Detect externally driven country changes (e.g. parent's <select bind:value={country}>).
+	 * Stamps `_lastWrittenCountry` eagerly so the watcher doesn't re-fire when
+	 * handleParsePhoneNumber later writes country through countryUpdater.
+	 */
+	$effect(() => {
+		const currentCountry = country;
+		untrack(() => {
+			if (currentCountry !== _lastWrittenCountry) {
+				_lastWrittenCountry = currentCountry;
+				handleParsePhoneNumber(null, currentCountry ?? null);
 			}
 		});
 	});
@@ -289,29 +336,12 @@
 		onLoad?.();
 	});
 
-	const setValue = (newValue: string | null, newCountry?: CountryCode | null) => {
-		const castedValue = newValue;
-		if (castedValue) {
-			const { country: numberHasCountry, fullDialCodeMatch } = guessCountryByPartialNumber({
-				partialE164Number: castedValue,
-				currentCountryIso2: newCountry
-			});
-
-			handleParsePhoneNumber(
-				castedValue,
-				(fullDialCodeMatch ? numberHasCountry?.iso2 : null) || newCountry
-			);
-		}
-	};
-
-	const setCountry = (newCountry: CountryCode | null) => {
-		countryUpdater(newCountry);
-		handleParsePhoneNumber(null, newCountry);
-		el?.focus();
+	const reset = () => {
+		handleParsePhoneNumber(null, null);
 	};
 
 	const checkValidity = () => {
-		if (inputValue === null || inputValue === '') {
+		if (inputValue === '') {
 			valid = getEmptyValidity();
 			onValidityChange?.(valid);
 			return valid;
@@ -322,9 +352,8 @@
 	};
 
 	export const api = {
-		setValue,
-		setCountry,
-		checkValidity
+		checkValidity,
+		reset
 	};
 </script>
 

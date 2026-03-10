@@ -50,7 +50,7 @@
 		"test": "pnpm --filter=./packages/* test",
 		"test:ui": "pnpm --filter=./packages/* test:ui ",
 		"test:watch": "pnpm --filter=./packages/* test:watch",
-		"test:e2e": "pnpm --filter ./apps/site exec playwright test"
+		"test:e2e": "pnpm --filter=./apps/docs-site test:e2e"
 	},
 	"devDependencies": {
 		"@changesets/cli": "^2.30.0",

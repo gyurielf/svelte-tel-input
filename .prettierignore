@@ -23,3 +23,6 @@
 **/zarf
 **/scripts
 **/examplePhoneNumbers.ts
+
+**/.astro
+**/test-results

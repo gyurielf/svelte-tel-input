@@ -1,6 +1,27 @@
 import type { CountryCallingCode, CountryCode, MetadataJson, PhoneNumber } from 'libphonenumber-js';
-import type { Countries } from 'libphonenumber-js/types';
 import type { HTMLInputAttributes } from 'svelte/elements';
+
+type Countries = {
+	// Metadata here is a compressed one,
+	// so a country's data is just an array of some properties
+	// instead of a JSON object of shape:
+	// {
+	//   phone_code: string,
+	//   idd_prefix: string,
+	//   national_number_pattern: string,
+	//   types: object,
+	//   examples: object,
+	//   formats: object[]?,
+	//   possible_lengths: number[],
+	//   ...
+	// }
+	//
+	// `in` operator docs:
+	// https://www.typescriptlang.org/docs/handbook/advanced-types.html#mapped-types
+	// `country in CountryCode` means "for each and every CountryCode".
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	[country in CountryCode]?: any[];
+};
 
 export interface Country {
 	id: string;
@@ -101,7 +122,7 @@ export interface Props extends HTMLInputAttributes {
 	/** You can set the size attribute of the input field */
 	size?: number | null;
 	/** The core value of the input, this is the only one what you can store. It's an E164 phone number.*/
-	value: string | null;
+	value: string;
 	/** It's accept any Country Code Alpha-2 (ISO 3166) -- DEFAULT COUNTRY */
 	country?: CountryCode | null | undefined;
 	/** Detailed parse of the E164 phone number */
@@ -114,10 +135,7 @@ export interface Props extends HTMLInputAttributes {
 	el?: HTMLInputElement | undefined;
 	onCountryChange?: (newCountry: CountryCode | null) => void;
 	onValidityChange?: (newValidity: boolean) => void;
-	onValueChange?: (
-		newValue: string | null,
-		newDetails: Readonly<Partial<DetailedValue> | null>
-	) => void;
+	onValueChange?: (newValue: string, newDetails: Readonly<Partial<DetailedValue> | null>) => void;
 	onError?: (error: string) => void;
 	onLoad?: () => void;
 }

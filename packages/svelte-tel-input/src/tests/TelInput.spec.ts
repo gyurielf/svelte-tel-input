@@ -49,7 +49,7 @@ describe('TelInput Component', () => {
 	describe('Basic Functionality', () => {
 		it('should render with default props', () => {
 			const { getByTestId } = render(TelInput, {
-				props: { value: null, country: 'US' }
+				props: { value: '', country: 'US' }
 			});
 			const input = getByTestId('tel-input') as HTMLInputElement;
 			expect(input).toBeTruthy();
@@ -58,7 +58,7 @@ describe('TelInput Component', () => {
 
 		it('should handle basic number input', async () => {
 			const { getByTestId } = render(TelInput, {
-				props: { value: null, country: 'US' }
+				props: { value: '', country: 'US' }
 			});
 			const input = getByTestId('tel-input') as HTMLInputElement;
 
@@ -68,7 +68,7 @@ describe('TelInput Component', () => {
 
 		it('should maintain cursor position after typing', async () => {
 			const { getByTestId } = render(TelInput, {
-				props: { value: null, country: 'US' }
+				props: { value: '', country: 'US' }
 			});
 			const input = getByTestId('tel-input') as HTMLInputElement;
 
@@ -81,7 +81,7 @@ describe('TelInput Component', () => {
 	describe('Deletion Behavior', () => {
 		it('should handle backspace correctly', async () => {
 			const { getByTestId } = render(TelInput, {
-				props: { value: null, country: 'US' }
+				props: { value: '', country: 'US' }
 			});
 			const input = getByTestId('tel-input') as HTMLInputElement;
 
@@ -94,7 +94,7 @@ describe('TelInput Component', () => {
 
 		it('should handle delete key correctly', async () => {
 			const { getByTestId } = render(TelInput, {
-				props: { value: null, country: 'US' }
+				props: { value: '', country: 'US' }
 			});
 			const input = getByTestId('tel-input') as HTMLInputElement;
 
@@ -109,7 +109,7 @@ describe('TelInput Component', () => {
 
 		it('should handle selection deletion', async () => {
 			const { getByTestId } = render(TelInput, {
-				props: { value: null, country: 'US' }
+				props: { value: '', country: 'US' }
 			});
 			const input = getByTestId('tel-input') as HTMLInputElement;
 
@@ -128,7 +128,7 @@ describe('TelInput Component', () => {
 			const mockValidityChange = vi.fn();
 			const { getByTestId } = render(TelInput, {
 				props: {
-					value: null,
+					value: '',
 					country: 'US',
 					options: { validateOn: 'input' },
 					onValidityChange: mockValidityChange
@@ -146,7 +146,7 @@ describe('TelInput Component', () => {
 			const mockValidityChange = vi.fn();
 			const { getByTestId } = render(TelInput, {
 				props: {
-					value: null,
+					value: '',
 					country: 'US',
 					required: true,
 					options: { validateOn: 'input' },
@@ -166,7 +166,7 @@ describe('TelInput Component', () => {
 			const mockValidityChange = vi.fn();
 			const { getByTestId } = render(TelInput, {
 				props: {
-					value: null,
+					value: '',
 					country: 'US',
 					options: { validateOn: 'blur' },
 					onValidityChange: mockValidityChange
@@ -186,7 +186,7 @@ describe('TelInput Component', () => {
 			const mockValidityChange = vi.fn();
 			const { getByTestId } = render(TelInput, {
 				props: {
-					value: null,
+					value: '',
 					country: 'US',
 					required: true,
 					options: { validateOn: 'blur' },
@@ -206,7 +206,7 @@ describe('TelInput Component', () => {
 			const mockValidityChange = vi.fn();
 			const { getByTestId } = render(TelInput, {
 				props: {
-					value: null,
+					value: '',
 					country: 'US',
 					required: false,
 					options: { validateOn: 'blur' },
@@ -226,7 +226,7 @@ describe('TelInput Component', () => {
 			const mockValidityChange = vi.fn();
 			const { getByTestId, component } = render(TelInput, {
 				props: {
-					value: null,
+					value: '',
 					country: 'US',
 					options: { validateOn: 'blur' },
 					onValidityChange: mockValidityChange
@@ -249,7 +249,7 @@ describe('TelInput Component', () => {
 			const mockUpdateCountry = vi.fn();
 			const { getByTestId } = render(TelInput, {
 				props: {
-					value: null,
+					value: '',
 					country: 'US',
 					onValueChange: mockUpdateValue,
 					onValidityChange: mockUpdateValid,
@@ -280,7 +280,7 @@ describe('TelInput Component', () => {
 			const mockUpdateCountry = vi.fn();
 			const { getByTestId } = render(TelInput, {
 				props: {
-					value: null,
+					value: '',
 					country: 'US',
 					onCountryChange: mockUpdateCountry
 				}
@@ -296,7 +296,7 @@ describe('TelInput Component', () => {
 
 		it('should ignore non-digit characters while user is typing', async () => {
 			const { getByTestId } = render(TelInput, {
-				props: { value: null, country: 'US' }
+				props: { value: '', country: 'US' }
 			});
 			const input = getByTestId('tel-input') as HTMLInputElement;
 
@@ -310,7 +310,7 @@ describe('TelInput Component', () => {
 			const mockValidityChange = vi.fn();
 			const { getByTestId } = render(TelInput, {
 				props: {
-					value: null,
+					value: '',
 					country: 'US',
 					options: { validateOn: 'always' },
 					onValidityChange: mockValidityChange
@@ -328,7 +328,7 @@ describe('TelInput Component', () => {
 			const mockValidityChange = vi.fn();
 			const { getByTestId } = render(TelInput, {
 				props: {
-					value: null,
+					value: '',
 					country: 'US',
 					options: { validateOn: 'always' },
 					onValidityChange: mockValidityChange
@@ -349,7 +349,7 @@ describe('TelInput Component', () => {
 			const mockValidityChange = vi.fn();
 			const { getByTestId } = render(TelInput, {
 				props: {
-					value: null,
+					value: '',
 					country: 'US',
 					required: true,
 					options: { validateOn: 'always' },
@@ -369,7 +369,7 @@ describe('TelInput Component', () => {
 			const mockValidityChange = vi.fn();
 			const { getByTestId } = render(TelInput, {
 				props: {
-					value: null,
+					value: '',
 					country: 'US',
 					required: false,
 					options: { validateOn: 'always' },
@@ -389,7 +389,7 @@ describe('TelInput Component', () => {
 			const mockValidityChange = vi.fn();
 			const { getByTestId } = render(TelInput, {
 				props: {
-					value: null,
+					value: '',
 					country: 'US',
 					required: true,
 					options: { validateOn: 'always' },
@@ -409,7 +409,7 @@ describe('TelInput Component', () => {
 			const mockValidityChange = vi.fn();
 			const { getByTestId } = render(TelInput, {
 				props: {
-					value: null,
+					value: '',
 					country: 'US',
 					required: false,
 					options: { validateOn: 'always' },
@@ -429,7 +429,7 @@ describe('TelInput Component', () => {
 			const mockValidityChange = vi.fn();
 			const { getByTestId } = render(TelInput, {
 				props: {
-					value: null,
+					value: '',
 					country: 'US',
 					required: false,
 					options: { validateOn: 'always' },
@@ -450,7 +450,7 @@ describe('TelInput Component', () => {
 			const mockValidityChange = vi.fn();
 			const { getByTestId } = render(TelInput, {
 				props: {
-					value: null,
+					value: '',
 					country: 'US',
 					required: false,
 					onValidityChange: mockValidityChange
@@ -469,7 +469,7 @@ describe('TelInput Component', () => {
 			const mockValidityChange = vi.fn();
 			const { getByTestId } = render(TelInput, {
 				props: {
-					value: null,
+					value: '',
 					country: 'US',
 					required: true,
 					onValidityChange: mockValidityChange
@@ -488,7 +488,7 @@ describe('TelInput Component', () => {
 			const mockValidityChange = vi.fn();
 			const { getByTestId } = render(TelInput, {
 				props: {
-					value: null,
+					value: '',
 					country: 'US',
 					required: false,
 					onValidityChange: mockValidityChange
@@ -506,7 +506,7 @@ describe('TelInput Component', () => {
 			const mockValidityChange = vi.fn();
 			const { component } = render(TelInput, {
 				props: {
-					value: null,
+					value: '',
 					country: 'US',
 					required: false,
 					options: { validateOn: 'blur' },
@@ -523,7 +523,7 @@ describe('TelInput Component', () => {
 			const mockValidityChange = vi.fn();
 			const { component } = render(TelInput, {
 				props: {
-					value: null,
+					value: '',
 					country: 'US',
 					required: true,
 					options: { validateOn: 'blur' },
@@ -540,7 +540,7 @@ describe('TelInput Component', () => {
 			const mockValidityChange = vi.fn();
 			const { getByTestId, component } = render(TelInput, {
 				props: {
-					value: null,
+					value: '',
 					country: 'US',
 					required: false,
 					options: { validateOn: 'blur' },
@@ -561,80 +561,87 @@ describe('TelInput Component', () => {
 	describe('Country change validity', () => {
 		it('should be valid after country change when required is not set', async () => {
 			const mockValidityChange = vi.fn();
-			const { component } = render(TelInput, {
+			const { rerender } = render(TelInput, {
 				props: {
-					value: null,
+					value: '',
 					country: 'US',
 					onValidityChange: mockValidityChange
 				}
 			});
 
-			component.api.setCountry('HU');
+			await rerender({ country: 'HU' });
 			expect(mockValidityChange).toHaveBeenCalledWith(true);
 		});
 
 		it('should be invalid after country change when required is true', async () => {
 			const mockValidityChange = vi.fn();
-			const { component } = render(TelInput, {
+			const { rerender } = render(TelInput, {
 				props: {
-					value: null,
+					value: '',
 					country: 'US',
 					required: true,
 					onValidityChange: mockValidityChange
 				}
 			});
 
-			component.api.setCountry('HU');
+			await rerender({ country: 'HU' });
 			expect(mockValidityChange).toHaveBeenCalledWith(false);
 		});
 
 		it('should clear value and detailedValue after country change', async () => {
 			const mockValueChange = vi.fn();
-			const { component } = render(TelInput, {
+			const { rerender } = render(TelInput, {
 				props: {
-					value: null,
+					value: '',
 					country: 'US',
 					onValueChange: mockValueChange
 				}
 			});
 
-			component.api.setCountry('HU');
-			expect(mockValueChange).toHaveBeenCalledWith(null, null);
+			await rerender({ country: 'HU' });
+			expect(mockValueChange).toHaveBeenCalledWith('', null);
 		});
 
-		it('should not trigger callbacks when country does not actually change', async () => {
-			const mockValidityChange = vi.fn();
+		it('should fire onCountryChange(null) when api.reset() is called', () => {
+			const mockCountryChange = vi.fn();
 			const { component } = render(TelInput, {
+				props: { value: '+12154567890', country: 'US', onCountryChange: mockCountryChange }
+			});
+
+			mockCountryChange.mockClear();
+			component.api.reset();
+
+			expect(mockCountryChange).toHaveBeenCalledWith(null);
+		});
+
+		it('should not trigger callbacks when country prop does not actually change', async () => {
+			const mockValidityChange = vi.fn();
+			const { rerender } = render(TelInput, {
 				props: {
-					value: null,
+					value: '',
 					country: 'US',
 					onValidityChange: mockValidityChange
 				}
 			});
 
-			// setCountry calls countryUpdater which updates prevCountry,
-			// then handleParsePhoneNumber checks if currCountry !== prevCountry
-			component.api.setCountry('US');
-			// The prevCountry is initialized via $effect; first call to setCountry('US')
-			// may or may not trigger depending on initialization timing.
-			// What matters is that setCountry to a DIFFERENT country triggers callbacks.
 			mockValidityChange.mockClear();
-			component.api.setCountry('US');
-			// Second call to same country should not trigger
+			await rerender({ country: 'US' });
+			// Re-rendering with the same country should not trigger callbacks
+			expect(mockValidityChange).not.toHaveBeenCalled();
 		});
 
 		it('should ignore deprecated invalidateOnCountryChange option', async () => {
 			const mockValidityChange = vi.fn();
-			const { component } = render(TelInput, {
+			const { rerender } = render(TelInput, {
 				props: {
-					value: null,
+					value: '',
 					country: 'US',
 					options: { invalidateOnCountryChange: true },
 					onValidityChange: mockValidityChange
 				}
 			});
 
-			component.api.setCountry('HU');
+			await rerender({ country: 'HU' });
 			// Without required, should be valid regardless of invalidateOnCountryChange
 			expect(mockValidityChange).toHaveBeenCalledWith(true);
 		});
@@ -645,7 +652,7 @@ describe('TelInput Component', () => {
 			const mockUpdateCountry = vi.fn();
 			const { getByTestId } = render(TelInput, {
 				props: {
-					value: null,
+					value: '',
 					country: 'US',
 					onCountryChange: mockUpdateCountry
 				}
@@ -667,7 +674,7 @@ describe('TelInput Component', () => {
 			const { container } = render(TelInput, {
 				props: {
 					options: { spaces: true },
-					value: null,
+					value: '',
 					country: 'US'
 				}
 			});
@@ -681,7 +688,7 @@ describe('TelInput Component', () => {
 			const { container } = render(TelInput, {
 				props: {
 					options: { spaces: false },
-					value: null,
+					value: '',
 					country: 'US'
 				}
 			});
@@ -740,10 +747,164 @@ describe('TelInput Component', () => {
 		});
 	});
 
+	describe('External prop binding', () => {
+		it('should reformat and update detailedValue when value prop changes externally', async () => {
+			const mockValueChange = vi.fn();
+			const { container, rerender } = render(TelInput, {
+				props: {
+					value: '+12154567890',
+					country: 'US',
+					onValueChange: mockValueChange
+				}
+			});
+			const input = container.querySelector('input') as HTMLInputElement;
+			expect(input.value).toBe('+1 215-456-7890');
+
+			mockValueChange.mockClear();
+			await rerender({ value: '+447947123456' });
+
+			expect(input.value).toBe('+44 7947 123456');
+			expect(mockValueChange.mock.calls.at(-1)?.[0]).toBe('+447947123456');
+			expect(mockValueChange.mock.calls.at(-1)?.[1]).toEqual(
+				expect.objectContaining({ countryCode: 'GB', isValid: true })
+			);
+		});
+
+		it("should reset when value prop is set to '' externally", async () => {
+			const { container, rerender } = render(TelInput, {
+				props: {
+					value: '+12154567890',
+					country: 'US'
+				}
+			});
+			const input = container.querySelector('input') as HTMLInputElement;
+			expect(input.value).toBe('+1 215-456-7890');
+
+			await rerender({ value: '' });
+
+			expect(input.value).toBe('');
+		});
+
+		it('should reset input when country prop changes externally', async () => {
+			const mockValueChange = vi.fn();
+			const { container, rerender } = render(TelInput, {
+				props: {
+					value: '+12154567890',
+					country: 'US',
+					onValueChange: mockValueChange
+				}
+			});
+			const input = container.querySelector('input') as HTMLInputElement;
+			expect(input.value).toBe('+1 215-456-7890');
+
+			await rerender({ country: 'HU' });
+
+			// Clears input on external country change
+			expect(input.value).toBe('');
+		});
+
+		it('should not fire callbacks when parent re-renders with identical props', async () => {
+			const mockValueChange = vi.fn();
+			const { rerender } = render(TelInput, {
+				props: {
+					value: '+12154567890',
+					country: 'US',
+					onValueChange: mockValueChange
+				}
+			});
+
+			mockValueChange.mockClear();
+			await rerender({ value: '+12154567890', country: 'US' });
+
+			expect(mockValueChange).not.toHaveBeenCalled();
+		});
+
+		it('should not loop when internal parse normalises value', async () => {
+			const mockValueChange = vi.fn();
+			const { container } = render(TelInput, {
+				props: {
+					value: '+12154567890',
+					country: 'US',
+					onValueChange: mockValueChange
+				}
+			});
+			const input = container.querySelector('input') as HTMLInputElement;
+
+			mockValueChange.mockClear();
+			// After mount, the shadow tracker should equalise with the E164 value;
+			// no further value-change calls should fire spontaneously.
+			expect(mockValueChange).not.toHaveBeenCalled();
+			expect(input.value).toBe('+1 215-456-7890');
+		});
+
+		it('should mark as invalid when value prop is set externally to a partial/invalid number', async () => {
+			const mockValidityChange = vi.fn();
+			const { rerender } = render(TelInput, {
+				props: {
+					value: '',
+					country: 'US',
+					onValidityChange: mockValidityChange
+				}
+			});
+
+			await rerender({ value: '+1999' });
+
+			expect(mockValidityChange).toHaveBeenCalledWith(false);
+		});
+
+		it('should reflect the new country when country prop is set externally (no echo callback)', async () => {
+			// When a parent drives country via a prop change, the component clears
+			// the input and accepts the new country.  onCountryChange is intentionally
+			// NOT echoed back to prevent parent→component→parent feedback loops.
+			const mockCountryChange = vi.fn();
+			const { container, rerender } = render(TelInput, {
+				props: {
+					value: '+12154567890',
+					country: 'US',
+					onCountryChange: mockCountryChange
+				}
+			});
+			const input = container.querySelector('input') as HTMLInputElement;
+			expect(input.value).toBe('+1 215-456-7890');
+
+			mockCountryChange.mockClear();
+			await rerender({ country: 'DE' });
+
+			// Input is cleared on external country change
+			expect(input.value).toBe('');
+			// No echo back to avoid feedback loops
+			expect(mockCountryChange).not.toHaveBeenCalled();
+		});
+
+		it('should reflect validity lifecycle: valid → invalid (external bind) → valid (external bind)', async () => {
+			const mockValidityChange = vi.fn();
+			const { rerender } = render(TelInput, {
+				props: {
+					value: '+12154567890',
+					country: 'US',
+					onValidityChange: mockValidityChange
+				}
+			});
+
+			// Initially valid — no validity-change call expected on mount with valid value
+			mockValidityChange.mockClear();
+
+			// Set to invalid via external prop
+			await rerender({ value: '+1999' });
+			expect(mockValidityChange).toHaveBeenCalledWith(false);
+
+			mockValidityChange.mockClear();
+
+			// Restore a valid value via external prop
+			await rerender({ value: '+12014560001' });
+			expect(mockValidityChange).toHaveBeenCalledWith(true);
+		});
+	});
+
 	describe('Selection and Cursor Behavior', () => {
 		it('should handle text replacement correctly', async () => {
 			const { getByTestId } = render(TelInput, {
-				props: { value: null, country: 'US' }
+				props: { value: '', country: 'US' }
 			});
 			const input = getByTestId('tel-input') as HTMLInputElement;
 
@@ -758,7 +919,7 @@ describe('TelInput Component', () => {
 
 		it('should maintain cursor position after space insertion', async () => {
 			const { getByTestId } = render(TelInput, {
-				props: { value: null, country: 'US' }
+				props: { value: '', country: 'US' }
 			});
 			const input = getByTestId('tel-input') as HTMLInputElement;
 
@@ -769,7 +930,7 @@ describe('TelInput Component', () => {
 
 		it('should handle cursor movement around spaces', async () => {
 			const { getByTestId } = render(TelInput, {
-				props: { value: null, country: 'US' }
+				props: { value: '', country: 'US' }
 			});
 			const input = getByTestId('tel-input') as HTMLInputElement;
 
@@ -784,7 +945,7 @@ describe('TelInput Component', () => {
 	describe('Length Capping', () => {
 		it('should cap length at maximum valid number length', async () => {
 			const { getByTestId } = render(TelInput, {
-				props: { value: null, country: 'US' }
+				props: { value: '', country: 'US' }
 			});
 			const input = getByTestId('tel-input') as HTMLInputElement;
 
@@ -805,7 +966,7 @@ describe('TelInput Component', () => {
 
 				const { getByTestId } = render(TelInput, {
 					props: {
-						value: null,
+						value: '',
 						country,
 						onValueChange: mockUpdateValue,
 						onValidityChange: mockUpdateValid
@@ -849,7 +1010,7 @@ describe('TelInput Component', () => {
 
 				const { getByTestId } = render(TelInput, {
 					props: {
-						value: null,
+						value: '',
 						country,
 						onValueChange: mockUpdateValue,
 						onValidityChange: mockUpdateValid
@@ -879,7 +1040,7 @@ describe('TelInput Component', () => {
 				const mockUpdateValue = vi.fn();
 				const { getByTestId } = render(TelInput, {
 					props: {
-						value: null,
+						value: '',
 						country,
 						onValueChange: mockUpdateValue
 					}

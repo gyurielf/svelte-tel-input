@@ -7,7 +7,7 @@ interface TelInputActionParams {
 	handler: (val: string) => void;
 	spaces: boolean;
 	country: CountryCode | null | undefined;
-	value: string | null;
+	value: string;
 }
 
 interface InputState {
