@@ -1,5 +1,19 @@
 # svelte-tel-input
 
+## 3.6.1
+### Patch Changes
+
+
+
+- fix: cursor position ([#246](https://github.com/gyurielf/svelte-tel-input/pull/246))
+
+## 3.6.0
+### Minor Changes
+
+
+
+- feat: option to disallow detecting and changing country from e164 number ([#240](https://github.com/gyurielf/svelte-tel-input/pull/240))
+
 ## 3.5.2
 ### Patch Changes
 
