@@ -72,6 +72,15 @@ export interface DetailedValue {
 export type PhoneNumberParseError = 'NOT_A_NUMBER' | 'INVALID_COUNTRY' | 'TOO_SHORT' | 'TOO_LONG';
 export type PhoneType = 'FIXED_LINE' | 'MOBILE';
 
+/**
+ * The reason the current phone number input is invalid.
+ * - `'required'` — field is empty and `required` is `true`
+ * - `'country_not_allowed'` — the resolved country is not in `options.allowedCountries`
+ * - `'invalid'` — number does not pass libphonenumber-js validation
+ * - `null` — no error (input is valid)
+ */
+export type ValidationError = 'required' | 'country_not_allowed' | 'invalid' | null;
+
 export interface TelInputValidity {
 	value: boolean | null;
 	errorMessage?: string;
@@ -101,6 +110,13 @@ export interface TelInputOptions {
 	 * @default 'always'
 	 */
 	validateOn?: 'input' | 'blur' | 'always';
+	/**
+	 * Restrict validation to a specific set of countries.
+	 * When provided, any resolved country that is not in this list will cause
+	 * the field to be marked invalid with `validationError = 'country_not_allowed'`.
+	 * Pass `undefined` (or omit) to allow all countries.
+	 */
+	allowedCountries?: CountryCode[];
 }
 
 export interface Props extends HTMLInputAttributes {
@@ -129,15 +145,24 @@ export interface Props extends HTMLInputAttributes {
 	detailedValue?: Readonly<Partial<DetailedValue> | null>;
 	/** Validity of the input based on the config settings. */
 	valid?: boolean;
+	/** The reason the current value is invalid, or `null` when valid. */
+	validationError?: ValidationError;
 	/** You can turn on and off certain features by this object */
 	options?: TelInputOptions;
 	/** Binding to the underlying `<input>` element */
 	el?: HTMLInputElement | undefined;
 	onCountryChange?: (newCountry: CountryCode | null) => void;
-	onValidityChange?: (newValidity: boolean) => void;
+	onValidityChange?: (newValidity: boolean, error: ValidationError) => void;
 	onValueChange?: (newValue: string, newDetails: Readonly<Partial<DetailedValue> | null>) => void;
 	onError?: (error: string) => void;
 	onLoad?: () => void;
 }
 
-export type { CountryCallingCode, CountryCode, PhoneNumber, Countries, MetadataJson };
+export type {
+	CountryCallingCode,
+	CountryCode,
+	PhoneNumber,
+	Countries,
+	MetadataJson,
+	ValidationError
+};

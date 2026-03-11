@@ -6,12 +6,27 @@ import tailwindcss from '@tailwindcss/vite';
 
 // https://astro.build/config
 export default defineConfig({
+	markdown: {
+		shikiConfig: {
+			themes: {
+				light: 'github-light',
+				dark: 'github-dark'
+			}
+		}
+	},
 	integrations: [
+		svelte(),
 		starlight({
+			expressiveCode: {
+				themes: ['github-dark', 'github-light'],
+				useStarlightDarkModeSwitch: true
+			},
 			title: 'Svelte Tel Input',
+			components: {
+				Header: './src/components/Header.astro'
+			},
 			social: [
 				{
-					name: 'GitHub',
 					label: 'GitHub',
 					href: 'https://github.com/gyurielf/svelte-tel-input',
 					icon: 'github'
@@ -41,10 +56,8 @@ export default defineConfig({
 				}
 			],
 			customCss: ['./src/styles/custom.css']
-		}),
-		svelte()
+		})
 	],
-	vite: {
-		plugins: [tailwindcss()]
-	}
+	// @ts-ignore
+	vite: { plugins: [tailwindcss()] }
 });

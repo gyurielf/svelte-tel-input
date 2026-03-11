@@ -10,7 +10,7 @@ function panel(page: import('@playwright/test').Page) {
 
 test.describe('API & Binding playground', () => {
 	test.beforeEach(async ({ page }) => {
-		await page.goto('/');
+		await page.goto('/playground');
 		// Wait for the panel's country dropdown to be hydrated and enabled.
 		await expect(page.locator('#states-button')).toBeEnabled({ timeout: 15_000 });
 		await expect(page.getByTestId('tel-input')).toBeVisible();

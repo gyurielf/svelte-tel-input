@@ -5,7 +5,12 @@
 	import PayloadBlock from '../components/utils/PayloadBlock.svelte';
 	import OptionsPanel from './OptionsPanel.svelte';
 	// import EventDrivenPhoneInput from '$lib/components/examples/EventDrivenPhoneInput.svelte';
-	import type { DetailedValue, TelInputOptions, CountryCode } from 'svelte-tel-input/types';
+	import type {
+		DetailedValue,
+		TelInputOptions,
+		CountryCode,
+		ValidationError
+	} from 'svelte-tel-input/types';
 
 	interface ExampleProps {
 		value: string;
@@ -21,13 +26,14 @@
 		valid: true,
 		country: null
 	} satisfies ExampleProps);
-	let advancedExampleOptions = $state({
+	let advancedExampleOptions: TelInputOptions = $state({
 		autoPlaceholder: true,
 		spaces: true,
 		validateOn: 'input'
-	} satisfies TelInputOptions);
+	});
 	let advancedExampleRequired = $state(true);
 	let advancedExampleComponent: AdvancedPhoneInput | undefined = $state();
+	let advancedExampleValidationError = $state<ValidationError>(null);
 
 	// /* basicWithE164 example */
 	// const basicExamplePropsWithE164 = $state({
@@ -107,6 +113,7 @@
 				bind:value={advancedExampleProps.value}
 				bind:detailedValue={advancedExampleProps.detailedValue}
 				bind:valid={advancedExampleProps.valid}
+				bind:validationError={advancedExampleValidationError}
 				bind:selectedCountry={advancedExampleProps.country}
 			/>
 		{/key}
@@ -118,8 +125,12 @@
 			bind:value={advancedExampleProps.value}
 			bind:country={advancedExampleProps.country}
 			bind:valid={advancedExampleProps.valid}
+			validationError={advancedExampleValidationError}
 			bind:detailedValue={advancedExampleProps.detailedValue}
 			apiRef={advancedExampleComponent}
+			onSetAllowedCountries={(countries) => {
+				advancedExampleOptions.allowedCountries = countries;
+			}}
 		/>
 		<PayloadBlock
 			value={advancedExampleProps.value}

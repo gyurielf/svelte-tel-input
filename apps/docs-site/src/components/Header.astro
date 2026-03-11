@@ -1,0 +1,111 @@
+---
+import config from 'virtual:starlight/user-config';
+import LanguageSelect from 'virtual:starlight/components/LanguageSelect';
+import Search from 'virtual:starlight/components/Search';
+import SiteTitle from 'virtual:starlight/components/SiteTitle';
+import SocialIcons from 'virtual:starlight/components/SocialIcons';
+import ThemeSelect from 'virtual:starlight/components/ThemeSelect';
+
+const shouldRenderSearch =
+	config.pagefind || config.components.Search !== '@astrojs/starlight/components/Search.astro';
+---
+
+<div class="header">
+	<div class="left-group sl-flex">
+		<div class="title-wrapper sl-flex">
+			<SiteTitle />
+		</div>
+		<nav class="top-nav sl-hidden md:sl-flex print:hidden" aria-label="Main navigation">
+			<a href="/getting-started/installation/">Docs</a>
+			<a href="/playground/">Playground</a>
+		</nav>
+	</div>
+	<div class="sl-flex print:hidden">
+		{shouldRenderSearch && <Search />}
+	</div>
+	<div class="sl-hidden md:sl-flex print:hidden right-group">
+		<div class="sl-flex social-icons">
+			<SocialIcons />
+		</div>
+		<ThemeSelect />
+		<LanguageSelect />
+	</div>
+</div>
+
+<style>
+	@layer starlight.core {
+		.header {
+			display: flex;
+			gap: var(--sl-nav-gap);
+			justify-content: space-between;
+			align-items: center;
+			height: 100%;
+		}
+
+		.left-group {
+			align-items: center;
+			gap: 0;
+			flex-shrink: 0;
+		}
+
+		.title-wrapper {
+			overflow: clip;
+			padding: 0.25rem;
+			margin: -0.25rem;
+			min-width: 0;
+		}
+
+		.top-nav {
+			display: flex;
+			gap: 0.25rem;
+			align-items: center;
+			margin-inline-start: 1rem;
+		}
+
+		.top-nav a {
+			color: var(--sl-color-gray-2);
+			text-decoration: none;
+			padding: 0.35rem 0.75rem;
+			border-radius: 0.375rem;
+			font-size: var(--sl-text-sm);
+			font-weight: 500;
+			white-space: nowrap;
+			transition: color 0.2s;
+		}
+
+		.top-nav a:hover {
+			color: var(--sl-color-white);
+		}
+
+		.right-group,
+		.social-icons {
+			gap: 1rem;
+			align-items: center;
+		}
+		.social-icons::after {
+			content: '';
+			height: 2rem;
+			border-inline-end: 1px solid var(--sl-color-gray-5);
+		}
+
+		@media (min-width: 50rem) {
+			:global(:root[data-has-sidebar]) {
+				--__sidebar-pad: calc(2 * var(--sl-nav-pad-x));
+			}
+			:global(:root:not([data-has-toc])) {
+				--__toc-width: 0rem;
+			}
+			.header {
+				display: grid;
+				grid-template-columns:
+					/* 1 (site title + nav links) */
+					auto
+					/* 2 (search box) */
+					1fr
+					/* 3 (right items) */
+					auto;
+				align-content: center;
+			}
+		}
+	}
+</style>

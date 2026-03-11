@@ -22,7 +22,7 @@ async function openOptionsPanel(page: import('@playwright/test').Page) {
 
 test.describe('TelInput (demo)', () => {
 	test.beforeEach(async ({ page }) => {
-		await page.goto('/');
+		await page.goto('/playground');
 
 		// Wait for the demo to initialize (country dropdown enabled) and for hydration to settle.
 		await expect(page.locator('#states-button')).toBeEnabled();
@@ -295,7 +295,7 @@ test.describe('TelInput (demo)', () => {
 
 test.describe('Validation behavior', () => {
 	test.beforeEach(async ({ page }) => {
-		await page.goto('/');
+		await page.goto('/playground');
 		await expect(page.locator('#states-button')).toBeEnabled();
 		await expect(page.getByTestId('tel-input')).toBeVisible();
 	});
@@ -488,7 +488,7 @@ const inputFormatsMatrix = [
 
 test.describe('Input Format Variants', () => {
 	test.beforeEach(async ({ page }) => {
-		await page.goto('/');
+		await page.goto('/playground');
 		await expect(page.locator('#states-button')).toBeEnabled();
 		await expect(page.getByTestId('tel-input')).toBeVisible();
 	});

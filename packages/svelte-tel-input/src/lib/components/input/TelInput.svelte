@@ -2,7 +2,7 @@
 	import { onMount, untrack } from 'svelte';
 	import { ParseError } from 'libphonenumber-js/max';
 	import { generatePlaceholder, newNormalizer, telInputAction } from '$lib/utils/index.js';
-	import type { CountryCode, TelInputOptions, Props } from '$lib/types';
+	import type { CountryCode, TelInputOptions, Props, ValidationError } from '$lib/types';
 	import { getCountry, guessCountryByPartialNumber } from '$lib/utils/directives/countryHelpers';
 
 	const defaultOptions = {
@@ -30,6 +30,7 @@
 		country = $bindable(null),
 		detailedValue = $bindable(null),
 		valid = $bindable(true),
+		validationError = $bindable<ValidationError>(null),
 		options = defaultOptions,
 		el = $bindable(undefined),
 		...rest
@@ -158,7 +159,29 @@
 		handleParsePhoneNumber(value, country, combinedOptions.validateOn !== 'blur');
 	};
 
-	const getEmptyValidity = () => !required;
+	const getValidationError = (
+		isEmpty: boolean,
+		parseValid: boolean,
+		resolvedCountry: CountryCode | null | undefined
+	): ValidationError => {
+		const allowed = combinedOptions.allowedCountries;
+		if (allowed?.length && resolvedCountry != null && !allowed.includes(resolvedCountry)) {
+			return 'country_not_allowed';
+		}
+		if (isEmpty) return required ? 'required' : null;
+		return parseValid ? null : 'invalid';
+	};
+
+	const applyValidity = (
+		isEmpty: boolean,
+		parseValid: boolean,
+		resolvedCountry?: CountryCode | null
+	) => {
+		const error = getValidationError(isEmpty, parseValid, resolvedCountry);
+		valid = error === null;
+		validationError = error;
+		onValidityChange?.(valid, error);
+	};
 
 	const handleBlur = (
 		e: FocusEvent & {
@@ -167,11 +190,9 @@
 	) => {
 		if (!disabled && !readonly && combinedOptions.validateOn !== 'input') {
 			if (inputValue === '') {
-				valid = getEmptyValidity();
-				onValidityChange?.(valid);
+				applyValidity(true, false, country);
 			} else {
-				valid = detailedValue?.isValid ?? false;
-				onValidityChange?.(valid);
+				applyValidity(false, detailedValue?.isValid ?? false, country);
 			}
 		}
 		const { onblur } = rest;
@@ -201,12 +222,11 @@
 		if (rawInput === null && currCountry !== null) {
 			if (currCountry !== prevCountry) {
 				prevCountry = currCountry;
-				valid = getEmptyValidity();
+				applyValidity(true, false, currCountry);
 				value = '';
 				_lastWrittenValue = ''; // stamp
 				inputValue = '';
 				detailedValue = null;
-				onValidityChange?.(valid);
 				onValueChange?.(value, detailedValue);
 			}
 			return;
@@ -215,8 +235,7 @@
 		// Full reset.
 		if (rawInput === null) {
 			if (shouldValidate) {
-				valid = getEmptyValidity();
-				onValidityChange?.(valid);
+				applyValidity(true, false, null);
 			}
 			value = '';
 			_lastWrittenValue = ''; // stamp
@@ -233,8 +252,7 @@
 		const isEffectivelyEmpty = !/[0-9+]/.test(rawInput);
 		if (isEffectivelyEmpty) {
 			if (shouldValidate) {
-				valid = getEmptyValidity();
-				onValidityChange?.(valid);
+				applyValidity(true, false, country);
 			}
 			value = '';
 			_lastWrittenValue = ''; // stamp
@@ -297,8 +315,7 @@
 		onValueChange?.(value, detailedValue);
 
 		if (shouldValidate) {
-			valid = detailedValue?.isValid ?? false;
-			onValidityChange?.(valid);
+			applyValidity(false, detailedValue?.isValid ?? false, country);
 		}
 	};
 
@@ -376,15 +393,13 @@
 		handleParsePhoneNumber(null, null);
 	};
 
-	const checkValidity = () => {
+	const checkValidity = (): { valid: boolean; error: ValidationError } => {
 		if (inputValue === '') {
-			valid = getEmptyValidity();
-			onValidityChange?.(valid);
-			return valid;
+			applyValidity(true, false, country);
+		} else {
+			handleParsePhoneNumber(inputValue, country, true);
 		}
-
-		handleParsePhoneNumber(inputValue, country, true);
-		return valid;
+		return { valid, error: validationError };
 	};
 
 	export const api = {

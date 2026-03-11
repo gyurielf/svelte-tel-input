@@ -5,7 +5,8 @@
 		DetailedValue,
 		CountryCode,
 		TelInputOptions,
-		Country
+		Country,
+		ValidationError
 	} from 'svelte-tel-input/types';
 	import 'svelte-tel-input/styles/flags.css';
 	import LoadingSpinner from '../LoadingSpinner.svelte';
@@ -20,6 +21,7 @@
 		searchPlaceholder?: string | null;
 		selectedCountry: CountryCode | null;
 		valid: boolean;
+		validationError?: ValidationError;
 		options: TelInputOptions;
 		onSelectChange?: (details: CountryCode) => void;
 		onSelectSame?: (details: CountryCode) => void;
@@ -35,6 +37,7 @@
 		searchPlaceholder = 'Search',
 		selectedCountry = $bindable(),
 		valid = $bindable(),
+		validationError = $bindable<ValidationError>(null),
 		options,
 		onSelectChange,
 		onSelectSame
@@ -219,6 +222,7 @@
 		bind:detailedValue
 		bind:value
 		bind:valid
+		bind:validationError
 		{options}
 		{required}
 		onLoad={() => {

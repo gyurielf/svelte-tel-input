@@ -35,8 +35,11 @@
 		{
 			'@type': 'WebApplication',
 			name: 'Svelte Tel Input',
-			url: 'https://mono-sti.vercel.app/',
-			sameAs: ['https://mono-sti.vercel.app', 'https://github.com/gyurielf/mono-sti']
+			url: 'https://svelte-tel-input.vercel.app/',
+			sameAs: [
+				'https://svelte-tel-input.vercel.app',
+				'https://github.com/gyurielf/svelte-tel-input'
+			]
 		}
 	]}
 />

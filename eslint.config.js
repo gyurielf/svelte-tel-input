@@ -122,7 +122,8 @@ export default [
 			'scripts/',
 			'**/scripts/',
 			'**/reash/',
-			'**/.astro'
+			'**/.astro',
+			'**/env.d.ts'
 		]
 	},
 	{

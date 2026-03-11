@@ -238,7 +238,7 @@ describe('TelInput Component', () => {
 			expect(mockValidityChange).not.toHaveBeenCalled();
 
 			const isValid = component.api.checkValidity();
-			expect(isValid).toBe(true);
+			expect(isValid).toEqual({ valid: true, error: null });
 			expect(mockValidityChange).toHaveBeenCalled();
 			expect(mockValidityChange.mock.calls.at(-1)?.[0]).toBe(true);
 		});
@@ -515,8 +515,8 @@ describe('TelInput Component', () => {
 			});
 
 			const result = component.api.checkValidity();
-			expect(result).toBe(true);
-			expect(mockValidityChange).toHaveBeenCalledWith(true);
+			expect(result).toEqual({ valid: true, error: null });
+			expect(mockValidityChange).toHaveBeenCalledWith(true, null);
 		});
 
 		it('should return valid=false via checkValidity for empty input when required is true', async () => {
@@ -532,8 +532,8 @@ describe('TelInput Component', () => {
 			});
 
 			const result = component.api.checkValidity();
-			expect(result).toBe(false);
-			expect(mockValidityChange).toHaveBeenCalledWith(false);
+			expect(result).toEqual({ valid: false, error: 'required' });
+			expect(mockValidityChange).toHaveBeenCalledWith(false, 'required');
 		});
 
 		it('should return valid=false via checkValidity for partial number even when not required', async () => {
@@ -553,8 +553,8 @@ describe('TelInput Component', () => {
 			mockValidityChange.mockClear();
 
 			const result = component.api.checkValidity();
-			expect(result).toBe(false);
-			expect(mockValidityChange).toHaveBeenCalledWith(false);
+			expect(result).toEqual({ valid: false, error: 'invalid' });
+			expect(mockValidityChange).toHaveBeenCalledWith(false, 'invalid');
 		});
 	});
 
@@ -570,7 +570,7 @@ describe('TelInput Component', () => {
 			});
 
 			await rerender({ country: 'HU' });
-			expect(mockValidityChange).toHaveBeenCalledWith(true);
+			expect(mockValidityChange).toHaveBeenCalledWith(true, null);
 		});
 
 		it('should be invalid after country change when required is true', async () => {
@@ -585,7 +585,7 @@ describe('TelInput Component', () => {
 			});
 
 			await rerender({ country: 'HU' });
-			expect(mockValidityChange).toHaveBeenCalledWith(false);
+			expect(mockValidityChange).toHaveBeenCalledWith(false, 'required');
 		});
 
 		it('should clear value and detailedValue after country change', async () => {
@@ -643,7 +643,7 @@ describe('TelInput Component', () => {
 
 			await rerender({ country: 'HU' });
 			// Without required, should be valid regardless of invalidateOnCountryChange
-			expect(mockValidityChange).toHaveBeenCalledWith(true);
+			expect(mockValidityChange).toHaveBeenCalledWith(true, null);
 		});
 	});
 
@@ -849,7 +849,7 @@ describe('TelInput Component', () => {
 
 			await rerender({ value: '+1999' });
 
-			expect(mockValidityChange).toHaveBeenCalledWith(false);
+			expect(mockValidityChange).toHaveBeenCalledWith(false, 'invalid');
 		});
 
 		it('should reflect the new country when country prop is set externally (no echo callback)', async () => {
@@ -891,13 +891,13 @@ describe('TelInput Component', () => {
 
 			// Set to invalid via external prop
 			await rerender({ value: '+1999' });
-			expect(mockValidityChange).toHaveBeenCalledWith(false);
+			expect(mockValidityChange).toHaveBeenCalledWith(false, 'invalid');
 
 			mockValidityChange.mockClear();
 
 			// Restore a valid value via external prop
 			await rerender({ value: '+12014560001' });
-			expect(mockValidityChange).toHaveBeenCalledWith(true);
+			expect(mockValidityChange).toHaveBeenCalledWith(true, null);
 		});
 	});
 
