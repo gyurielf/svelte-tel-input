@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onMount, untrack } from 'svelte';
 	import { ParseError } from 'libphonenumber-js/max';
-	import { generatePlaceholder, newNormalizer, telInputAction } from '$lib/utils/index.js';
+	import { generatePlaceholder, parsePhoneInput, telInputAction } from '$lib/utils/index.js';
 	import type { CountryCode, TelInputOptions, Props, ValidationError } from '$lib/types';
 	import { getCountry, guessCountryByPartialNumber } from '$lib/utils/directives/countryHelpers';
 
@@ -28,11 +28,13 @@
 		onError,
 		value = $bindable(''),
 		country = $bindable(null),
+		defaultCountry = null,
 		detailedValue = $bindable(null),
 		valid = $bindable(true),
 		validationError = $bindable<ValidationError>(null),
 		options = defaultOptions,
 		el = $bindable(undefined),
+		'aria-invalid': ariaInvalidProp = undefined,
 		...rest
 	}: Props = $props();
 
@@ -122,7 +124,7 @@
 			? getCountry({ field: 'iso2', value: effectiveCountryIso2 })
 			: undefined;
 		try {
-			const details = newNormalizer(value, countryObj);
+			const details = parsePhoneInput(value, countryObj);
 			const spaces = options?.spaces ?? defaultOptions.spaces;
 			return spaces ? (details.formattedNumber ?? value) : value;
 		} catch {
@@ -294,7 +296,7 @@
 			startsWithPlus && fullDialCodeMatch ? numberHasCountry : selectedCountry;
 
 		try {
-			detailedValue = newNormalizer(rawInput, normalizerCountry);
+			detailedValue = parsePhoneInput(rawInput, normalizerCountry);
 		} catch (err) {
 			if (err instanceof ParseError) {
 				detailedValue = { isValid: false, error: err.message };
@@ -389,8 +391,17 @@
 		onLoad?.();
 	});
 
-	const reset = () => {
-		handleParsePhoneNumber(null, null);
+	const reset = ({ country: resetCountry = false }: { country?: boolean } = {}) => {
+		const targetCountry = resetCountry ? null : (defaultCountry ?? null);
+		applyValidity(true, false, targetCountry);
+		value = '';
+		_lastWrittenValue = '';
+		detailedValue = null;
+		prevCountry = targetCountry;
+		inputValue = '';
+		countryUpdater(targetCountry);
+		onCountryChange?.(targetCountry);
+		onValueChange?.('', null);
 	};
 
 	const checkValidity = (): { valid: boolean; error: ValidationError } => {
@@ -420,6 +431,7 @@
 	{readonly}
 	{required}
 	{size}
+	aria-invalid={ariaInvalidProp !== undefined ? ariaInvalidProp : valid ? undefined : true}
 	placeholder={getPlaceholder}
 	type="tel"
 	value={inputValue}

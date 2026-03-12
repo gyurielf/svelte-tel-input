@@ -86,6 +86,9 @@
 			],
 			"assets": [
 				"./dist/assets/index.d.ts"
+			],
+			"validators": [
+				"./dist/validators/index.d.ts"
 			]
 		}
 	},
@@ -105,6 +108,10 @@
 		"./assets": {
 			"types": "./dist/assets/index.d.ts",
 			"default": "./dist/assets/index.js"
+		},
+		"./validators": {
+			"types": "./dist/validators/index.d.ts",
+			"default": "./dist/validators/index.js"
 		},
 		"./styles/flags.css": "./dist/styles/flags.css"
 	}

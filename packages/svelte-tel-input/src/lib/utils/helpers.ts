@@ -7,6 +7,7 @@ import {
 import type { Country, DetailedValue } from '$lib/types/index.js';
 import type { CountryCode } from 'libphonenumber-js';
 import { examplePhoneNumbers } from '$lib/assets/index.js';
+import { getCountry } from './directives/countryHelpers.js';
 
 const whiteSpaceRegex = new RegExp(
 	'[\\t\\n\\v\\f\\r \\u00a0\\u2000\\u2001\\u2002\\u2003\\u2004\\u2005\\u2006\\u2007\\u2008\\u2009\\u200a\\u200b\\u2028\\u2029\\u3000]',
@@ -199,7 +200,7 @@ const formatNanp = (e164ish: string): string => {
 	return `+1 ${rest}`.trimEnd();
 };
 
-export const newNormalizer = (input: string, country: Country | undefined): DetailedValue => {
+export const parsePhoneInput = (input: string, country: Country | undefined): DetailedValue => {
 	const normalized = normalizeForLibphonenumber(input);
 	const defaultCountryIso2 = country?.iso2;
 	const capped = capToMaxValidLength(
@@ -259,4 +260,29 @@ export const newNormalizer = (input: string, country: Country | undefined): Deta
 		phoneNumber,
 		uri
 	};
+};
+
+/**
+ * Parse a raw phone number string into a `DetailedValue`.
+ *
+ * @param raw     - The raw input (E.164, national, or incomplete).
+ * @param country - Optional ISO 3166-1 alpha-2 country code used as the
+ *                  default country when the number has no leading `+`.
+ */
+export const parse = (raw: string, country?: CountryCode | null): DetailedValue => {
+	const countryObj = country ? getCountry({ field: 'iso2', value: country }) : undefined;
+	return parsePhoneInput(raw, countryObj);
+};
+
+/**
+ * Normalize a raw phone number string to E.164 format.
+ * Returns `null` when the number cannot be parsed or is not valid.
+ *
+ * @param raw     - The raw input (E.164, national, or incomplete).
+ * @param country - Optional ISO 3166-1 alpha-2 country code used as the
+ *                  default country when the number has no leading `+`.
+ */
+export const normalizeToE164 = (raw: string, country?: CountryCode | null): string | null => {
+	const result = parse(raw, country);
+	return result.isValid ? (result.e164 ?? null) : null;
 };

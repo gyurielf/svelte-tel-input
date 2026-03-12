@@ -614,6 +614,65 @@ describe('TelInput Component', () => {
 			expect(mockCountryChange).toHaveBeenCalledWith(null);
 		});
 
+		it('should restore defaultCountry when api.reset() is called', () => {
+			const mockCountryChange = vi.fn();
+			const { component } = render(TelInput, {
+				props: {
+					value: '+12154567890',
+					country: 'US',
+					defaultCountry: 'HU',
+					onCountryChange: mockCountryChange
+				}
+			});
+
+			mockCountryChange.mockClear();
+			component.api.reset();
+
+			expect(mockCountryChange).toHaveBeenCalledWith('HU');
+		});
+
+		it('should reset country to null when api.reset({ country: true }) is called, ignoring defaultCountry', () => {
+			const mockCountryChange = vi.fn();
+			const { component } = render(TelInput, {
+				props: {
+					value: '+12154567890',
+					country: 'US',
+					defaultCountry: 'HU',
+					onCountryChange: mockCountryChange
+				}
+			});
+
+			mockCountryChange.mockClear();
+			component.api.reset({ country: true });
+
+			expect(mockCountryChange).toHaveBeenCalledWith(null);
+		});
+
+		it('should clear value and set country to defaultCountry after reset', () => {
+			const mockCountryChange = vi.fn();
+			const mockValueChange = vi.fn();
+			const mockValidityChange = vi.fn();
+			const { component } = render(TelInput, {
+				props: {
+					value: '+12154567890',
+					country: 'US',
+					defaultCountry: 'HU',
+					onCountryChange: mockCountryChange,
+					onValueChange: mockValueChange,
+					onValidityChange: mockValidityChange
+				}
+			});
+
+			mockCountryChange.mockClear();
+			mockValueChange.mockClear();
+			mockValidityChange.mockClear();
+			component.api.reset();
+
+			expect(mockCountryChange).toHaveBeenCalledWith('HU');
+			expect(mockValueChange).toHaveBeenCalledWith('', null);
+			expect(mockValidityChange).toHaveBeenCalledWith(true, null);
+		});
+
 		it('should not trigger callbacks when country prop does not actually change', async () => {
 			const mockValidityChange = vi.fn();
 			const { rerender } = render(TelInput, {
@@ -1184,6 +1243,52 @@ describe('TelInput Component', () => {
 					}
 				})
 			).not.toThrow();
+		});
+	});
+
+	describe('Accessibility attribute passthrough', () => {
+		it('should forward aria-label to the input element', () => {
+			const { getByTestId } = render(TelInput, {
+				props: { value: '', country: 'US', 'aria-label': 'Phone number' }
+			});
+			expect(getByTestId('tel-input').getAttribute('aria-label')).toBe('Phone number');
+		});
+
+		it('should forward aria-labelledby to the input element', () => {
+			const { getByTestId } = render(TelInput, {
+				props: { value: '', country: 'US', 'aria-labelledby': 'label-id' }
+			});
+			expect(getByTestId('tel-input').getAttribute('aria-labelledby')).toBe('label-id');
+		});
+
+		it('should forward aria-describedby to the input element', () => {
+			const { getByTestId } = render(TelInput, {
+				props: { value: '', country: 'US', 'aria-describedby': 'hint-id' }
+			});
+			expect(getByTestId('tel-input').getAttribute('aria-describedby')).toBe('hint-id');
+		});
+
+		it('should not set aria-invalid when the input is valid', () => {
+			const { getByTestId } = render(TelInput, {
+				props: { value: '+12154567890', country: 'US', valid: true }
+			});
+			expect(getByTestId('tel-input').getAttribute('aria-invalid')).toBeNull();
+		});
+
+		it('should set aria-invalid="true" when valid is false', async () => {
+			const { getByTestId, rerender } = render(TelInput, {
+				props: { value: '+12154567890', country: 'US', required: true }
+			});
+			// Rerender with an invalid value to trigger aria-invalid
+			await rerender({ value: 'garbage', required: true });
+			expect(getByTestId('tel-input').getAttribute('aria-invalid')).toBe('true');
+		});
+
+		it('should allow consumer to override aria-invalid via prop', () => {
+			const { getByTestId } = render(TelInput, {
+				props: { value: '', country: 'US', 'aria-invalid': true }
+			});
+			expect(getByTestId('tel-input').getAttribute('aria-invalid')).toBe('true');
 		});
 	});
 });

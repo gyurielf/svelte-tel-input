@@ -1,6 +1,6 @@
 import type { CountryCode } from '$lib/types/index.js';
 import { getCountry } from '$lib/utils/directives/countryHelpers.js';
-import { newNormalizer } from '$lib/utils/helpers.js';
+import { parsePhoneInput } from '$lib/utils/helpers.js';
 import { calculateCursorPosition } from './cursorPosition.js';
 
 interface TelInputActionParams {
@@ -139,7 +139,7 @@ const onInput = (event: InputEvent, params: TelInputActionParams, node: HTMLInpu
 	const countryObj = params.country
 		? getCountry({ field: 'iso2', value: params.country })
 		: undefined;
-	const details = newNormalizer(normalized, countryObj);
+	const details = parsePhoneInput(normalized, countryObj);
 
 	// Display formatting:
 	// - When `spaces` is true, show formatted-as-you-type output (national or intl)

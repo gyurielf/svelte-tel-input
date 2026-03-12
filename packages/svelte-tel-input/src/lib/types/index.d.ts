@@ -139,8 +139,13 @@ export interface Props extends HTMLInputAttributes {
 	size?: number | null;
 	/** The core value of the input, this is the only one what you can store. It's an E164 phone number.*/
 	value: string;
-	/** It's accept any Country Code Alpha-2 (ISO 3166) -- DEFAULT COUNTRY */
+	/** It accepts any Country Code Alpha-2 (ISO 3166) -- DEFAULT COUNTRY */
 	country?: CountryCode | null | undefined;
+	/**
+	 * Country to restore when `api.reset()` is called without `{ country: true }`.
+	 * If not set, `reset()` clears `country` to `null`.
+	 */
+	defaultCountry?: CountryCode | null;
 	/** Detailed parse of the E164 phone number */
 	detailedValue?: Readonly<Partial<DetailedValue> | null>;
 	/** Validity of the input based on the config settings. */
