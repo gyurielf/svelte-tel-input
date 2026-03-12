@@ -67,6 +67,8 @@ export interface DetailedValue {
 	uri: string | null;
 	e164: string | null;
 	error?: string;
+	/** Granular validation error when `isValid` is `false`. */
+	validationError?: ValidationError;
 }
 
 export type PhoneNumberParseError = 'NOT_A_NUMBER' | 'INVALID_COUNTRY' | 'TOO_SHORT' | 'TOO_LONG';
@@ -76,10 +78,24 @@ export type PhoneType = 'FIXED_LINE' | 'MOBILE';
  * The reason the current phone number input is invalid.
  * - `'required'` — field is empty and `required` is `true`
  * - `'country_not_allowed'` — the resolved country is not in `options.allowedCountries`
- * - `'invalid'` — number does not pass libphonenumber-js validation
+ * - `'TOO_SHORT'` — number has too few digits
+ * - `'TOO_LONG'` — number has too many digits
+ * - `'NOT_A_NUMBER'` — input does not look like a phone number at all
+ * - `'INVALID_COUNTRY'` — country code is not recognized
+ * - `'INVALID_LENGTH'` — number length doesn't match any valid length for the country
+ * - `'INVALID'` — fallback when the specific reason cannot be determined
  * - `null` — no error (input is valid)
  */
-export type ValidationError = 'required' | 'country_not_allowed' | 'invalid' | null;
+export type ValidationError =
+	| 'required'
+	| 'country_not_allowed'
+	| 'TOO_SHORT'
+	| 'TOO_LONG'
+	| 'NOT_A_NUMBER'
+	| 'INVALID_COUNTRY'
+	| 'INVALID_LENGTH'
+	| 'INVALID'
+	| null;
 
 export interface TelInputValidity {
 	value: boolean | null;
@@ -100,12 +116,6 @@ export interface TelInputOptions {
 	 */
 	spaces?: boolean;
 	/**
-	 * @deprecated This option is no longer used. Country-change validity is now
-	 * determined by the `required` prop: empty input after a country change is
-	 * invalid when `required` is set, valid otherwise.
-	 */
-	invalidateOnCountryChange?: boolean;
-	/**
 	 * Control when validation is triggered.
 	 * @default 'always'
 	 */
@@ -117,6 +127,13 @@ export interface TelInputOptions {
 	 * Pass `undefined` (or omit) to allow all countries.
 	 */
 	allowedCountries?: CountryCode[];
+	/**
+	 * Prevent the country from changing when the user types a different
+	 * international dial code (e.g. `+1`, `+36`).
+	 * The input stays locked to the current `country` (or `defaultCountry`).
+	 * @default false
+	 */
+	lockCountry?: boolean;
 }
 
 export interface Props extends HTMLInputAttributes {

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { parse, normalizeToE164 } from '$lib/utils/index.js';
+import { parse, normalizeToE164, pickCountries } from '$lib/utils/index.js';
 
 describe('parse()', () => {
 	it('parses a full E.164 number without a country hint', () => {
@@ -74,5 +74,44 @@ describe('normalizeToE164()', () => {
 	it('returns null for an incomplete number', () => {
 		// Not enough digits to be valid
 		expect(normalizeToE164('+1215')).toBeNull();
+	});
+});
+
+describe('pickCountries()', () => {
+	it('returns only the requested countries', () => {
+		const result = pickCountries(['US', 'HU']);
+		expect(result).toHaveLength(2);
+		expect(result.map((c) => c.iso2)).toEqual(['US', 'HU']);
+	});
+
+	it('preserves the order specified by the caller', () => {
+		const result = pickCountries(['GB', 'US', 'HU']);
+		expect(result.map((c) => c.iso2)).toEqual(['GB', 'US', 'HU']);
+	});
+
+	it('returns an empty array when given an empty list', () => {
+		expect(pickCountries([])).toEqual([]);
+	});
+
+	it('skips unknown codes gracefully', () => {
+		// 'XX' is not a valid CountryCode but the function shouldn't crash
+		const result = pickCountries(['US', 'XX' as any, 'HU']);
+		expect(result.map((c) => c.iso2)).toEqual(['US', 'HU']);
+	});
+
+	it('returns full Country objects with all fields', () => {
+		const [us] = pickCountries(['US']);
+		expect(us).toMatchObject({
+			id: 'US',
+			iso2: 'US',
+			dialCode: '1',
+			name: expect.stringContaining('United States')
+		});
+	});
+
+	it('returns a single country when given one code', () => {
+		const result = pickCountries(['DE']);
+		expect(result).toHaveLength(1);
+		expect(result[0].iso2).toBe('DE');
 	});
 });

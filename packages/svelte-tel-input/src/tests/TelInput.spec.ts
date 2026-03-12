@@ -553,8 +553,8 @@ describe('TelInput Component', () => {
 			mockValidityChange.mockClear();
 
 			const result = component.api.checkValidity();
-			expect(result).toEqual({ valid: false, error: 'invalid' });
-			expect(mockValidityChange).toHaveBeenCalledWith(false, 'invalid');
+			expect(result).toEqual({ valid: false, error: 'TOO_SHORT' });
+			expect(mockValidityChange).toHaveBeenCalledWith(false, 'TOO_SHORT');
 		});
 	});
 
@@ -695,7 +695,6 @@ describe('TelInput Component', () => {
 				props: {
 					value: '',
 					country: 'US',
-					options: { invalidateOnCountryChange: true },
 					onValidityChange: mockValidityChange
 				}
 			});
@@ -725,6 +724,73 @@ describe('TelInput Component', () => {
 			await fireUserEvent.clear(input);
 			await fireUserEvent.type(input, '+447947123456');
 			expect(mockUpdateCountry).toHaveBeenCalled();
+		});
+	});
+
+	describe('lockCountry option', () => {
+		it('should not switch country when lockCountry is true and a different dial code is typed', async () => {
+			const mockCountryChange = vi.fn();
+			const { getByTestId } = render(TelInput, {
+				props: {
+					value: '',
+					country: 'US',
+					options: { lockCountry: true },
+					onCountryChange: mockCountryChange
+				}
+			});
+			const input = getByTestId('tel-input') as HTMLInputElement;
+
+			await fireUserEvent.type(input, '+447947123456');
+			expect(mockCountryChange).not.toHaveBeenCalled();
+		});
+
+		it('should switch country normally when lockCountry is false', async () => {
+			const mockCountryChange = vi.fn();
+			const { getByTestId } = render(TelInput, {
+				props: {
+					value: '',
+					country: 'US',
+					options: { lockCountry: false },
+					onCountryChange: mockCountryChange
+				}
+			});
+			const input = getByTestId('tel-input') as HTMLInputElement;
+
+			await fireUserEvent.type(input, '+447947123456');
+			expect(mockCountryChange).toHaveBeenCalledWith('GB');
+		});
+
+		it('should parse number using the locked country even when dial code differs', async () => {
+			const mockCountryChange = vi.fn();
+			const { getByTestId } = render(TelInput, {
+				props: {
+					value: '',
+					country: 'HU',
+					options: { lockCountry: true },
+					onCountryChange: mockCountryChange
+				}
+			});
+			const input = getByTestId('tel-input') as HTMLInputElement;
+
+			await fireUserEvent.type(input, '+36301234567');
+			// Country should remain HU — no country change callback fired
+			expect(mockCountryChange).not.toHaveBeenCalled();
+		});
+
+		it('should not switch country when value is set externally with lockCountry', async () => {
+			const mockCountryChange = vi.fn();
+			const { rerender } = render(TelInput, {
+				props: {
+					value: '+12154567890',
+					country: 'US',
+					options: { lockCountry: true },
+					onCountryChange: mockCountryChange
+				}
+			});
+
+			mockCountryChange.mockClear();
+			await rerender({ value: '+447947123456' });
+			expect(mockCountryChange).not.toHaveBeenCalled();
 		});
 	});
 
@@ -908,7 +974,7 @@ describe('TelInput Component', () => {
 
 			await rerender({ value: '+1999' });
 
-			expect(mockValidityChange).toHaveBeenCalledWith(false, 'invalid');
+			expect(mockValidityChange).toHaveBeenCalledWith(false, 'TOO_SHORT');
 		});
 
 		it('should reflect the new country when country prop is set externally (no echo callback)', async () => {
@@ -950,7 +1016,7 @@ describe('TelInput Component', () => {
 
 			// Set to invalid via external prop
 			await rerender({ value: '+1999' });
-			expect(mockValidityChange).toHaveBeenCalledWith(false, 'invalid');
+			expect(mockValidityChange).toHaveBeenCalledWith(false, 'TOO_SHORT');
 
 			mockValidityChange.mockClear();
 
@@ -1191,14 +1257,12 @@ describe('TelInput Component', () => {
 
 		it('should throw when options is an array', () => {
 			expect(() =>
-				// eslint-disable-next-line @typescript-eslint/no-explicit-any
 				render(TelInput, { props: { value: '', country: 'US', options: [] as any } })
 			).toThrow(badPropMsg('options'));
 		});
 
 		it('should throw when options is a string', () => {
 			expect(() =>
-				// eslint-disable-next-line @typescript-eslint/no-explicit-any
 				render(TelInput, { props: { value: '', country: 'US', options: 'blur' as any } })
 			).toThrow(badPropMsg('options'));
 		});

@@ -171,7 +171,9 @@
 			return 'country_not_allowed';
 		}
 		if (isEmpty) return required ? 'required' : null;
-		return parseValid ? null : 'invalid';
+		if (parseValid) return null;
+		// Use the granular error from detailedValue when available
+		return detailedValue?.validationError ?? 'INVALID';
 	};
 
 	const applyValidity = (
@@ -278,6 +280,7 @@
 		// Only switch country when we have a FULL dial-code match.
 		// This prevents switching on partial prefixes like "+3" while backspacing.
 		if (
+			!combinedOptions.lockCountry &&
 			startsWithPlus &&
 			fullDialCodeMatch &&
 			numberHasCountry?.iso2 &&
@@ -292,8 +295,12 @@
 
 		// If dial code is incomplete (e.g. "+3"), keep using the currently selected country
 		// so we don't bounce countries during deletions.
-		const normalizerCountry =
-			startsWithPlus && fullDialCodeMatch ? numberHasCountry : selectedCountry;
+		// When lockCountry is enabled, always use the selected country regardless of dial code.
+		const normalizerCountry = combinedOptions.lockCountry
+			? selectedCountry
+			: startsWithPlus && fullDialCodeMatch
+				? numberHasCountry
+				: selectedCountry;
 
 		try {
 			detailedValue = parsePhoneInput(rawInput, normalizerCountry);

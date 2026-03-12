@@ -20,10 +20,10 @@ export interface TelValidatorOptions {
  * @example Zod
  * ```ts
  * const schema = z.object({
- *   phone: z.string().refine(
- *     val => !validateTelInput(val, { required: true }),
- *     val => ({ message: validateTelInput(val, { required: true }) ?? 'Invalid' })
- *   )
+ *   phone: z.string().superRefine((val, ctx) => {
+ *     const error = validateTelInput(val, { required: true });
+ *     if (error) ctx.addIssue({ code: 'custom', message: error });
+ *   })
  * });
  * ```
  *
@@ -51,7 +51,7 @@ export function validateTelInput(
 
 	const result = parse(value, country ?? null);
 
-	if (!result.isValid) return 'invalid';
+	if (!result.isValid) return result.validationError ?? 'INVALID';
 
 	if (
 		allowedCountries &&

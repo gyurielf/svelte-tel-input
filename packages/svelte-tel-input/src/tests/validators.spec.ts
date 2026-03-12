@@ -29,11 +29,19 @@ describe('validateTelInput()', () => {
 
 	describe('invalid numbers', () => {
 		it('returns "invalid" for a garbage string', () => {
-			expect(validateTelInput('not-a-phone')).toBe('invalid');
+			expect(validateTelInput('not-a-phone')).toBe('INVALID');
 		});
 
-		it('returns "invalid" for an incomplete number', () => {
-			expect(validateTelInput('+1215')).toBe('invalid');
+		it('returns "TOO_SHORT" for an incomplete number', () => {
+			expect(validateTelInput('+1215')).toBe('TOO_SHORT');
+		});
+
+		it('returns "TOO_SHORT" for an incomplete number with country hint', () => {
+			expect(validateTelInput('215', { country: 'US' })).toBe('TOO_SHORT');
+		});
+
+		it('returns "INVALID_COUNTRY" for digits-only without recognizable country code', () => {
+			expect(validateTelInput('+0001234')).toBe('INVALID_COUNTRY');
 		});
 	});
 

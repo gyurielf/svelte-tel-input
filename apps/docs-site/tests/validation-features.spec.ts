@@ -17,10 +17,10 @@ test.describe('validationError binding', () => {
 		await expect(panel(page).getByTestId('validation-error-display')).toHaveText('');
 	});
 
-	test('shows "invalid" when an incomplete number is set externally', async ({ page }) => {
+	test('shows "TOO_SHORT" when an incomplete number is set externally', async ({ page }) => {
 		await page.getByTestId('bind-set-invalid-btn').click();
 		await expect(panel(page).getByTestId('valid-display')).toHaveText('false');
-		await expect(panel(page).getByTestId('validation-error-display')).toHaveText('invalid');
+		await expect(panel(page).getByTestId('validation-error-display')).toHaveText('TOO_SHORT');
 	});
 
 	test('shows "required" when field is empty and required is true', async ({ page }) => {
@@ -35,7 +35,7 @@ test.describe('validationError binding', () => {
 
 	test('clears validationError when valid value is restored', async ({ page }) => {
 		await page.getByTestId('bind-set-invalid-btn').click();
-		await expect(panel(page).getByTestId('validation-error-display')).toHaveText('invalid');
+		await expect(panel(page).getByTestId('validation-error-display')).toHaveText('TOO_SHORT');
 
 		await page.getByTestId('bind-set-value-btn').click();
 		await expect(panel(page).getByTestId('validation-error-display')).toHaveText('');
@@ -55,11 +55,15 @@ test.describe('api.checkValidity() returns { valid, error }', () => {
 		await expect(panel(page).getByTestId('check-validity-error-result')).toHaveText('');
 	});
 
-	test('returns { valid: false, error: "invalid" } for an invalid number', async ({ page }) => {
+	test('returns { valid: false, error: "TOO_SHORT" } for an incomplete number', async ({
+		page
+	}) => {
 		await page.getByTestId('bind-set-invalid-btn').click();
 		await page.getByTestId('api-check-validity-btn').click();
 		await expect(panel(page).getByTestId('check-validity-result')).toHaveText('false');
-		await expect(panel(page).getByTestId('check-validity-error-result')).toHaveText('invalid');
+		await expect(panel(page).getByTestId('check-validity-error-result')).toHaveText(
+			'TOO_SHORT'
+		);
 	});
 
 	test('returns { valid: false, error: "required" } for empty field when required', async ({

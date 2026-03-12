@@ -4,9 +4,9 @@ import {
 	formatIncompletePhoneNumber,
 	validatePhoneNumberLength
 } from 'libphonenumber-js/max';
-import type { Country, DetailedValue } from '$lib/types/index.js';
+import type { Country, DetailedValue, ValidationError } from '$lib/types/index.js';
 import type { CountryCode } from 'libphonenumber-js';
-import { examplePhoneNumbers } from '$lib/assets/index.js';
+import { examplePhoneNumbers, countries } from '$lib/assets/index.js';
 import { getCountry } from './directives/countryHelpers.js';
 
 const whiteSpaceRegex = new RegExp(
@@ -243,6 +243,16 @@ export const parsePhoneInput = (input: string, country: Country | undefined): De
 	const nationalNumber = phone?.nationalNumber || null;
 	const uri = phone?.getURI() || null;
 
+	const isValid = asYouType.isValid();
+
+	let phoneValidationError: ValidationError = null;
+	if (!isValid && capped) {
+		const lengthResult = defaultCountryIso2
+			? validatePhoneNumberLength(capped, defaultCountryIso2 as CountryCode)
+			: validatePhoneNumberLength(capped);
+		phoneValidationError = lengthResult ?? 'INVALID';
+	}
+
 	return {
 		countryCallingCode,
 		countryCode,
@@ -255,10 +265,11 @@ export const parsePhoneInput = (input: string, country: Country | undefined): De
 				: null,
 		formattedNumber,
 		isPossible: asYouType.isPossible(),
-		isValid: asYouType.isValid(),
+		isValid,
 		nationalNumber,
 		phoneNumber,
-		uri
+		uri,
+		validationError: phoneValidationError
 	};
 };
 
@@ -285,4 +296,22 @@ export const parse = (raw: string, country?: CountryCode | null): DetailedValue 
 export const normalizeToE164 = (raw: string, country?: CountryCode | null): string | null => {
 	const result = parse(raw, country);
 	return result.isValid ? (result.e164 ?? null) : null;
+};
+
+/**
+ * Return a subset of the full `countries` list filtered to the given codes,
+ * preserving the order of `codes`.
+ *
+ * Useful for building country-picker dropdowns that only show relevant countries
+ * and for pairing with the `allowedCountries` option.
+ *
+ * @param codes - ISO 3166-1 alpha-2 country codes to include (e.g. `['US', 'HU', 'GB']`).
+ */
+export const pickCountries = (codes: CountryCode[]): Country[] => {
+	const set = new Set(codes);
+	const map = new Map<CountryCode, Country>();
+	for (const c of countries) {
+		if (set.has(c.iso2)) map.set(c.iso2, c);
+	}
+	return codes.filter((code) => map.has(code)).map((code) => map.get(code)!);
 };
