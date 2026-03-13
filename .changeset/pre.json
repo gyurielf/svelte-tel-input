@@ -5,5 +5,7 @@
     "docs-site": "0.0.1",
     "svelte-tel-input": "3.6.1"
   },
-  "changesets": []
+  "changesets": [
+    "polite-suits-ask"
+  ]
 }
