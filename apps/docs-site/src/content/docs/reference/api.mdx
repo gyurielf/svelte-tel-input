@@ -1,6 +1,6 @@
 ---
 title: API Methods
-description: Component API methods exposed via the api export.
+description: Imperative methods exposed by the TelInput component.
 ---
 
 `TelInput` exposes an `api` object with imperative methods. Access it via `bind:this`:
@@ -20,44 +20,55 @@ description: Component API methods exposed via the api export.
 </button>
 ```
 
-## Methods
+## `checkValidity()`
 
-### `checkValidity(): boolean`
+```typescript
+checkValidity(): { valid: boolean; error: ValidationError }
+```
 
-Triggers validation immediately and returns the result.
+Triggers validation immediately and returns the result with a granular error.
 
-- If the input is **empty** and `required` is not set → returns `true`
-- If the input is **empty** and `required` is set → returns `false`
-- If the input contains a **valid** phone number → returns `true`
-- If the input contains an **invalid/partial** number → returns `false`
+| Input state | `required` not set | `required` set |
+|---|---|---|
+| Empty | `{ valid: true, error: null }` | `{ valid: false, error: 'required' }` |
+| Valid number | `{ valid: true, error: null }` | `{ valid: true, error: null }` |
+| Invalid number | `{ valid: false, error: '...' }` | `{ valid: false, error: '...' }` |
 
-Also updates the `valid` binding and fires `onValidityChange`.
+Also updates the `valid` and `validationError` bindings and fires `onValidityChange`.
 
 ```svelte
 <button onclick={() => {
-  const isValid = telInput.api.checkValidity();
-  if (!isValid) {
-    alert('Please enter a valid phone number');
+  const { valid, error } = telInput.api.checkValidity();
+  if (!valid) {
+    alert(`Invalid: ${error}`);
   }
 }}>
   Submit
 </button>
 ```
 
-### `reset(): void`
+## `reset()`
+
+```typescript
+reset(options?: { country?: boolean }): void
+```
 
 Resets the component to its empty state:
 
 - `value` → `''`
-- `country` → `null`
+- `country` → `defaultCountry` (or `null` if not set)
 - `detailedValue` → `null`
-- `valid` → `true` (or `false` if `required` is set)
-- Input display → cleared
+- `valid` → `true` (or `false` if `required`)
+- `validationError` → `null` (or `'required'` if `required`)
 
-Fires the corresponding change callbacks (`onValueChange`, `onValidityChange`).
+Pass `{ country: true }` to force `country` to `null`, ignoring `defaultCountry`:
 
 ```svelte
-<button onclick={() => telInput.api.reset()}>
-  Clear phone number
-</button>
+<!-- Resets value, restores country to defaultCountry -->
+<button onclick={() => telInput.api.reset()}>Reset</button>
+
+<!-- Resets value AND country to null -->
+<button onclick={() => telInput.api.reset({ country: true })}>Full reset</button>
 ```
+
+Fires `onValueChange` and `onValidityChange`.

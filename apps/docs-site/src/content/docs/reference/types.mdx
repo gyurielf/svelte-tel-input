@@ -11,6 +11,7 @@ import type {
   Country,
   DetailedValue,
   TelInputOptions,
+  ValidationError,
   Props
 } from 'svelte-tel-input/types';
 ```
@@ -25,7 +26,7 @@ type CountryCode = 'US' | 'GB' | 'HU' | 'DE' | /* ... all ISO 3166 codes */;
 
 ## `Country`
 
-Represents a country entry in the `countries` array:
+A country entry in the `countries` array:
 
 ```typescript
 interface Country {
@@ -58,26 +59,59 @@ interface DetailedValue {
   uri: string | null;
   e164: string | null;
   error?: string;
+  validationError?: ValidationError;
 }
 ```
 
-### Field descriptions
+### Field reference
 
 | Field | Example | Description |
 |-------|---------|-------------|
-| `e164` | `+36301234567` | E.164 formatted number (storage format) |
-| `isValid` | `true` | Whether the number is valid for its country |
-| `isPossible` | `true` | Whether the number has the right length |
+| `e164` | `+36301234567` | E.164 formatted (storage format) |
+| `isValid` | `true` | Valid for its country |
+| `isPossible` | `true` | Has the right length |
 | `countryCode` | `'HU'` | Detected ISO country code |
 | `countryCallingCode` | `'36'` | Numeric calling code |
-| `nationalNumber` | `'301234567'` | Number without country calling code |
+| `nationalNumber` | `'301234567'` | Without country calling code |
 | `formatInternational` | `'+36 30 123 4567'` | Internationally formatted |
 | `formatNational` | `'(06 30) 123 4567'` | Nationally formatted |
 | `formattedNumber` | `'+36 30 123 4567'` | Display-formatted number |
-| `formatOriginal` | `'30 123 4567'` | International format without calling code prefix |
-| `uri` | `'tel:+36301234567'` | `tel:` URI for links |
+| `formatOriginal` | `'30 123 4567'` | International without calling code prefix |
+| `uri` | `'tel:+36301234567'` | `tel:` URI for `<a href>` links |
 | `phoneNumber` | `'+36301234567'` | Same as `e164` |
-| `error` | `'TOO_SHORT'` | Parse error message (when invalid) |
+| `error` | `'TOO_SHORT'` | Parse error message |
+| `validationError` | `'TOO_SHORT'` | Granular [ValidationError](#validationerror) |
+
+## `ValidationError`
+
+The reason the current phone number is invalid:
+
+```typescript
+type ValidationError =
+  | 'required'
+  | 'country_not_allowed'
+  | 'TOO_SHORT'
+  | 'TOO_LONG'
+  | 'NOT_A_NUMBER'
+  | 'INVALID_COUNTRY'
+  | 'INVALID_LENGTH'
+  | 'INVALID'
+  | null;
+```
+
+| Value | Meaning |
+|---|---|
+| `'required'` | Field is empty and `required` is `true` |
+| `'country_not_allowed'` | Country not in `options.allowedCountries` |
+| `'TOO_SHORT'` | Number has too few digits |
+| `'TOO_LONG'` | Number has too many digits |
+| `'NOT_A_NUMBER'` | Input doesn't look like a phone number |
+| `'INVALID_COUNTRY'` | Country code not recognized |
+| `'INVALID_LENGTH'` | Length doesn't match any valid pattern for the country |
+| `'INVALID'` | Fallback when the specific reason can't be determined |
+| `null` | No error — input is valid |
+
+Uppercase values (`TOO_SHORT`, `TOO_LONG`, etc.) come directly from `libphonenumber-js`'s `validatePhoneNumberLength()`.
 
 ## `TelInputOptions`
 
@@ -85,15 +119,15 @@ Configuration object for the `options` prop:
 
 ```typescript
 interface TelInputOptions {
-  autoPlaceholder?: boolean;  // default: true
-  spaces?: boolean;           // default: true
+  autoPlaceholder?: boolean;       // default: true
+  spaces?: boolean;                // default: true
   validateOn?: 'input' | 'blur' | 'always';  // default: 'always'
-  /** @deprecated No longer used */
-  invalidateOnCountryChange?: boolean;
+  allowedCountries?: CountryCode[];
+  lockCountry?: boolean;           // default: false
 }
 ```
 
-See [Options](/reference/options/) for details.
+See [Options](/reference/options/) for details and examples.
 
 ## `Props`
 
@@ -103,15 +137,16 @@ The full component props interface. Extends Svelte's `HTMLInputAttributes`:
 interface Props extends HTMLInputAttributes {
   value: string;
   country?: CountryCode | null | undefined;
+  defaultCountry?: CountryCode | null;
   valid?: boolean;
-  detailedValue?: DetailedValue | null;
+  validationError?: ValidationError;
+  detailedValue?: Readonly<Partial<DetailedValue> | null>;
   options?: TelInputOptions;
   el?: HTMLInputElement | undefined;
-  onValueChange?: (value: string, details: DetailedValue | null) => void;
+  onValueChange?: (value: string, details: Readonly<Partial<DetailedValue> | null>) => void;
   onCountryChange?: (country: CountryCode | null) => void;
-  onValidityChange?: (valid: boolean) => void;
+  onValidityChange?: (valid: boolean, error: ValidationError) => void;
   onError?: (error: string) => void;
   onLoad?: () => void;
-  // ... plus all HTML input attributes
 }
 ```

@@ -1,48 +1,14 @@
 ---
-title: Welcome to Starlight
-description: Get started building your docs site with Starlight.
-template: splash # Remove or comment out this line to display the site sidebar on this page.
+title: svelte-tel-input
+description: A lightweight Svelte 5 phone input component. Parse, format, and validate international phone numbers — store in E.164.
+template: splash
 hero:
-  tagline: Congrats on setting up a new Starlight project!
-  actions:
-    - text: Getting started
-      link: /getting-started/installation
-      icon: right-arrow
-    - text: Playground
-      link: /playground
-      icon: rocket
-      variant: minimal
+  tagline: ""
+  actions: []
 ---
 
-```svelte
-<script lang="ts">
-    import { TelInput, countries } from 'svelte-tel-input';
-    import type { DetailedValue, CountryCode } from 'svelte-tel-input/types';
+import HeroAnimation from '../../components/HeroAnimation.svelte';
+import LandingPage from '../../components/LandingPage.svelte';
 
-    let selectedCountry: CountryCode | null = $state('HU');
-    let value: string = $state('+36301234567');
-    let valid: boolean = $state(true);
-    let detailedValue: DetailedValue | null = $state(null);
-</script>
-
-<select bind:value={selectedCountry} aria-label="Country">
-<option value={null}>Select country</option>
-{#each countries as country (country.id)}
-    <option value={country.iso2}>
-    {country.name} (+{country.dialCode})
-    </option>
-{/each}
-</select>
-
-<TelInput
-    bind:country={selectedCountry}
-    bind:value
-    bind:valid
-    bind:detailedValue
-    class="tel-input"
-/>
-
-{#if !valid}
-    <p role="alert">Please enter a valid phone number.</p>
-{/if}
-```
+<HeroAnimation client:idle />
+<LandingPage client:visible />

@@ -1,0 +1,128 @@
+---
+title: Utilities
+description: Standalone utility functions exported by svelte-tel-input.
+---
+
+These functions are exported from the main `svelte-tel-input` package. They work independently of the component — use them server-side, in form handlers, or anywhere you need to parse phone numbers.
+
+```typescript
+import { parse, normalizeToE164, pickCountries } from 'svelte-tel-input';
+```
+
+## `parse()`
+
+```typescript
+parse(raw: string, country?: CountryCode | null): Partial<DetailedValue>
+```
+
+Parses any raw phone number string and returns a [`DetailedValue`](/reference/types/#detailedvalue) with all formatted variants.
+
+```typescript
+import { parse } from 'svelte-tel-input';
+
+const result = parse('+36301234567');
+// {
+//   isValid: true,
+//   isPossible: true,
+//   countryCode: 'HU',
+//   countryCallingCode: '36',
+//   nationalNumber: '301234567',
+//   formatInternational: '+36 30 123 4567',
+//   formatNational: '(06 30) 123 4567',
+//   e164: '+36301234567',
+//   uri: 'tel:+36301234567',
+//   ...
+// }
+```
+
+Pass a `country` hint when the input doesn't have a leading `+`:
+
+```typescript
+const result = parse('301234567', 'HU');
+// Parses as a Hungarian number
+```
+
+## `normalizeToE164()`
+
+```typescript
+normalizeToE164(raw: string, country?: CountryCode | null): string | null
+```
+
+Convenience one-liner: parses the input and returns the E.164 string, or `null` if invalid.
+
+```typescript
+import { normalizeToE164 } from 'svelte-tel-input';
+
+normalizeToE164('+36 30 123 4567');  // '+36301234567'
+normalizeToE164('301234567', 'HU');  // '+36301234567'
+normalizeToE164('not a number');     // null
+```
+
+## `pickCountries()`
+
+```typescript
+pickCountries(codes: CountryCode[]): Country[]
+```
+
+Returns a filtered subset of the `countries` array, in the order you specify. Useful for building country dropdowns with a limited set:
+
+```typescript
+import { pickCountries } from 'svelte-tel-input';
+
+const allowed = pickCountries(['US', 'CA', 'GB']);
+// [
+//   { iso2: 'US', name: 'United States', dialCode: '1', ... },
+//   { iso2: 'CA', name: 'Canada', dialCode: '1', ... },
+//   { iso2: 'GB', name: 'United Kingdom', dialCode: '44', ... }
+// ]
+```
+
+Pairs well with `options.allowedCountries`:
+
+```svelte
+<script>
+  import { TelInput, pickCountries } from 'svelte-tel-input';
+
+  const codes = ['US', 'CA', 'GB'];
+  const myCountries = pickCountries(codes);
+  let country = $state('US');
+</script>
+
+<select bind:value={country}>
+  {#each myCountries as c (c.id)}
+    <option value={c.iso2}>{c.name} (+{c.dialCode})</option>
+  {/each}
+</select>
+
+<TelInput
+  bind:country
+  options={{ allowedCountries: codes }}
+/>
+```
+
+## `inputParser()`
+
+```typescript
+inputParser(raw: string): string
+```
+
+Normalizes raw user input: strips non-digit characters except a leading `+` and spaces. Used internally by the component but available for custom input handling.
+
+```typescript
+import { inputParser } from 'svelte-tel-input';
+
+inputParser('+1 (215) 456-7890');  // '+1 215 4567890'
+inputParser('０３０１２３４５６７');  // '0301234567' (fullwidth digits)
+```
+
+## `isSelected()`
+
+```typescript
+isSelected(countryIso2: CountryCode, selectedCountry: CountryCode | null): boolean
+```
+
+Type-safe helper for checking if a country is selected in a dropdown.
+
+## `parsePhoneInput()`
+
+Low-level parser that accepts a `Country` object (from the `countries` array) instead of a `CountryCode` string. Returns a `DetailedValue`. Used internally by the component — prefer `parse()` for most use cases.

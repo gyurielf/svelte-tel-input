@@ -3,15 +3,15 @@ title: Installation
 description: How to install and set up svelte-tel-input in your Svelte 5 project.
 ---
 
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
 ## Prerequisites
 
 - **Svelte 5** (peer dependency)
 - **Node.js** >= 22
-- **pnpm** >= 10 (or npm/yarn)
+- **pnpm** >= 10 (or npm / yarn)
 
 ## Install
-
-import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 <Tabs>
   <TabItem label="pnpm">
@@ -31,22 +31,15 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
   </TabItem>
 </Tabs>
 
-## Peer dependency
+## Package exports
 
-`svelte-tel-input` requires **Svelte 5** as a peer dependency. Make sure your project is running Svelte 5+.
+| Import path | What you get |
+|---|---|
+| `svelte-tel-input` | `TelInput` component, `countries` array, `parse()`, `normalizeToE164()`, `pickCountries()`, `inputParser()`, `isSelected()`, `parsePhoneInput()` |
+| `svelte-tel-input/types` | All TypeScript types (`CountryCode`, `DetailedValue`, `TelInputOptions`, `ValidationError`, `Props`, …) |
+| `svelte-tel-input/validators` | `validateTelInput()` — framework-agnostic validator for Zod / Valibot / Yup |
+| `svelte-tel-input/styles/flags.css` | CSS sprite flags for country dropdowns |
+| `svelte-tel-input/utils` | Low-level utilities (`clickOutsideAction`, etc.) |
+| `svelte-tel-input/assets` | Raw country data |
 
-## What's included
-
-The package ships:
-
-| Export | Description |
-|--------|-------------|
-| `TelInput` | The main phone input component |
-| `countries` | Array of all supported countries with dial codes |
-| `parsePhoneNumberWithError` | Re-export from `libphonenumber-js` |
-| `ParseError` | Re-export from `libphonenumber-js` |
-| `inputParser` | Utility to parse raw input strings |
-| `isSelected` | Helper for country list selection |
-| `parsePhoneInput` | Low-level phone number parser (returns `DetailedValue`; accepts a `Country` object) |
-
-Types are available from `svelte-tel-input/types` and flag CSS from `svelte-tel-input/styles/flags.css`.
+Re-exports from `libphonenumber-js`: `parsePhoneNumberWithError`, `ParseError`.

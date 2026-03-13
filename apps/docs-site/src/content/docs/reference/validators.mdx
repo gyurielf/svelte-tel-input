@@ -1,0 +1,123 @@
+---
+title: Validators
+description: Schema validation helpers for Zod, Valibot, Yup, and any other library.
+---
+
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+`svelte-tel-input` ships a separate subpath export for form validation — zero impact on your bundle if you don't use it.
+
+```typescript
+import { validateTelInput } from 'svelte-tel-input/validators';
+```
+
+## `validateTelInput()`
+
+```typescript
+validateTelInput(
+  value: string,
+  options?: TelValidatorOptions
+): ValidationError
+```
+
+Returns a [`ValidationError`](/reference/types/#validationerror) (`null` when valid). Works with any schema library.
+
+### Options
+
+```typescript
+interface TelValidatorOptions {
+  required?: boolean;              // default: false
+  allowedCountries?: CountryCode[];
+  country?: CountryCode | null;   // hint for numbers without '+'
+}
+```
+
+## Framework examples
+
+<Tabs>
+  <TabItem label="Zod">
+    ```typescript
+    import { z } from 'zod';
+    import { validateTelInput } from 'svelte-tel-input/validators';
+
+    const schema = z.object({
+      phone: z.string().superRefine((val, ctx) => {
+        const error = validateTelInput(val, { required: true });
+        if (error) {
+          ctx.addIssue({ code: 'custom', message: error });
+        }
+      })
+    });
+
+    schema.parse({ phone: '+36301234567' }); // ✓
+    schema.parse({ phone: '' });             // ✗ 'required'
+    schema.parse({ phone: '+1999' });        // ✗ 'TOO_SHORT'
+    ```
+  </TabItem>
+  <TabItem label="Valibot">
+    ```typescript
+    import * as v from 'valibot';
+    import { validateTelInput } from 'svelte-tel-input/validators';
+
+    const schema = v.object({
+      phone: v.pipe(
+        v.string(),
+        v.check(
+          (val) => !validateTelInput(val, { required: true }),
+          'Invalid phone number'
+        )
+      )
+    });
+    ```
+  </TabItem>
+  <TabItem label="Yup">
+    ```typescript
+    import * as yup from 'yup';
+    import { validateTelInput } from 'svelte-tel-input/validators';
+
+    const schema = yup.object({
+      phone: yup.string().test(
+        'tel',
+        'Invalid phone number',
+        (val) => !validateTelInput(val ?? '', { required: true })
+      )
+    });
+    ```
+  </TabItem>
+</Tabs>
+
+## Allowed countries
+
+Restrict to a subset of countries:
+
+```typescript
+const error = validateTelInput('+442012345678', {
+  allowedCountries: ['US', 'HU']
+});
+// 'country_not_allowed' — GB is not in the list
+```
+
+## Country hint
+
+When validating numbers without a `+` prefix, pass a `country` hint:
+
+```typescript
+validateTelInput('301234567', { country: 'HU' });    // null (valid)
+validateTelInput('301234567');                         // 'INVALID' (no country context)
+```
+
+## Return values
+
+`validateTelInput` returns one of the [`ValidationError`](/reference/types/#validationerror) values:
+
+| Return | Meaning |
+|---|---|
+| `null` | Valid |
+| `'required'` | Empty value with `required: true` |
+| `'TOO_SHORT'` | Not enough digits |
+| `'TOO_LONG'` | Too many digits |
+| `'NOT_A_NUMBER'` | Doesn't look like a phone number |
+| `'INVALID_COUNTRY'` | Unrecognized country code |
+| `'INVALID_LENGTH'` | Length doesn't match any valid pattern |
+| `'country_not_allowed'` | Valid number but country not in `allowedCountries` |
+| `'INVALID'` | Fallback |
