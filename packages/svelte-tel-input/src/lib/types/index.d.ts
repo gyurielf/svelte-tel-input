@@ -1,28 +1,6 @@
 import type { CountryCallingCode, CountryCode, MetadataJson, PhoneNumber } from 'libphonenumber-js';
 import type { HTMLInputAttributes } from 'svelte/elements';
 
-type Countries = {
-	// Metadata here is a compressed one,
-	// so a country's data is just an array of some properties
-	// instead of a JSON object of shape:
-	// {
-	//   phone_code: string,
-	//   idd_prefix: string,
-	//   national_number_pattern: string,
-	//   types: object,
-	//   examples: object,
-	//   formats: object[]?,
-	//   possible_lengths: number[],
-	//   ...
-	// }
-	//
-	// `in` operator docs:
-	// https://www.typescriptlang.org/docs/handbook/advanced-types.html#mapped-types
-	// `country in CountryCode` means "for each and every CountryCode".
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	[country in CountryCode]?: any[];
-};
-
 export interface Country {
 	id: string;
 	label: string;
@@ -33,24 +11,6 @@ export interface Country {
 	/** Order (if >1 country with the same dial code) */
 	priority: number;
 	areaCodes: string[] | null;
-}
-
-export type CountrySelectEvents<T> = {
-	add: { option: T };
-	remove: { option: T };
-	same: { option: T };
-	change: {
-		option: T;
-	};
-	focus: unknown;
-	blur: unknown;
-};
-
-export interface PhoneNumberError {
-	/** @new TODO - need to implement */
-	isPossible: boolean;
-	isValid: false;
-	error: PhoneNumberParseError;
 }
 
 export interface DetailedValue {
@@ -66,13 +26,9 @@ export interface DetailedValue {
 	formatNational: string | null;
 	uri: string | null;
 	e164: string | null;
-	error?: string;
 	/** Granular validation error when `isValid` is `false`. */
 	validationError?: ValidationError;
 }
-
-export type PhoneNumberParseError = 'NOT_A_NUMBER' | 'INVALID_COUNTRY' | 'TOO_SHORT' | 'TOO_LONG';
-export type PhoneType = 'FIXED_LINE' | 'MOBILE';
 
 /**
  * The reason the current phone number input is invalid.
@@ -96,11 +52,6 @@ export type ValidationError =
 	| 'INVALID_LENGTH'
 	| 'INVALID'
 	| null;
-
-export interface TelInputValidity {
-	value: boolean | null;
-	errorMessage?: string;
-}
 
 export interface TelInputOptions {
 	/**
@@ -180,11 +131,4 @@ export interface Props extends HTMLInputAttributes {
 	onLoad?: () => void;
 }
 
-export type {
-	CountryCallingCode,
-	CountryCode,
-	PhoneNumber,
-	Countries,
-	MetadataJson,
-	ValidationError
-};
+export type { CountryCallingCode, CountryCode, PhoneNumber, MetadataJson };

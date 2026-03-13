@@ -49,7 +49,8 @@ export default defineConfig({
 						{ label: 'Events', slug: 'reference/events' },
 						{ label: 'Types', slug: 'reference/types' },
 						{ label: 'Utilities', slug: 'reference/utilities' },
-						{ label: 'Validators', slug: 'reference/validators' }
+						{ label: 'Validators', slug: 'reference/validators' },
+						{ label: 'Assets', slug: 'reference/assets' }
 					]
 				},
 				{

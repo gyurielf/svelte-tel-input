@@ -306,7 +306,7 @@
 			detailedValue = parsePhoneInput(rawInput, normalizerCountry);
 		} catch (err) {
 			if (err instanceof ParseError) {
-				detailedValue = { isValid: false, error: err.message };
+				detailedValue = { isValid: false, validationError: err.message as ValidationError };
 				onError?.(err.message);
 			} else {
 				throw err;
