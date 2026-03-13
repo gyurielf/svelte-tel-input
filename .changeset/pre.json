@@ -1,0 +1,9 @@
+{
+  "mode": "pre",
+  "tag": "next",
+  "initialVersions": {
+    "docs-site": "0.0.1",
+    "svelte-tel-input": "3.6.1"
+  },
+  "changesets": []
+}
