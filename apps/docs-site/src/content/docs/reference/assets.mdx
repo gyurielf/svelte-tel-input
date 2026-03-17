@@ -95,7 +95,7 @@ The built-in `TelInput` component uses CSS class-based flags via `svelte-tel-inp
 examplePhoneNumbers: Examples
 ```
 
-A map of `CountryCode` → example phone number string (national format, no country prefix). Sourced from [libphonenumber-js](https://github.com/catamphetamine/libphonenumber-js). Used internally by the component to generate `autoPlaceholder` values.
+A map of `CountryCode` → example phone number string (national format, no country prefix). Used internally by the component to generate `autoPlaceholder` values.
 
 ```typescript
 examplePhoneNumbers['US']  // '2015550123'
@@ -103,19 +103,15 @@ examplePhoneNumbers['HU']  // '201234567'
 examplePhoneNumbers['GB']  // '7400123456'
 ```
 
-The type `Examples` is re-exported from `libphonenumber-js`.
+`Examples` is a `Record<CountryCode, string>`.
 
-**Example — generating a placeholder for a custom input:**
+**Example — reading an example number for a country:**
 
 ```typescript
 import { examplePhoneNumbers } from 'svelte-tel-input/assets';
-import { parsePhoneNumber } from 'libphonenumber-js';
 
-function getPlaceholder(countryCode: string): string {
-  const raw = examplePhoneNumbers[countryCode];
-  if (!raw) return '';
-  const parsed = parsePhoneNumber(raw, countryCode);
-  return parsed?.formatInternational() ?? '';
+function getExampleNumber(countryCode: string): string {
+  return examplePhoneNumbers[countryCode] ?? '';
 }
 
 getPlaceholder('US');  // '+1 201 555 0123'

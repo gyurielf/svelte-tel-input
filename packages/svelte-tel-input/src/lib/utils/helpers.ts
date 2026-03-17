@@ -265,6 +265,7 @@ export const parsePhoneInput = (input: string, country: Country | undefined): De
 				: null,
 		formattedNumber,
 		isPossible: asYouType.isPossible(),
+		isPhoneValid: isValid,
 		isValid,
 		nationalNumber,
 		phoneNumber,

@@ -50,7 +50,7 @@ interface TelValidatorOptions {
     });
 
     schema.parse({ phone: '+36301234567' }); // ✓
-    schema.parse({ phone: '' });             // ✗ 'required'
+    schema.parse({ phone: '' });             // ✗ 'REQUIRED'
     schema.parse({ phone: '+1999' });        // ✗ 'TOO_SHORT'
     ```
   </TabItem>
@@ -94,7 +94,7 @@ Restrict to a subset of countries:
 const error = validateTelInput('+442012345678', {
   allowedCountries: ['US', 'HU']
 });
-// 'country_not_allowed' — GB is not in the list
+// 'COUNTRY_NOT_ALLOWED' — GB is not in the list
 ```
 
 ## Country hint
@@ -113,11 +113,11 @@ validateTelInput('301234567');                         // 'INVALID' (no country 
 | Return | Meaning |
 |---|---|
 | `null` | Valid |
-| `'required'` | Empty value with `required: true` |
+| `'REQUIRED'` | Empty value with `required: true` |
 | `'TOO_SHORT'` | Not enough digits |
 | `'TOO_LONG'` | Too many digits |
 | `'NOT_A_NUMBER'` | Doesn't look like a phone number |
 | `'INVALID_COUNTRY'` | Unrecognized country code |
 | `'INVALID_LENGTH'` | Length doesn't match any valid pattern |
-| `'country_not_allowed'` | Valid number but country not in `allowedCountries` |
+| `'COUNTRY_NOT_ALLOWED'` | Valid number but country not in `allowedCountries` |
 | `'INVALID'` | Fallback |

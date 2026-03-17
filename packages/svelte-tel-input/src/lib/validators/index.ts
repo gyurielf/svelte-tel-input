@@ -47,7 +47,7 @@ export function validateTelInput(
 ): ValidationError {
 	const { required = false, allowedCountries, country } = options;
 
-	if (!value) return required ? 'required' : null;
+	if (!value) return required ? 'REQUIRED' : null;
 
 	const result = parse(value, country ?? null);
 
@@ -59,7 +59,7 @@ export function validateTelInput(
 		result.countryCode != null &&
 		!allowedCountries.includes(result.countryCode)
 	) {
-		return 'country_not_allowed';
+		return 'COUNTRY_NOT_ALLOWED';
 	}
 
 	return null;

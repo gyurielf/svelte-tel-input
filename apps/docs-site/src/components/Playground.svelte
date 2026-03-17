@@ -110,7 +110,7 @@
 			>Options:</span
 		>
 		<label class="pg-toggle">
-			<input type="checkbox" bind:checked={options.spaces} />
+			<input id="spaces-0" type="checkbox" bind:checked={options.spaces} />
 			<span class="pg-toggle-knob"></span>
 			<span>Spaces</span>
 		</label>
@@ -120,13 +120,14 @@
 			<span>Auto-placeholder</span>
 		</label>
 		<label class="pg-toggle">
-			<input type="checkbox" bind:checked={required} />
+			<input id="required-0" type="checkbox" bind:checked={required} />
 			<span class="pg-toggle-knob"></span>
 			<span>Required</span>
 		</label>
 		<label class="inline-flex items-center gap-1.5 text-[var(--sl-color-text)] text-xs">
 			Validate on
 			<select
+				id="validateOn-0"
 				class="text-[0.78rem] px-2 py-[0.2rem] rounded-[0.35rem] border border-[var(--sl-color-hairline)] bg-[var(--sl-color-bg-nav)] text-[var(--sl-color-text)]"
 				value={options.validateOn ?? 'always'}
 				onchange={(e) => {
@@ -271,7 +272,7 @@
 		</div>
 
 		<!-- RIGHT: Live output panel -->
-		<div class="p-5">
+		<div data-testid="api-test-panel" class="p-5">
 			<div class="border border-[var(--sl-color-hairline)] rounded-[0.6rem] overflow-hidden">
 				<div
 					class="flex items-center gap-1.5 px-[0.9rem] py-[0.55rem] text-[0.7rem] font-semibold uppercase tracking-[0.06em] text-[var(--sl-color-gray-3)] bg-[var(--sl-color-bg-sidebar)] border-b border-[var(--sl-color-hairline)]"
@@ -423,12 +424,12 @@
 							<span data-testid="check-validity-result" style="display:none"
 								>{String(checkResult.valid)}</span
 							>
+							<span data-testid="check-validity-error-result" style="display:none"
+								>{checkResult.error ?? ''}</span
+							>
 							{#if checkResult.error}
 								<span
 									class="inline-flex items-center px-[0.45rem] py-[0.1rem] rounded-full text-[0.72rem] font-semibold border bg-[rgba(251,191,36,0.12)] text-[#fbbf24] border-[rgba(251,191,36,0.25)]"
-									>{checkResult.error}</span
-								>
-								<span data-testid="check-validity-error-result" style="display:none"
 									>{checkResult.error}</span
 								>
 							{/if}

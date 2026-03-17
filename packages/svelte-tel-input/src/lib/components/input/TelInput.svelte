@@ -168,9 +168,9 @@
 	): ValidationError => {
 		const allowed = combinedOptions.allowedCountries;
 		if (allowed?.length && resolvedCountry != null && !allowed.includes(resolvedCountry)) {
-			return 'country_not_allowed';
+			return 'COUNTRY_NOT_ALLOWED';
 		}
-		if (isEmpty) return required ? 'required' : null;
+		if (isEmpty) return required ? 'REQUIRED' : null;
 		if (parseValid) return null;
 		// Use the granular error from detailedValue when available
 		return detailedValue?.validationError ?? 'INVALID';
@@ -287,6 +287,11 @@
 			numberHasCountry.iso2 !== prevCountry
 		) {
 			countryUpdater(numberHasCountry.iso2);
+			// Keep prevCountry in sync so that a subsequent external country change
+			// (e.g. parent sets country='DE' again) is correctly detected as a change
+			// and triggers a value reset. Without this, prevCountry would still hold
+			// the last externally-written value and the reset guard would short-circuit.
+			prevCountry = numberHasCountry.iso2;
 			// Fire the callback only here — when the country is inferred from the
 			// user's input (dial-code parsing). reset() and external prop changes
 			// do NOT fire onCountryChange.
@@ -306,11 +311,33 @@
 			detailedValue = parsePhoneInput(rawInput, normalizerCountry);
 		} catch (err) {
 			if (err instanceof ParseError) {
-				detailedValue = { isValid: false, validationError: err.message as ValidationError };
+				detailedValue = {
+					isPhoneValid: false,
+					isValid: false,
+					validationError: err.message as ValidationError
+				};
 				onError?.(err.message);
 			} else {
 				throw err;
 			}
+		}
+
+		// If the resolved country is not in allowedCountries, the phone number is
+		// intrinsically valid (libphonenumber-js says so) but the application rejects
+		// it. Patch detailedValue to reflect this so that detailedValue.isValid is
+		// consistent with the component's `valid` prop and `validationError`.
+		const _allowedCountries = combinedOptions.allowedCountries;
+		if (
+			detailedValue &&
+			_allowedCountries?.length &&
+			detailedValue.countryCode != null &&
+			!_allowedCountries.includes(detailedValue.countryCode)
+		) {
+			detailedValue = {
+				...detailedValue,
+				isValid: false,
+				validationError: 'COUNTRY_NOT_ALLOWED'
+			};
 		}
 
 		// `inputValue` is the displayed value (must stay in sync with the directive's formatting).
