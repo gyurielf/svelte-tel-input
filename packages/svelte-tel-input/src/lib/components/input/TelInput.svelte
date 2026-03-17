@@ -287,6 +287,11 @@
 			numberHasCountry.iso2 !== prevCountry
 		) {
 			countryUpdater(numberHasCountry.iso2);
+			// Keep prevCountry in sync so that a subsequent external country change
+			// (e.g. parent sets country='DE' again) is correctly detected as a change
+			// and triggers a value reset. Without this, prevCountry would still hold
+			// the last externally-written value and the reset guard would short-circuit.
+			prevCountry = numberHasCountry.iso2;
 			// Fire the callback only here — when the country is inferred from the
 			// user's input (dial-code parsing). reset() and external prop changes
 			// do NOT fire onCountryChange.
