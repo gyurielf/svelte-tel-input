@@ -1,5 +1,28 @@
 # svelte-tel-input
 
+## 4.0.0-next.1
+### Patch Changes
+
+
+
+- chore: update deps ([#250](https://github.com/gyurielf/svelte-tel-input/pull/250))
+
+
+
+- feat: differentiate isValid and isPhoneValid ([#250](https://github.com/gyurielf/svelte-tel-input/pull/250))
+
+
+
+- chore: extend docs according to changes ([#250](https://github.com/gyurielf/svelte-tel-input/pull/250))
+
+
+
+- chore: cleanup ([#250](https://github.com/gyurielf/svelte-tel-input/pull/250))
+
+
+
+- fix: country change behavior ([#250](https://github.com/gyurielf/svelte-tel-input/pull/250))
+
 ## 4.0.0-next.0
 ### Major Changes
 
