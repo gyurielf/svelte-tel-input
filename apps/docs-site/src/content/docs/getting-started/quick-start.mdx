@@ -34,7 +34,7 @@ A `<select>` for the country and `TelInput` for the phone number:
 ## How it works
 
 1. The user types a phone number — with or without a leading `+`.
-2. `TelInput` parses the input with [libphonenumber-js](https://gitlab.com/catamphetamine/libphonenumber-js), auto-detects the country from the dial code, and formats the display value.
+2. `TelInput` parses the input, auto-detects the country from the dial code, and formats the display value.
 3. `value` always holds the phone number in **E.164** format (e.g. `+36301234567`), the standard for storage and APIs.
 4. `valid` reflects whether the current input is a valid phone number for the detected / selected country.
 
@@ -98,7 +98,7 @@ Bind `validationError` to get a granular reason when the phone number is invalid
 {/if}
 ```
 
-Possible values: `'required'`, `'TOO_SHORT'`, `'TOO_LONG'`, `'NOT_A_NUMBER'`, `'INVALID_COUNTRY'`, `'INVALID_LENGTH'`, `'country_not_allowed'`, `'INVALID'`, or `null`.
+Possible values: `'REQUIRED'`, `'TOO_SHORT'`, `'TOO_LONG'`, `'NOT_A_NUMBER'`, `'INVALID_COUNTRY'`, `'INVALID_LENGTH'`, `'COUNTRY_NOT_ALLOWED'`, `'INVALID'`, or `null`.
 
 ## Next steps
 

@@ -42,11 +42,11 @@ describe('Zod integration', () => {
 		expect(result.success).toBe(true);
 	});
 
-	it('fails with "required" for an empty string', () => {
+	it('fails with "REQUIRED" for an empty string', () => {
 		const result = zodPhoneSchema.safeParse({ phone: '' });
 		expect(result.success).toBe(false);
 		if (!result.success) {
-			expect(result.error.issues[0].message).toBe('required');
+			expect(result.error.issues[0].message).toBe('REQUIRED');
 		}
 	});
 
@@ -63,11 +63,11 @@ describe('Zod integration', () => {
 		expect(result.success).toBe(true);
 	});
 
-	it('fails with "country_not_allowed" for a GB number when only US/HU allowed', () => {
+	it('fails with "COUNTRY_NOT_ALLOWED" for a GB number when only US/HU allowed', () => {
 		const result = zodAllowedCountriesSchema.safeParse({ phone: '+447947123456' });
 		expect(result.success).toBe(false);
 		if (!result.success) {
-			expect(result.error.issues[0].message).toBe('country_not_allowed');
+			expect(result.error.issues[0].message).toBe('COUNTRY_NOT_ALLOWED');
 		}
 	});
 
@@ -125,7 +125,7 @@ describe('Valibot integration', () => {
 		const result = v.safeParse(valibotPhoneSchema, { phone: '' });
 		expect(result.success).toBe(false);
 		if (!result.success) {
-			expect(result.issues[0].message).toBe('required');
+			expect(result.issues[0].message).toBe('REQUIRED');
 		}
 	});
 
@@ -142,11 +142,11 @@ describe('Valibot integration', () => {
 		expect(result.success).toBe(true);
 	});
 
-	it('fails with "country_not_allowed" for a GB number when only US/HU allowed', () => {
+	it('fails with "COUNTRY_NOT_ALLOWED" for a GB number when only US/HU allowed', () => {
 		const result = v.safeParse(valibotAllowedCountriesSchema, { phone: '+447947123456' });
 		expect(result.success).toBe(false);
 		if (!result.success) {
-			expect(result.issues[0].message).toBe('country_not_allowed');
+			expect(result.issues[0].message).toBe('COUNTRY_NOT_ALLOWED');
 		}
 	});
 

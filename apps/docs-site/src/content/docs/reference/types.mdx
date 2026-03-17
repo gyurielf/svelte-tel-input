@@ -18,7 +18,7 @@ import type {
 
 ## `CountryCode`
 
-ISO 3166 Alpha-2 country code string. Re-exported from `libphonenumber-js`.
+ISO 3166 Alpha-2 country code string (e.g. `'US'`, `'GB'`, `'HU'`).
 
 ```typescript
 type CountryCode = 'US' | 'GB' | 'HU' | 'DE' | /* ... all ISO 3166 codes */;
@@ -48,6 +48,13 @@ The full parsed result returned via `bind:detailedValue`:
 interface DetailedValue {
   countryCode?: CountryCode | null;
   isPossible: boolean;
+  /** The phone number itself is structurally valid for its country (correct digit count and format).
+   * Can be `true` even when `isValid` is `false` — e.g. the number is real but its country
+   * is blocked by `allowedCountries`. Use `isValid` for form validation. */
+  isPhoneValid: boolean;
+  /** Overall validity: `true` only when the number is structurally valid AND all
+   * component-level constraints (such as `allowedCountries`) are satisfied.
+   * This is the field to check in your application logic. */
   isValid: boolean;
   phoneNumber: string | null;
   countryCallingCode: string | null;
@@ -68,7 +75,8 @@ interface DetailedValue {
 | Field | Example | Description |
 |-------|---------|-------------|
 | `e164` | `+36301234567` | E.164 formatted (storage format) |
-| `isValid` | `true` | Valid for its country |
+| `isPhoneValid` | `true` | The number itself is structurally valid — can be `true` even when `isValid` is `false` (e.g. country blocked by `allowedCountries`) |
+| `isValid` | `true` | Overall validity — `false` if phone is invalid **or** country is not allowed |
 | `isPossible` | `true` | Has the right length |
 | `countryCode` | `'HU'` | Detected ISO country code |
 | `countryCallingCode` | `'36'` | Numeric calling code |
@@ -88,8 +96,8 @@ The reason the current phone number is invalid:
 
 ```typescript
 type ValidationError =
-  | 'required'
-  | 'country_not_allowed'
+  | 'REQUIRED'
+  | 'COUNTRY_NOT_ALLOWED'
   | 'TOO_SHORT'
   | 'TOO_LONG'
   | 'NOT_A_NUMBER'
@@ -101,8 +109,8 @@ type ValidationError =
 
 | Value | Meaning |
 |---|---|
-| `'required'` | Field is empty and `required` is `true` |
-| `'country_not_allowed'` | Country not in `options.allowedCountries` |
+| `'REQUIRED'` | Field is empty and `required` is `true` |
+| `'COUNTRY_NOT_ALLOWED'` | Country not in `options.allowedCountries` |
 | `'TOO_SHORT'` | Number has too few digits |
 | `'TOO_LONG'` | Number has too many digits |
 | `'NOT_A_NUMBER'` | Input doesn't look like a phone number |
@@ -111,7 +119,7 @@ type ValidationError =
 | `'INVALID'` | Fallback when the specific reason can't be determined |
 | `null` | No error — input is valid |
 
-Uppercase values (`TOO_SHORT`, `TOO_LONG`, etc.) come directly from `libphonenumber-js`'s `validatePhoneNumberLength()`.
+`REQUIRED` and `COUNTRY_NOT_ALLOWED` are component-level errors. `INVALID` is a fallback when no specific reason can be determined. The remaining values reflect the specific structural issue with the number.
 
 ## `TelInputOptions`
 

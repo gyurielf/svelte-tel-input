@@ -8,8 +8,8 @@ describe('validateTelInput()', () => {
 			expect(validateTelInput('')).toBeNull();
 		});
 
-		it('returns "required" for empty string when required', () => {
-			expect(validateTelInput('', { required: true })).toBe('required');
+		it('returns "REQUIRED" for empty string when required', () => {
+			expect(validateTelInput('', { required: true })).toBe('REQUIRED');
 		});
 	});
 
@@ -50,9 +50,9 @@ describe('validateTelInput()', () => {
 			expect(validateTelInput('+12154567890', { allowedCountries: ['US', 'HU'] })).toBeNull();
 		});
 
-		it('returns "country_not_allowed" when country is not in allowedCountries', () => {
+		it('returns "COUNTRY_NOT_ALLOWED" when country is not in allowedCountries', () => {
 			expect(validateTelInput('+12154567890', { allowedCountries: ['HU', 'GB'] })).toBe(
-				'country_not_allowed'
+				'COUNTRY_NOT_ALLOWED'
 			);
 		});
 
@@ -77,8 +77,8 @@ describe('validateTelInput()', () => {
 
 		it('allows passing the error message to the schema library', () => {
 			const opts = { required: true, allowedCountries: ['HU'] as CountryCode[] };
-			expect(validateTelInput('', opts)).toBe('required');
-			expect(validateTelInput('+12154567890', opts)).toBe('country_not_allowed');
+			expect(validateTelInput('', opts)).toBe('REQUIRED');
+			expect(validateTelInput('+12154567890', opts)).toBe('COUNTRY_NOT_ALLOWED');
 			expect(validateTelInput('+36301234567', opts)).toBeNull();
 		});
 	});

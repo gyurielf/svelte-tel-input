@@ -30,7 +30,7 @@ Triggers validation immediately and returns the result with a granular error.
 
 | Input state | `required` not set | `required` set |
 |---|---|---|
-| Empty | `{ valid: true, error: null }` | `{ valid: false, error: 'required' }` |
+| Empty | `{ valid: true, error: null }` | `{ valid: false, error: 'REQUIRED' }` |
 | Valid number | `{ valid: true, error: null }` | `{ valid: true, error: null }` |
 | Invalid number | `{ valid: false, error: '...' }` | `{ valid: false, error: '...' }` |
 
@@ -59,7 +59,7 @@ Resets the component to its empty state:
 - `country` → `defaultCountry` (or `null` if not set)
 - `detailedValue` → `null`
 - `valid` → `true` (or `false` if `required`)
-- `validationError` → `null` (or `'required'` if `required`)
+- `validationError` → `null` (or `'REQUIRED'` if `required`)
 
 Pass `{ country: true }` to force `country` to `null`, ignoring `defaultCountry`:
 

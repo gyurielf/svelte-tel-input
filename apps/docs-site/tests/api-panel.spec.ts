@@ -5,11 +5,12 @@ const BIND_VALUE = '+12014560001';
 test.describe('API & Binding playground', () => {
 	test.beforeEach(async ({ page }) => {
 		await page.goto('/playground');
-		// Switch to the API Test tab to reveal action buttons
-		await page.getByRole('tab', { name: 'API Test' }).click();
-		// Wait for the country dropdown to be hydrated and enabled
+		// Wait for the Svelte component to be fully hydrated before clicking any tab
 		await expect(page.locator('#states-button')).toBeEnabled({ timeout: 15_000 });
 		await expect(page.getByTestId('tel-input')).toBeVisible();
+		// Switch to the API Test tab to reveal action buttons
+		await page.getByRole('tab', { name: 'API Test' }).click();
+		await expect(page.getByTestId('bind-set-value-btn')).toBeVisible();
 	});
 
 	// ── bind:value ─────────────────────────────────────────────────────────────

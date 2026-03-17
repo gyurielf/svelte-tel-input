@@ -34,3 +34,5 @@ yarn-error.log*
 # vercel build output
 .vercel
 .playwright-mcp
+test-results
+AGENTS.md

@@ -16,6 +16,17 @@ export interface Country {
 export interface DetailedValue {
 	countryCode?: CountryCode | null;
 	isPossible: boolean;
+	/**
+	 * Whether the phone number itself is valid according to libphonenumber-js,
+	 * regardless of any application-level constraints (e.g. `allowedCountries`).
+	 * Use `isValid` as the source of truth for overall form validity.
+	 */
+	isPhoneValid: boolean;
+	/**
+	 * Overall validity: `true` only when the number is valid **and** all
+	 * component-level constraints (e.g. `allowedCountries`) are satisfied.
+	 * This is the field you should check in your application logic.
+	 */
 	isValid: boolean;
 	phoneNumber: string | null;
 	countryCallingCode: string | null;
@@ -32,8 +43,8 @@ export interface DetailedValue {
 
 /**
  * The reason the current phone number input is invalid.
- * - `'required'` — field is empty and `required` is `true`
- * - `'country_not_allowed'` — the resolved country is not in `options.allowedCountries`
+ * - `'REQUIRED'` — field is empty and `required` is `true`
+ * - `'COUNTRY_NOT_ALLOWED'` — the resolved country is not in `options.allowedCountries`
  * - `'TOO_SHORT'` — number has too few digits
  * - `'TOO_LONG'` — number has too many digits
  * - `'NOT_A_NUMBER'` — input does not look like a phone number at all
@@ -43,8 +54,8 @@ export interface DetailedValue {
  * - `null` — no error (input is valid)
  */
 export type ValidationError =
-	| 'required'
-	| 'country_not_allowed'
+	| 'REQUIRED'
+	| 'COUNTRY_NOT_ALLOWED'
 	| 'TOO_SHORT'
 	| 'TOO_LONG'
 	| 'NOT_A_NUMBER'

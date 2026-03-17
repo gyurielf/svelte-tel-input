@@ -9,6 +9,8 @@ test.describe('validationError binding', () => {
 		await page.goto('/playground');
 		await expect(page.locator('#states-button')).toBeEnabled({ timeout: 15_000 });
 		await expect(page.getByTestId('tel-input')).toBeVisible();
+		await page.getByRole('tab', { name: 'API Test' }).click();
+		await expect(page.getByTestId('bind-set-value-btn')).toBeVisible();
 	});
 
 	test('shows empty validationError when input is valid', async ({ page }) => {
@@ -24,13 +26,14 @@ test.describe('validationError binding', () => {
 	});
 
 	test('shows "required" when field is empty and required is true', async ({ page }) => {
-		// The advanced example is required by default. Clear the value.
+		// Enable required (Playground defaults to required=false)
+		await page.locator('label:has(input[id^="required-"])').click();
+		// Set a valid value then clear it.
 		await page.getByTestId('bind-set-value-btn').click();
 		await page.getByTestId('bind-clear-btn').click();
-		// Blur the input so validation fires.
-		await page.getByTestId('tel-input').blur();
+		// Clearing via binding triggers validation automatically.
 		await expect(panel(page).getByTestId('valid-display')).toHaveText('false');
-		await expect(panel(page).getByTestId('validation-error-display')).toHaveText('required');
+		await expect(panel(page).getByTestId('validation-error-display')).toHaveText('REQUIRED');
 	});
 
 	test('clears validationError when valid value is restored', async ({ page }) => {
@@ -46,6 +49,8 @@ test.describe('api.checkValidity() returns { valid, error }', () => {
 	test.beforeEach(async ({ page }) => {
 		await page.goto('/playground');
 		await expect(page.locator('#states-button')).toBeEnabled({ timeout: 15_000 });
+		await page.getByRole('tab', { name: 'API Test' }).click();
+		await expect(page.getByTestId('bind-set-value-btn')).toBeVisible();
 	});
 
 	test('returns { valid: true, error: null } for a valid number', async ({ page }) => {
@@ -69,12 +74,14 @@ test.describe('api.checkValidity() returns { valid, error }', () => {
 	test('returns { valid: false, error: "required" } for empty field when required', async ({
 		page
 	}) => {
+		// Enable required (Playground defaults to required=false)
+		await page.locator('label:has(input[id^="required-"])').click();
 		// Start with valid, then clear
 		await page.getByTestId('bind-set-value-btn').click();
 		await page.getByTestId('bind-clear-btn').click();
 		await page.getByTestId('api-check-validity-btn').click();
 		await expect(panel(page).getByTestId('check-validity-result')).toHaveText('false');
-		await expect(panel(page).getByTestId('check-validity-error-result')).toHaveText('required');
+		await expect(panel(page).getByTestId('check-validity-error-result')).toHaveText('REQUIRED');
 	});
 });
 
@@ -83,6 +90,8 @@ test.describe('allowedCountries option', () => {
 		await page.goto('/playground');
 		await expect(page.locator('#states-button')).toBeEnabled({ timeout: 15_000 });
 		await expect(page.getByTestId('tel-input')).toBeVisible();
+		await page.getByRole('tab', { name: 'API Test' }).click();
+		await expect(page.getByTestId('bind-set-value-btn')).toBeVisible();
 	});
 
 	test('allows any valid number when allowedCountries is not set', async ({ page }) => {
@@ -113,7 +122,7 @@ test.describe('allowedCountries option', () => {
 		// GB is not in [US, HU], so should be invalid
 		await expect(panel(page).getByTestId('valid-display')).toHaveText('false');
 		await expect(panel(page).getByTestId('validation-error-display')).toHaveText(
-			'country_not_allowed'
+			'COUNTRY_NOT_ALLOWED'
 		);
 	});
 
@@ -140,7 +149,7 @@ test.describe('allowedCountries option', () => {
 		await input.press('Backspace');
 		await input.pressSequentially('+447947123456', { delay: 50 });
 		await expect(panel(page).getByTestId('validation-error-display')).toHaveText(
-			'country_not_allowed'
+			'COUNTRY_NOT_ALLOWED'
 		);
 
 		// Clear allowedCountries restriction
@@ -172,7 +181,7 @@ test.describe('allowedCountries option', () => {
 		await page.getByTestId('api-check-validity-btn').click();
 		await expect(panel(page).getByTestId('check-validity-result')).toHaveText('false');
 		await expect(panel(page).getByTestId('check-validity-error-result')).toHaveText(
-			'country_not_allowed'
+			'COUNTRY_NOT_ALLOWED'
 		);
 	});
 });

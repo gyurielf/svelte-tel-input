@@ -19,7 +19,7 @@ Parse, format, and validate international phone numbers — store in [E.164](htt
 - **E.164 storage** — one canonical format, always searchable and SMS-ready
 - **Auto-detect country** from dial code (`+44` → `GB`)
 - **Smart formatting** — international display with cursor position preservation
-- **Validation** — powered by [libphonenumber-js](https://gitlab.com/catamphetamine/libphonenumber-js), with granular error types
+- **Validation** — powered with granular error types
 - **Auto placeholder** — country-specific example numbers
 - **Allowed countries** — restrict to a subset of country codes
 - **Lock country** — prevent country switching via dial codes
@@ -88,3 +88,7 @@ Full API reference, options, events, types, and examples are on the **[documenta
 ## License
 
 [MIT](LICENSE.md)
+
+## Acknowledgements
+
+Phone number parsing and validation is powered by [libphonenumber-js](https://gitlab.com/catamphetamine/libphonenumber-js) by [catamphetamine](https://gitlab.com/catamphetamine) and its contributors. This project wouldn't be possible without their work. Thank you for their work.

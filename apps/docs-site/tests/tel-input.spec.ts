@@ -14,10 +14,8 @@ async function toggleRequiredCheckbox(page: import('@playwright/test').Page) {
 	});
 }
 
-async function openOptionsPanel(page: import('@playwright/test').Page) {
-	const optionsButton = page.getByRole('button', { name: 'Options' });
-	await optionsButton.click();
-	await expect(page.getByRole('checkbox', { name: 'Spaces' })).toBeAttached();
+async function openOptionsPanel(_page: import('@playwright/test').Page) {
+	// Options bar is always visible in the current Playground — no button to click.
 }
 
 test.describe('TelInput (demo)', () => {
@@ -275,8 +273,14 @@ test.describe('TelInput (demo)', () => {
 		const countryButton = page.locator('#states-button');
 		await expect(countryButton).toBeEnabled();
 
-		// Manual country change clears input; demo default has required=true,
-		// so the empty input should be invalid.
+		// Enable required so the empty field is invalid after country change.
+		const requiredCheckbox = page.locator('input[id^="required-"]');
+		if (!(await requiredCheckbox.isChecked())) {
+			await toggleRequiredCheckbox(page);
+			await expect(requiredCheckbox).toBeChecked();
+		}
+
+		// Manual country change clears input; required=true so empty input should be invalid.
 		await countryButton.click();
 		await page.locator('#dropdown-countries button[value="US"]').click();
 		await countryButton.click();
@@ -508,10 +512,8 @@ test.describe('Input Format Variants', () => {
 
 				await expect(input).toHaveValue(displayedAs);
 
-				// Verify the stored e164 value appears in the payload block
-				await expect(
-					page.locator('div.validation-table.mt-5:not(.rounded-t)')
-				).toContainText(e164);
+				// Verify the stored e164 value appears in the value display
+				await expect(page.getByTestId('value-display')).toHaveText(e164);
 			});
 		}
 	}

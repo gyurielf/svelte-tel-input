@@ -532,8 +532,8 @@ describe('TelInput Component', () => {
 			});
 
 			const result = component.api.checkValidity();
-			expect(result).toEqual({ valid: false, error: 'required' });
-			expect(mockValidityChange).toHaveBeenCalledWith(false, 'required');
+			expect(result).toEqual({ valid: false, error: 'REQUIRED' });
+			expect(mockValidityChange).toHaveBeenCalledWith(false, 'REQUIRED');
 		});
 
 		it('should return valid=false via checkValidity for partial number even when not required', async () => {
@@ -585,7 +585,7 @@ describe('TelInput Component', () => {
 			});
 
 			await rerender({ country: 'HU' });
-			expect(mockValidityChange).toHaveBeenCalledWith(false, 'required');
+			expect(mockValidityChange).toHaveBeenCalledWith(false, 'REQUIRED');
 		});
 
 		it('should clear value and detailedValue after country change', async () => {
@@ -1178,6 +1178,123 @@ describe('TelInput Component', () => {
 				expect(mockUpdateValue.mock.calls.at(-1)?.[0]).toBe(e164);
 			}
 		);
+	});
+
+	describe('allowedCountries option', () => {
+		it('sets detailedValue.isValid=false and validationError=country_not_allowed when country is not allowed', async () => {
+			let detailedValue: unknown = null;
+			let valid: boolean | undefined;
+			const { getByTestId } = render(TelInput, {
+				props: {
+					value: '',
+					country: null,
+					options: { allowedCountries: ['US', 'HU'] },
+					onValueChange: (_v: string, dv: unknown) => {
+						detailedValue = dv;
+					},
+					onValidityChange: (v: boolean) => {
+						valid = v;
+					}
+				}
+			});
+			const input = getByTestId('tel-input') as HTMLInputElement;
+
+			// Type a valid German number
+			await fireUserEvent.type(input, '+4930123456789');
+
+			expect(valid).toBe(false);
+			expect(detailedValue).toMatchObject({
+				isPhoneValid: true,
+				isValid: false,
+				validationError: 'COUNTRY_NOT_ALLOWED',
+				countryCode: 'DE'
+			});
+		});
+
+		it('does not affect detailedValue.isValid when country is in allowedCountries', async () => {
+			let detailedValue: unknown = null;
+			const { getByTestId } = render(TelInput, {
+				props: {
+					value: '',
+					country: null,
+					options: { allowedCountries: ['US', 'HU'] },
+					onValueChange: (_v: string, dv: unknown) => {
+						detailedValue = dv;
+					}
+				}
+			});
+			const input = getByTestId('tel-input') as HTMLInputElement;
+
+			await fireUserEvent.type(input, '+12154567890');
+
+			expect(detailedValue).toMatchObject({
+				isValid: true,
+				validationError: null,
+				countryCode: 'US'
+			});
+		});
+	});
+
+	describe('isPhoneValid in detailedValue', () => {
+		it('equals isValid for a valid number with no constraints', async () => {
+			let detailedValue: unknown = null;
+			const { getByTestId } = render(TelInput, {
+				props: {
+					value: '',
+					country: 'US',
+					onValueChange: (_v: string, dv: unknown) => {
+						detailedValue = dv;
+					}
+				}
+			});
+			const input = getByTestId('tel-input') as HTMLInputElement;
+
+			await fireUserEvent.type(input, '2154567890');
+
+			expect(detailedValue).toMatchObject({ isPhoneValid: true, isValid: true });
+		});
+
+		it('equals isValid for an invalid (too short) number', async () => {
+			let detailedValue: unknown = null;
+			const { getByTestId } = render(TelInput, {
+				props: {
+					value: '',
+					country: 'US',
+					options: { validateOn: 'input' },
+					onValueChange: (_v: string, dv: unknown) => {
+						detailedValue = dv;
+					}
+				}
+			});
+			const input = getByTestId('tel-input') as HTMLInputElement;
+
+			await fireUserEvent.type(input, '215');
+
+			expect(detailedValue).toMatchObject({ isPhoneValid: false, isValid: false });
+		});
+
+		it('is true when the phone is valid but the country is not in allowedCountries (isValid false)', async () => {
+			let detailedValue: unknown = null;
+			const { getByTestId } = render(TelInput, {
+				props: {
+					value: '',
+					country: null,
+					options: { allowedCountries: ['US', 'HU'] },
+					onValueChange: (_v: string, dv: unknown) => {
+						detailedValue = dv;
+					}
+				}
+			});
+			const input = getByTestId('tel-input') as HTMLInputElement;
+
+			await fireUserEvent.type(input, '+4930123456789');
+
+			expect(detailedValue).toMatchObject({
+				isPhoneValid: true,
+				isValid: false,
+				validationError: 'COUNTRY_NOT_ALLOWED'
+			});
+		});
 	});
 
 	describe('Prop type validation', () => {
