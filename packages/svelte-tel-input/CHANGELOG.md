@@ -1,5 +1,12 @@
 # svelte-tel-input
 
+## 4.0.0-next.2
+### Patch Changes
+
+
+
+- chore: tweak component jsdoc ([#253](https://github.com/gyurielf/svelte-tel-input/pull/253))
+
 ## 4.0.0-next.1
 ### Patch Changes
 
