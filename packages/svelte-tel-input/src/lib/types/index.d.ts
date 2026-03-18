@@ -99,6 +99,9 @@ export interface TelInputOptions {
 }
 
 export interface Props extends HTMLInputAttributes {
+	/**
+	 * Autocomplete attribute for autofill hints (e.g. 'tel', 'tel-national').
+	 */
 	autocomplete?: AutoFill | null;
 	/** You can set the classes of the input field*/
 	class?: string;
@@ -135,10 +138,31 @@ export interface Props extends HTMLInputAttributes {
 	options?: TelInputOptions;
 	/** Binding to the underlying `<input>` element */
 	el?: HTMLInputElement | undefined;
+	/**
+	 * Callback fired when the country changes (auto-detected or user-selected).
+	 * @param newCountry The new country code or null.
+	 */
 	onCountryChange?: (newCountry: CountryCode | null) => void;
+	/**
+	 * Callback fired when validity changes.
+	 * @param newValidity The new validity state.
+	 * @param error The validation error type.
+	 */
 	onValidityChange?: (newValidity: boolean, error: ValidationError) => void;
+	/**
+	 * Callback fired when the value or details change.
+	 * @param newValue The new E164 value.
+	 * @param newDetails The new detailed value object.
+	 */
 	onValueChange?: (newValue: string, newDetails: Readonly<Partial<DetailedValue> | null>) => void;
+	/**
+	 * Callback fired on parse or validation errors.
+	 * @param error The error message.
+	 */
 	onError?: (error: string) => void;
+	/**
+	 * Callback fired after component initialization.
+	 */
 	onLoad?: () => void;
 }
 
