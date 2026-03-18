@@ -103,11 +103,10 @@
 		}
 	});
 
-	/**
-	 * Compute the initial formatted display value synchronously.
-	 * Runs on both server and client at initialization time, so SSR renders the
-	 * formatted number and the client's first render matches — no hydration mismatch.
-	 */
+	// Compute the initial formatted display value synchronously.
+	// Runs on both server and client at initialization time, so SSR renders the
+	// formatted number and the client's first render matches — no hydration mismatch.
+
 	const computeInitialDisplayValue = (): string => {
 		if (!value) return '';
 		let effectiveCountryIso2: CountryCode | null = null;
@@ -139,18 +138,16 @@
 		if (prevCountry === undefined) prevCountry = country;
 	});
 
-	/**
-	 * Shadow trackers — record every value this component writes internally so the
-	 * external-change watchers below can distinguish "we set it" vs "parent set it".
-	 * Plain let (not $state) because they are only ever read inside untrack(), never
-	 * as reactive dependencies.
-	 * Initialized to the incoming prop values so the first render never false-fires.
-	 */
+	//Shadow trackers — record every value this component writes internally so the
+	//external-change watchers below can distinguish "we set it" vs "parent set it".
+	//Plain let (not $state) because they are only ever read inside untrack(), never
+	//as reactive dependencies.
+	//Initialized to the incoming prop values so the first render never false-fires.
 	let _lastWrittenValue: string = value;
 	let _lastWrittenCountry: CountryCode | null | undefined = untrack(() => country);
 	// let isInitialized = $state(false);
 
-	/** Merge options into default opts, to be able to set just one config option. */
+	// Merge options into default opts, to be able to set just one config option.
 	const combinedOptions = $derived({
 		...defaultOptions,
 		...options
@@ -378,11 +375,9 @@
 		});
 	});
 
-	/**
-	 * Detect externally driven value changes (e.g. parent sets bind:value, or resets to null).
-	 * The shadow `_lastWrittenValue` is stamped on every internal write inside
-	 * handleParsePhoneNumber, so any difference here means the parent changed it.
-	 */
+	//Detect externally driven value changes (e.g. parent sets bind:value, or resets to null).
+	//The shadow `_lastWrittenValue` is stamped on every internal write inside
+	//handleParsePhoneNumber, so any difference here means the parent changed it.
 	$effect(() => {
 		const currentValue = value;
 		untrack(() => {
@@ -392,11 +387,9 @@
 		});
 	});
 
-	/**
-	 * Detect externally driven country changes (e.g. parent's <select bind:value={country}>).
-	 * Stamps `_lastWrittenCountry` eagerly so the watcher doesn't re-fire when
-	 * handleParsePhoneNumber later writes country through countryUpdater.
-	 */
+	// Detect externally driven country changes (e.g. parent's <select bind:value={country}>).
+	// Stamps `_lastWrittenCountry` eagerly so the watcher doesn't re-fire when
+	// handleParsePhoneNumber later writes country through countryUpdater.
 	$effect(() => {
 		const currentCountry = country;
 		untrack(() => {
@@ -425,6 +418,13 @@
 		onLoad?.();
 	});
 
+	/**
+	 * Resets the input value and validation state.
+	 *
+	 * @param {Object} [options] - Optional settings.
+	 * @param {boolean} [options.country=false] - If true, resets the country to null; otherwise, resets to defaultCountry.
+	 * @returns {void}
+	 */
 	const reset = ({ country: resetCountry = false }: { country?: boolean } = {}) => {
 		const targetCountry = resetCountry ? null : (defaultCountry ?? null);
 		applyValidity(true, false, targetCountry);
@@ -438,6 +438,11 @@
 		onValueChange?.('', null);
 	};
 
+	/**
+	 * Checks the validity of the current input value and updates validation state.
+	 *
+	 * @returns {{ valid: boolean; error: ValidationError }} - The validity status and error type.
+	 */
 	const checkValidity = (): { valid: boolean; error: ValidationError } => {
 		if (inputValue === '') {
 			applyValidity(true, false, country);
