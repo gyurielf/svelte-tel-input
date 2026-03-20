@@ -27,11 +27,11 @@ test.describe('TelInput (demo)', () => {
 		await expect(page.getByTestId('tel-input')).toBeVisible();
 	});
 
-	test('formats +12154567890 as +1 215-456-7890', async ({ page }) => {
+	test('formats +12154567890 as +1 215 456 7890', async ({ page }) => {
 		const input = page.getByTestId('tel-input');
 		await clearTelInput(input);
 		await input.pressSequentially('+12154567890', { delay: 50 });
-		await expect(input).toHaveValue('+1 215-456-7890');
+		await expect(input).toHaveValue('+1 215 456 7890');
 	});
 
 	test('formats national US examples when US is selected', async ({ page }) => {
@@ -47,11 +47,11 @@ test.describe('TelInput (demo)', () => {
 		await clearTelInput(input);
 
 		await input.pressSequentially('12154567890', { delay: 50 });
-		await expect(input).toHaveValue('1 (215) 456-7890');
+		await expect(input).toHaveValue('1 215 456 7890');
 
 		await clearTelInput(input);
 		await input.pressSequentially('2154567890', { delay: 50 });
-		await expect(input).toHaveValue('(215) 456-7890');
+		await expect(input).toHaveValue('215 456 7890');
 	});
 
 	test('caps length at max valid length (NANP)', async ({ page }) => {
@@ -64,11 +64,11 @@ test.describe('TelInput (demo)', () => {
 		await clearTelInput(input);
 
 		await input.pressSequentially('+12154567890', { delay: 50 });
-		await expect(input).toHaveValue('+1 215-456-7890');
+		await expect(input).toHaveValue('+1 215 456 7890');
 
 		// Extra digits should be ignored/capped.
 		await input.pressSequentially('12', { delay: 50 });
-		await expect(input).toHaveValue('+1 215-456-7890');
+		await expect(input).toHaveValue('+1 215 456 7890');
 	});
 
 	test('does not switch country on partial dial code during backspace (+3 should not become GR)', async ({
@@ -111,7 +111,7 @@ test.describe('TelInput (demo)', () => {
 
 		// Simulate a common paste payload.
 		await input.fill('+1 (215) 456-7890');
-		await expect(input).toHaveValue('+1 215-456-7890');
+		await expect(input).toHaveValue('+1 215 456 7890');
 	});
 
 	test('backspace skips formatting characters (caret moves, value unchanged)', async ({
@@ -120,15 +120,16 @@ test.describe('TelInput (demo)', () => {
 		const input = page.getByTestId('tel-input');
 		await clearTelInput(input);
 		await input.pressSequentially('+12154567890', { delay: 30 });
-		await expect(input).toHaveValue('+1 215-456-7890');
+		await expect(input).toHaveValue('+1 215 456 7890');
 
-		// Place caret just after the first hyphen ("+1 215-456-7890").
+		// Place caret just after the first space ("+1 |215 456 7890").
 		const before = await page.evaluate(() => {
 			const el = document.querySelector(
 				'[data-testid="tel-input"]'
 			) as HTMLInputElement | null;
 			if (!el) throw new Error('tel input not found');
-			const idx = el.value.indexOf('-');
+			// Find the space between "215" and "456"
+			const idx = el.value.indexOf(' ', 3); // skip the first space after "+1"
 			el.setSelectionRange(idx + 1, idx + 1);
 			return { value: el.value, idx, selectionStart: el.selectionStart };
 		});
@@ -153,15 +154,16 @@ test.describe('TelInput (demo)', () => {
 		const input = page.getByTestId('tel-input');
 		await clearTelInput(input);
 		await input.pressSequentially('+12154567890', { delay: 30 });
-		await expect(input).toHaveValue('+1 215-456-7890');
+		await expect(input).toHaveValue('+1 215 456 7890');
 
-		// Place caret just before the first hyphen.
+		// Place caret just before the space between "215" and "456".
 		const before = await page.evaluate(() => {
 			const el = document.querySelector(
 				'[data-testid="tel-input"]'
 			) as HTMLInputElement | null;
 			if (!el) throw new Error('tel input not found');
-			const idx = el.value.indexOf('-');
+			// Find the space between "215" and "456"
+			const idx = el.value.indexOf(' ', 3); // skip the first space after "+1"
 			el.setSelectionRange(idx, idx);
 			return { value: el.value, idx, selectionStart: el.selectionStart };
 		});
@@ -221,7 +223,7 @@ test.describe('TelInput (demo)', () => {
 		const input = page.getByTestId('tel-input');
 		await clearTelInput(input);
 		await input.pressSequentially('+12154567890', { delay: 30 });
-		await expect(input).toHaveValue('+1 215-456-7890');
+		await expect(input).toHaveValue('+1 215 456 7890');
 
 		// Now toggle spaces OFF — existing value should reformat immediately
 		await page.evaluate(() => {
@@ -261,14 +263,14 @@ test.describe('TelInput (demo)', () => {
 			el.click();
 		});
 		await expect(spacesToggle).toBeChecked();
-		await expect(input).toHaveValue('+1 215-456-7890');
+		await expect(input).toHaveValue('+1 215 456 7890');
 	});
 
 	test('country change shows invalid styling when required is set', async ({ page }) => {
 		const input = page.getByTestId('tel-input');
 		await clearTelInput(input);
 		await input.pressSequentially('+12154567890', { delay: 30 });
-		await expect(input).toHaveValue('+1 215-456-7890');
+		await expect(input).toHaveValue('+1 215 456 7890');
 
 		const countryButton = page.locator('#states-button');
 		await expect(countryButton).toBeEnabled();
@@ -468,16 +470,16 @@ const inputFormatsMatrix = [
 		variants: [
 			{ typed: '+3613171377', displayedAs: '+36 1 317 1377', e164: '+3613171377' },
 			{ typed: '3613171377', displayedAs: '36 1 317 1377', e164: '+3613171377' },
-			{ typed: '0613171377', displayedAs: '(06 1) 317 1377', e164: '+3613171377' },
+			{ typed: '0613171377', displayedAs: '06 1 317 1377', e164: '+3613171377' },
 			{ typed: '13171377', displayedAs: '1 317 1377', e164: '+3613171377' }
 		]
 	},
 	{
 		country: 'US',
 		variants: [
-			{ typed: '+12154567890', displayedAs: '+1 215-456-7890', e164: '+12154567890' },
-			{ typed: '12154567890', displayedAs: '1 (215) 456-7890', e164: '+12154567890' },
-			{ typed: '2154567890', displayedAs: '(215) 456-7890', e164: '+12154567890' }
+			{ typed: '+12154567890', displayedAs: '+1 215 456 7890', e164: '+12154567890' },
+			{ typed: '12154567890', displayedAs: '1 215 456 7890', e164: '+12154567890' },
+			{ typed: '2154567890', displayedAs: '215 456 7890', e164: '+12154567890' }
 		]
 	},
 	{

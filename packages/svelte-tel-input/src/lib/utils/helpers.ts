@@ -195,10 +195,16 @@ const formatNanp = (e164ish: string): string => {
 	const c = national.slice(6, 10);
 	let rest = '';
 	if (national.length <= 3) rest = a;
-	else if (national.length <= 6) rest = `${a}-${b}`;
-	else rest = `${a}-${b}-${c}`;
+	else if (national.length <= 6) rest = `${a} ${b}`;
+	else rest = `${a} ${b} ${c}`;
 	return `+1 ${rest}`.trimEnd();
 };
+
+const stripSpecialChars = (s: string): string =>
+	s
+		.replace(/[()-]/g, ' ')
+		.replace(/\s{2,}/g, ' ')
+		.trim();
 
 export const parsePhoneInput = (input: string, country: Country | undefined): DetailedValue => {
 	const normalized = normalizeForLibphonenumber(input);
@@ -218,13 +224,16 @@ export const parsePhoneInput = (input: string, country: Country | undefined): De
 	const countryCode = asYouType.getCountry() || country?.iso2 || null;
 	const formatInternational = phone?.formatInternational() || null;
 	const formatNational = phone?.formatNational() || null;
+	const nationalNumber = phone?.nationalNumber || null;
+
 	let formattedNumber: string | null = null;
 	if (capped) {
 		if (capped.startsWith('+')) {
-			formattedNumber = formatIncompletePhoneNumber(capped) || capped;
+			let raw = formatIncompletePhoneNumber(capped) || capped;
 			if (countryCallingCode === '1' && (countryCode === 'US' || countryCode === 'CA')) {
-				formattedNumber = formatNanp(capped);
+				raw = formatNanp(capped);
 			}
+			formattedNumber = stripSpecialChars(raw);
 		} else if (defaultCountryIso2) {
 			const formatted = formatIncompletePhoneNumber(
 				capped,
@@ -233,14 +242,13 @@ export const parsePhoneInput = (input: string, country: Country | undefined): De
 			if (formatted === capped && formatInternational && countryCallingCode) {
 				formattedNumber = formatInternational.slice(countryCallingCode.length + 1).trim();
 			} else {
-				formattedNumber = formatted || capped;
+				formattedNumber = stripSpecialChars(formatted || capped);
 			}
 		} else {
 			formattedNumber = capped;
 		}
 	}
 	const phoneNumber = phone?.number || null;
-	const nationalNumber = phone?.nationalNumber || null;
 	const uri = phone?.getURI() || null;
 
 	const isValid = asYouType.isValid();

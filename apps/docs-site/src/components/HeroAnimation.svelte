@@ -46,8 +46,9 @@
 	</div>
 
 	<p class="hero-sub">
-		A lightweight <strong>Svelte 5</strong> component for international phone input.
-		<br />Store in <code>E.164</code>, display beautifully, validate instantly.
+		A <strong>headless</strong> <strong>Svelte 5</strong> toolkit for phone input.
+		<br />Type nationally or internationally — always stored as <code>E.164</code>. You build
+		the UI.
 	</p>
 
 	<div class="hero-actions">

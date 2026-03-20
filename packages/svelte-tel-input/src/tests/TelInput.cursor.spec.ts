@@ -20,7 +20,7 @@ describe('TelInput - Cursor Positioning Integration Tests', () => {
 			expect(input.selectionStart).toBe(2);
 
 			await user.type(input, '5');
-			expect(input.value).toBe('(215)');
+			expect(input.value).toBe('215');
 			expect(input.selectionStart).toBe(input.value.length);
 		});
 
@@ -31,7 +31,7 @@ describe('TelInput - Cursor Positioning Integration Tests', () => {
 			const input = getByTestId('tel-input') as HTMLInputElement;
 
 			await user.type(input, '+1215456');
-			expect(input.value).toBe('+1 215-456');
+			expect(input.value).toBe('+1 215 456');
 			expect(input.selectionStart).toBe(input.value.length);
 		});
 
@@ -40,7 +40,7 @@ describe('TelInput - Cursor Positioning Integration Tests', () => {
 			const input = getByTestId('tel-input') as HTMLInputElement;
 
 			await user.type(input, '2154567890');
-			expect(input.value).toBe('(215) 456-7890');
+			expect(input.value).toBe('215 456 7890');
 			expect(input.selectionStart).toBe(input.value.length);
 		});
 	});
@@ -54,13 +54,13 @@ describe('TelInput - Cursor Positioning Integration Tests', () => {
 
 			// Wait for initial formatting
 			await new Promise((r) => setTimeout(r, 100));
-			expect(input.value).toBe('+1 215-456-7890');
+			expect(input.value).toBe('+1 215 456 7890');
 
 			// Move cursor to end
 			await user.click(input);
 			input.setSelectionRange(input.value.length, input.value.length);
 			await user.keyboard('{Backspace}');
-			expect(input.value).not.toBe('+1 215-456-7890');
+			expect(input.value).not.toBe('+1 215 456 7890');
 		});
 
 		it('should handle backspace from middle of input', async () => {
@@ -70,13 +70,13 @@ describe('TelInput - Cursor Positioning Integration Tests', () => {
 			const input = getByTestId('tel-input') as HTMLInputElement;
 
 			await new Promise((r) => setTimeout(r, 100));
-			expect(input.value).toBe('(215) 456-7890');
+			expect(input.value).toBe('215 456 7890');
 
-			// Position cursor after the area code close-paren: "(215)| 456-7890"
-			input.setSelectionRange(5, 5);
+			// Position cursor after the area code: "215 |456 7890"
+			input.setSelectionRange(4, 4);
 			await user.keyboard('{Backspace}');
 
-			expect(input.value).toContain('456-7890');
+			expect(input.value).toContain('456');
 		});
 
 		it('should skip spaces when backspacing', async () => {
@@ -118,15 +118,15 @@ describe('TelInput - Cursor Positioning Integration Tests', () => {
 			const input = getByTestId('tel-input') as HTMLInputElement;
 
 			await new Promise((r) => setTimeout(r, 100));
-			expect(input.value).toBe('(215) 456-7890');
+			expect(input.value).toBe('215 456 7890');
 			await user.click(input);
 
-			// Position cursor before the first digit of the exchange (after ") ")
-			input.setSelectionRange(6, 6);
+			// Position cursor before the first digit of the exchange ("215 |456 7890")
+			input.setSelectionRange(4, 4);
 			await user.keyboard('{Delete}');
 
 			// Should delete a digit (format may shift)
-			expect(input.value).not.toBe('(215) 456-7890');
+			expect(input.value).not.toBe('215 456 7890');
 		});
 
 		it('should skip spaces when deleting forward', async () => {
@@ -161,11 +161,11 @@ describe('TelInput - Cursor Positioning Integration Tests', () => {
 			const input = getByTestId('tel-input') as HTMLInputElement;
 
 			await new Promise((r) => setTimeout(r, 100));
-			expect(input.value).toBe('(215) 456-7890');
+			expect(input.value).toBe('215 456 7890');
 			await user.click(input);
 
 			// Select area code digits
-			input.setSelectionRange(1, 4);
+			input.setSelectionRange(0, 3);
 			await user.keyboard('{Backspace}');
 
 			expect(input.value).not.toContain('215');
@@ -178,11 +178,11 @@ describe('TelInput - Cursor Positioning Integration Tests', () => {
 			const input = getByTestId('tel-input') as HTMLInputElement;
 
 			await new Promise((r) => setTimeout(r, 100));
-			expect(input.value).toBe('(215) 456-7890');
+			expect(input.value).toBe('215 456 7890');
 			await user.click(input);
 
 			// Select first two area code digits
-			input.setSelectionRange(1, 3);
+			input.setSelectionRange(0, 2);
 			await user.type(input, '7');
 
 			expect(input.value).toContain('7');
@@ -195,14 +195,14 @@ describe('TelInput - Cursor Positioning Integration Tests', () => {
 			const input = getByTestId('tel-input') as HTMLInputElement;
 
 			await new Promise((r) => setTimeout(r, 100));
-			expect(input.value).toBe('(215) 456-7890');
+			expect(input.value).toBe('215 456 7890');
 			await user.click(input);
 
 			// Select the exchange digits
-			input.setSelectionRange(6, 9);
+			input.setSelectionRange(4, 7);
 			await user.type(input, '999');
 			// Number is already at max valid length; additional digits should be ignored/capped.
-			expect(input.value).toBe('(215) 456-7890');
+			expect(input.value).toBe('215 456 7890');
 		});
 	});
 
@@ -214,7 +214,7 @@ describe('TelInput - Cursor Positioning Integration Tests', () => {
 			await user.click(input);
 			await user.paste('2154567890');
 
-			expect(input.value).toBe('(215) 456-7890');
+			expect(input.value).toBe('215 456 7890');
 			// Cursor should be at the end after paste
 			expect(input.selectionStart).toBeGreaterThanOrEqual(10);
 		});
@@ -228,10 +228,10 @@ describe('TelInput - Cursor Positioning Integration Tests', () => {
 			await new Promise((r) => setTimeout(r, 100));
 			await user.click(input);
 			// Select middle section
-			input.setSelectionRange(6, 9);
+			input.setSelectionRange(4, 7);
 
 			await user.paste('999');
-			expect(input.value).not.toBe('(215) 456-7890');
+			expect(input.value).not.toBe('215 456 7890');
 		});
 	});
 
@@ -243,7 +243,7 @@ describe('TelInput - Cursor Positioning Integration Tests', () => {
 			// Type digits
 			await user.type(input, '2154567890');
 
-			expect(input.value).toBe('(215) 456-7890');
+			expect(input.value).toBe('215 456 7890');
 			expect(input.selectionStart).toBe(input.value.length);
 		});
 
@@ -320,7 +320,7 @@ describe('TelInput - Cursor Positioning Integration Tests', () => {
 			await user.type(input, '2154567890');
 			await input.blur();
 
-			expect(input.value).toBe('(215) 456-7890');
+			expect(input.value).toBe('215 456 7890');
 		});
 	});
 });

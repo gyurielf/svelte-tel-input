@@ -87,6 +87,11 @@
 			title: 'Svelte 5 Runes',
 			desc: 'Built with $state, $derived, and $bindable — fully reactive with zero ceremony.',
 			svg: '<polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>'
+		},
+		{
+			title: 'Headless & Unstyled',
+			desc: 'No UI opinions — pair it with any CSS framework, design system, or component library. You own the markup.',
+			svg: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/>'
 		}
 	];
 
@@ -369,10 +374,14 @@
 			Features
 		</div>
 		<h2
-			class="text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-tight text-[var(--sl-color-white)] m-0 mb-8"
+			class="text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-tight text-[var(--sl-color-white)] m-0 mb-3"
 		>
-			Everything you need, nothing you don't
+			All the ingredients. You build the UI.
 		</h2>
+		<p class="text-base text-[var(--sl-color-gray-3)] m-0 mb-8 max-w-[60ch]">
+			svelte-tel-input is <strong>headless</strong> — it handles parsing, formatting, country detection,
+			and validation, but ships zero styles. Use any CSS framework, design system, or custom markup.
+		</p>
 
 		<div class="grid grid-cols-1 min-[600px]:grid-cols-2 min-[900px]:grid-cols-3 gap-4">
 			{#each features as f (f.title)}

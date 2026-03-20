@@ -5,8 +5,9 @@
 [![npm version](https://badge.fury.io/js/svelte-tel-input.svg)](https://www.npmjs.com/package/svelte-tel-input)
 [![license](https://img.shields.io/npm/l/svelte-tel-input)](LICENSE.md)
 
-A lightweight **Svelte 5** phone input component.
-Parse, format, and validate international phone numbers — store in [E.164](https://en.wikipedia.org/wiki/E.164).
+A **headless**, fully customizable **Svelte 5** phone input toolkit.
+All the ingredients to parse, format, and validate international phone numbers — you build the UI.
+Store in [E.164](https://en.wikipedia.org/wiki/E.164). Ship with any CSS framework, design system, or custom markup.
 
 [Documentation](https://svelte-tel-input.vercel.app/) · [Playground](https://svelte-tel-input.vercel.app/playground/) · [Changelog](CHANGELOG.md)
 
@@ -16,6 +17,8 @@ Parse, format, and validate international phone numbers — store in [E.164](htt
 
 ## Features
 
+- **Headless & unstyled** — zero built-in styles; bring Tailwind, CSS Modules, or plain CSS
+- **Fully customizable UI** — you own the markup; the library owns the logic
 - **E.164 storage** — one canonical format, always searchable and SMS-ready
 - **Auto-detect country** from dial code (`+44` → `GB`)
 - **Smart formatting** — international display with cursor position preservation

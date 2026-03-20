@@ -14,9 +14,9 @@ describe('TelInput Component', () => {
 			replacementTyped: '+1 215 456 7891',
 			replacementE164: '+12154567891',
 			inputVariants: [
-				{ typed: '+12154567890', displayedAs: '+1 215-456-7890', e164: '+12154567890' }, // E.164 with +
-				{ typed: '12154567890', displayedAs: '1 (215) 456-7890', e164: '+12154567890' }, // digits, no + (1 = NANP trunk)
-				{ typed: '2154567890', displayedAs: '(215) 456-7890', e164: '+12154567890' } // national, no trunk
+				{ typed: '+12154567890', displayedAs: '+1 215 456 7890', e164: '+12154567890' }, // E.164 with +
+				{ typed: '12154567890', displayedAs: '1 215 456 7890', e164: '+12154567890' }, // digits, no + (1 = NANP trunk, calling-code leak fix → national format)
+				{ typed: '2154567890', displayedAs: '215 456 7890', e164: '+12154567890' } // national, no trunk
 			]
 		},
 		{
@@ -27,8 +27,8 @@ describe('TelInput Component', () => {
 			replacementE164: '+36301234568',
 			inputVariants: [
 				{ typed: '+3613171377', displayedAs: '+36 1 317 1377', e164: '+3613171377' }, // E.164 with +
-				{ typed: '3613171377', displayedAs: '36 1 317 1377', e164: '+3613171377' }, // digits, no +
-				{ typed: '0613171377', displayedAs: '(06 1) 317 1377', e164: '+3613171377' }, // national + trunk
+				{ typed: '3613171377', displayedAs: '36 1 317 1377', e164: '+3613171377' }, // digits, no + (calling-code leak fix → national format)
+				{ typed: '0613171377', displayedAs: '06 1 317 1377', e164: '+3613171377' }, // national + trunk (strip parens)
 				{ typed: '13171377', displayedAs: '1 317 1377', e164: '+3613171377' } // national, no trunk
 			]
 		},
@@ -63,7 +63,7 @@ describe('TelInput Component', () => {
 			const input = getByTestId('tel-input') as HTMLInputElement;
 
 			await fireUserEvent.type(input, '2154567890');
-			expect(input.value).toBe('(215) 456-7890');
+			expect(input.value).toBe('215 456 7890');
 		});
 
 		it('should maintain cursor position after typing', async () => {
@@ -73,7 +73,7 @@ describe('TelInput Component', () => {
 			const input = getByTestId('tel-input') as HTMLInputElement;
 
 			await fireUserEvent.type(input, '215');
-			expect(input.value).toBe('(215)');
+			expect(input.value).toBe('215');
 			expect(input.selectionStart).toBe(input.value.length);
 		});
 	});
@@ -86,10 +86,10 @@ describe('TelInput Component', () => {
 			const input = getByTestId('tel-input') as HTMLInputElement;
 
 			await fireUserEvent.type(input, '2154567890');
-			expect(input.value).toBe('(215) 456-7890');
+			expect(input.value).toBe('215 456 7890');
 
 			await fireUserEvent.type(input, '{Backspace}');
-			expect(input.value).toBe('(215) 456-789');
+			expect(input.value).toBe('215 456 789');
 		});
 
 		it('should handle delete key correctly', async () => {
@@ -99,9 +99,9 @@ describe('TelInput Component', () => {
 			const input = getByTestId('tel-input') as HTMLInputElement;
 
 			await fireUserEvent.type(input, '2154567890');
-			expect(input.value).toBe('(215) 456-7890');
-			// Position cursor on the first digit of the exchange (after ") ")
-			input.setSelectionRange(6, 6);
+			expect(input.value).toBe('215 456 7890');
+			// Position cursor on the first digit of the exchange
+			input.setSelectionRange(4, 4);
 
 			await fireUserEvent.keyboard('{Delete}');
 			expect(input.value).toContain('56');
@@ -114,9 +114,9 @@ describe('TelInput Component', () => {
 			const input = getByTestId('tel-input') as HTMLInputElement;
 
 			await fireUserEvent.type(input, '2154567890');
-			expect(input.value).toBe('(215) 456-7890');
+			expect(input.value).toBe('215 456 7890');
 			// Select the area code digits "215"
-			input.setSelectionRange(1, 4);
+			input.setSelectionRange(0, 3);
 
 			await fireUserEvent.keyboard('{Backspace}');
 			expect(input.value).not.toContain('215');
@@ -260,7 +260,7 @@ describe('TelInput Component', () => {
 
 			await fireUserEvent.type(input, '2154567890');
 
-			expect(input.value).toBe('(215) 456-7890');
+			expect(input.value).toBe('215 456 7890');
 			expect(mockUpdateValue).toHaveBeenCalled();
 			expect(mockUpdateValid).toHaveBeenCalled();
 			expect(mockUpdateCountry).not.toHaveBeenCalled();
@@ -301,7 +301,7 @@ describe('TelInput Component', () => {
 			const input = getByTestId('tel-input') as HTMLInputElement;
 
 			await fireUserEvent.type(input, '(215)abc-456 78x90');
-			expect(input.value).toBe('(215) 456-7890');
+			expect(input.value).toBe('215 456 7890');
 		});
 	});
 
@@ -806,7 +806,7 @@ describe('TelInput Component', () => {
 			const input = container.querySelector('input') as HTMLInputElement;
 
 			await fireUserEvent.type(input, '+12154567890');
-			expect(input.value).toBe('+1 215-456-7890');
+			expect(input.value).toBe('+1 215 456 7890');
 		});
 
 		it('should format number without spaces when spaces option is false', async () => {
@@ -833,7 +833,7 @@ describe('TelInput Component', () => {
 			});
 			const input = container.querySelector('input') as HTMLInputElement;
 
-			expect(input.value).toBe('+1 215-456-7890');
+			expect(input.value).toBe('+1 215 456 7890');
 
 			await rerender({ options: { spaces: false } });
 			expect(input.value).toBe('+12154567890');
@@ -852,7 +852,7 @@ describe('TelInput Component', () => {
 			expect(input.value).toBe('+12154567890');
 
 			await rerender({ options: { spaces: true } });
-			expect(input.value).toBe('+1 215-456-7890');
+			expect(input.value).toBe('+1 215 456 7890');
 		});
 
 		it('should reformat HU number when spaces toggled off', async () => {
@@ -883,7 +883,7 @@ describe('TelInput Component', () => {
 				}
 			});
 			const input = container.querySelector('input') as HTMLInputElement;
-			expect(input.value).toBe('+1 215-456-7890');
+			expect(input.value).toBe('+1 215 456 7890');
 
 			mockValueChange.mockClear();
 			await rerender({ value: '+447947123456' });
@@ -903,7 +903,7 @@ describe('TelInput Component', () => {
 				}
 			});
 			const input = container.querySelector('input') as HTMLInputElement;
-			expect(input.value).toBe('+1 215-456-7890');
+			expect(input.value).toBe('+1 215 456 7890');
 
 			await rerender({ value: '' });
 
@@ -920,7 +920,7 @@ describe('TelInput Component', () => {
 				}
 			});
 			const input = container.querySelector('input') as HTMLInputElement;
-			expect(input.value).toBe('+1 215-456-7890');
+			expect(input.value).toBe('+1 215 456 7890');
 
 			await rerender({ country: 'HU' });
 
@@ -959,7 +959,7 @@ describe('TelInput Component', () => {
 			// After mount, the shadow tracker should equalise with the E164 value;
 			// no further value-change calls should fire spontaneously.
 			expect(mockValueChange).not.toHaveBeenCalled();
-			expect(input.value).toBe('+1 215-456-7890');
+			expect(input.value).toBe('+1 215 456 7890');
 		});
 
 		it('should mark as invalid when value prop is set externally to a partial/invalid number', async () => {
@@ -990,7 +990,7 @@ describe('TelInput Component', () => {
 				}
 			});
 			const input = container.querySelector('input') as HTMLInputElement;
-			expect(input.value).toBe('+1 215-456-7890');
+			expect(input.value).toBe('+1 215 456 7890');
 
 			mockCountryChange.mockClear();
 			await rerender({ country: 'DE' });
@@ -1034,9 +1034,9 @@ describe('TelInput Component', () => {
 			const input = getByTestId('tel-input') as HTMLInputElement;
 
 			await fireUserEvent.type(input, '2154567890');
-			expect(input.value).toBe('(215) 456-7890');
+			expect(input.value).toBe('215 456 7890');
 
-			input.setSelectionRange(1, 4); // Select area code digits
+			input.setSelectionRange(0, 3); // Select area code digits
 			await fireUserEvent.keyboard('4');
 			await fireUserEvent.keyboard('5');
 			expect(input.value).toContain('45');
@@ -1075,10 +1075,10 @@ describe('TelInput Component', () => {
 			const input = getByTestId('tel-input') as HTMLInputElement;
 
 			await fireUserEvent.type(input, '2154567890');
-			expect(input.value).toBe('(215) 456-7890');
+			expect(input.value).toBe('215 456 7890');
 			// Try to add extra digits beyond a valid US national number
 			await fireUserEvent.type(input, '12345');
-			expect(input.value).toBe('(215) 456-7890');
+			expect(input.value).toBe('215 456 7890');
 		});
 	});
 
