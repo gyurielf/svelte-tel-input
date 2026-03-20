@@ -1,5 +1,12 @@
 # svelte-tel-input
 
+## 4.0.0-next.4
+### Patch Changes
+
+
+
+- fix: no more brackets and hyphens in the parsed number
+
 ## 4.0.0-next.3
 ### Patch Changes
 
