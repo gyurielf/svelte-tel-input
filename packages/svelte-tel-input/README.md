@@ -17,8 +17,6 @@ Store in [E.164](https://en.wikipedia.org/wiki/E.164). Ship with any CSS framewo
 
 ## Features
 
-- **Headless & unstyled** — zero built-in styles; bring Tailwind, CSS Modules, or plain CSS
-- **Fully customizable UI** — you own the markup; the library owns the logic
 - **E.164 storage** — one canonical format, always searchable and SMS-ready
 - **Auto-detect country** from dial code (`+44` → `GB`)
 - **Smart formatting** — international display with cursor position preservation
@@ -30,7 +28,8 @@ Store in [E.164](https://en.wikipedia.org/wiki/E.164). Ship with any CSS framewo
 - **SSR / SSG** compatible
 - **Svelte 5 runes** — `$bindable` props, `$state`, `$derived`
 - **Accessible** — `aria-invalid` auto-set, ARIA attribute passthrough, `type="tel"`
-- **Unstyled** — bring your own CSS or Tailwind classes
+- **Headless & unstyled** — zero built-in styles; bring Tailwind, CSS Modules, or plain CSS
+- **Fully customizable UI** — you own the markup; the library owns the logic
 
 ## Install
 

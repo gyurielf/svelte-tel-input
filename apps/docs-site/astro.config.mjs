@@ -56,7 +56,8 @@ export default defineConfig({
 				{
 					label: 'Playground',
 					slug: 'playground'
-				}
+				},
+				{ label: 'Credits', slug: 'credits' }
 			],
 			customCss: ['./src/styles/custom.css']
 		})

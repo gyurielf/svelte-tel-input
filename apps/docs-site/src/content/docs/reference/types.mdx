@@ -82,8 +82,8 @@ interface DetailedValue {
 | `countryCallingCode` | `'36'` | Numeric calling code |
 | `nationalNumber` | `'301234567'` | Without country calling code |
 | `formatInternational` | `'+36 30 123 4567'` | Internationally formatted |
-| `formatNational` | `'(06 30) 123 4567'` | Nationally formatted |
-| `formattedNumber` | `'+36 30 123 4567'` | Display-formatted number |
+| `formatNational` | `'(06 30) 123 4567'` | Nationally formatted (may include parentheses) |
+| `formattedNumber` | `'+36 30 123 4567'` | Display-friendly format — always spaces only, no parentheses or hyphens. Used for the input display when `options.spaces` is `true`. |
 | `formatOriginal` | `'30 123 4567'` | International without calling code prefix |
 | `uri` | `'tel:+36301234567'` | `tel:` URI for `<a href>` links |
 | `phoneNumber` | `'+36301234567'` | Same as `e164` |
