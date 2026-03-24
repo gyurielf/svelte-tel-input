@@ -20,10 +20,12 @@
 	let detailedValue = $state<DetailedValue | null>(null);
 	const options: TelInputOptions = $state({
 		autoPlaceholder: true,
+		lockCountry: false,
 		spaces: true,
 		validateOn: 'input'
 	});
 	let required = $state(false);
+	let defaultCountry = $state<CountryCode | null>(null);
 
 	let advancedRef = $state<AdvancedPhoneInput | undefined>(undefined);
 	let checkResult = $state<{ valid: boolean; error: ValidationError } | null>(null);
@@ -115,7 +117,7 @@
 			<span>Spaces</span>
 		</label>
 		<label class="pg-toggle">
-			<input type="checkbox" bind:checked={options.autoPlaceholder} />
+			<input id="autoPlaceholder-0" type="checkbox" bind:checked={options.autoPlaceholder} />
 			<span class="pg-toggle-knob"></span>
 			<span>Auto-placeholder</span>
 		</label>
@@ -123,6 +125,11 @@
 			<input id="required-0" type="checkbox" bind:checked={required} />
 			<span class="pg-toggle-knob"></span>
 			<span>Required</span>
+		</label>
+		<label class="pg-toggle">
+			<input id="lockCountry-0" type="checkbox" bind:checked={options.lockCountry} />
+			<span class="pg-toggle-knob"></span>
+			<span>Lock country</span>
 		</label>
 		<label class="inline-flex items-center gap-1.5 text-[var(--sl-color-text)] text-xs">
 			Validate on
@@ -183,6 +190,7 @@
 						bind:valid
 						bind:detailedValue
 						bind:validationError
+						{defaultCountry}
 						{options}
 						{required}
 					/>
@@ -192,6 +200,44 @@
 			<!-- API Test actions (only on API tab) -->
 			{#if activeTab === 'api'}
 				<div class="flex flex-col gap-3 pt-3 border-t border-[var(--sl-color-hairline)]">
+					<div class="flex flex-col gap-1.5">
+						<p
+							class="text-[0.7rem] font-semibold uppercase tracking-[0.07em] text-[var(--sl-color-gray-4)] m-0"
+						>
+							defaultCountry
+						</p>
+						<div class="flex flex-wrap items-center gap-2">
+							<label
+								class="inline-flex items-center gap-1.5 text-[var(--sl-color-text)] text-xs"
+							>
+								Reset target
+								<select
+									data-testid="default-country-select"
+									class="text-[0.78rem] px-2 py-[0.2rem] rounded-[0.35rem] border border-[var(--sl-color-hairline)] bg-[var(--sl-color-bg-nav)] text-[var(--sl-color-text)]"
+									value={defaultCountry ?? ''}
+									onchange={(e) => {
+										const nextValue = (e.currentTarget as HTMLSelectElement)
+											.value;
+										defaultCountry =
+											nextValue === '' ? null : (nextValue as CountryCode);
+									}}
+								>
+									<option value="">none</option>
+									<option value="US">US</option>
+									<option value="HU">HU</option>
+									<option value="DE">DE</option>
+									<option value="GB">GB</option>
+								</select>
+							</label>
+							<span
+								data-testid="default-country-display"
+								class="text-[0.72rem] text-[var(--sl-color-gray-3)]"
+							>
+								{defaultCountry ?? ''}
+							</span>
+						</div>
+					</div>
+
 					<div class="flex flex-col gap-1.5">
 						<p
 							class="text-[0.7rem] font-semibold uppercase tracking-[0.07em] text-[var(--sl-color-gray-4)] m-0"
@@ -241,6 +287,12 @@
 								data-testid="api-reset-btn"
 								class="px-3 py-[0.3rem] text-xs rounded-[0.35rem] border cursor-pointer hover:opacity-85 transition-opacity duration-150 bg-[var(--sl-color-bg-sidebar)] text-[var(--sl-color-text)] border-[var(--sl-color-hairline)]"
 								onclick={() => advancedRef?.reset()}>reset()</button
+							>
+							<button
+								data-testid="api-reset-clear-country-btn"
+								class="px-3 py-[0.3rem] text-xs rounded-[0.35rem] border cursor-pointer hover:opacity-85 transition-opacity duration-150 bg-[var(--sl-color-bg-sidebar)] text-[var(--sl-color-text)] border-[var(--sl-color-hairline)]"
+								onclick={() => advancedRef?.reset({ country: true })}
+								>reset country</button
 							>
 						</div>
 					</div>

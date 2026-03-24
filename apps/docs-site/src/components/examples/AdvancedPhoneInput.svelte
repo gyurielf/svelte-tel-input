@@ -14,6 +14,7 @@
 	interface Props {
 		clickOutside?: boolean;
 		closeOnClick?: boolean;
+		defaultCountry?: CountryCode | null;
 		disabled?: boolean;
 		required?: boolean;
 		detailedValue?: DetailedValue | null;
@@ -30,6 +31,7 @@
 	let {
 		clickOutside = true,
 		closeOnClick = true,
+		defaultCountry = null,
 		disabled = false,
 		required = true,
 		detailedValue = $bindable(null),
@@ -48,7 +50,7 @@
 	let telInputRef: TelInput | undefined = $state();
 
 	export const checkValidity = () => telInputRef?.api.checkValidity();
-	export const reset = () => telInputRef?.api.reset();
+	export const reset = (options?: { country?: boolean }) => telInputRef?.api.reset(options);
 
 	// const selectedCountryDialCode = $derived(
 	// 	countries.find((el) => el.iso2 === selectedCountry)?.dialCode || null
@@ -219,6 +221,7 @@
 	<TelInput
 		bind:this={telInputRef}
 		country={selectedCountry}
+		{defaultCountry}
 		bind:detailedValue
 		bind:value
 		bind:valid

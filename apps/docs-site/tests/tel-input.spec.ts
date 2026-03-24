@@ -14,6 +14,35 @@ async function toggleRequiredCheckbox(page: import('@playwright/test').Page) {
 	});
 }
 
+async function setToggleState(
+	page: import('@playwright/test').Page,
+	selectorPrefix: string,
+	checked: boolean,
+	errorMessage: string
+) {
+	const toggle = page.locator(`input[id^="${selectorPrefix}"]`);
+	if ((await toggle.isChecked()) !== checked) {
+		await page.evaluate(
+			({ selectorPrefix: currentPrefix, errorMessage: currentErrorMessage }) => {
+				const el = document.querySelector(
+					`input[id^="${currentPrefix}"]`
+				) as HTMLInputElement | null;
+				if (!el) throw new Error(currentErrorMessage);
+				el.click();
+			},
+			{ selectorPrefix, errorMessage }
+		);
+	}
+	await expect(toggle).toBeChecked({ checked });
+}
+
+async function selectCountry(page: import('@playwright/test').Page, country: string) {
+	const countryButton = page.locator('#states-button');
+	await expect(countryButton).toBeEnabled();
+	await countryButton.click();
+	await page.locator(`#dropdown-countries button[value="${country}"]`).click();
+}
+
 async function openOptionsPanel(_page: import('@playwright/test').Page) {
 	// Options bar is always visible in the current Playground — no button to click.
 }
@@ -461,6 +490,81 @@ test.describe('Validation behavior', () => {
 		// Blur — NOW should show invalid
 		await input.press('Tab');
 		await expect(wrapper).toHaveClass(/ring-pink-500/);
+	});
+
+	test('validateOn=input shows invalid state during typing before blur', async ({ page }) => {
+		const input = page.getByTestId('tel-input');
+		const countryButton = page.locator('#states-button');
+		const wrapper = countryButton
+			.locator('xpath=ancestor::div[contains(@class,"rounded-lg")]')
+			.first();
+
+		await openOptionsPanel(page);
+		await page.locator('select[id^="validateOn-"]').selectOption('input');
+		await setToggleState(page, 'required-', false, 'Required checkbox not found');
+
+		await expect(page.locator('#states-button')).toBeEnabled();
+		await expect(page.getByTestId('tel-input')).toBeVisible();
+
+		await selectCountry(page, 'US');
+		await clearTelInput(input);
+		await input.pressSequentially('215', { delay: 50 });
+		await expect(wrapper).toHaveClass(/ring-pink-500/);
+
+		await input.pressSequentially('4567890', { delay: 50 });
+		await expect(wrapper).not.toHaveClass(/ring-pink-500/);
+	});
+});
+
+test.describe('Option toggles', () => {
+	test.beforeEach(async ({ page }) => {
+		await page.goto('/playground');
+		await expect(page.locator('#states-button')).toBeEnabled();
+		await expect(page.getByTestId('tel-input')).toBeVisible();
+	});
+
+	test('autoPlaceholder follows the selected country and clears when disabled', async ({
+		page
+	}) => {
+		const input = page.getByTestId('tel-input');
+
+		await setToggleState(page, 'spaces-', true, 'Spaces checkbox not found');
+		await setToggleState(page, 'lockCountry-', false, 'Lock country checkbox not found');
+		await setToggleState(page, 'autoPlaceholder', true, 'Auto-placeholder checkbox not found');
+
+		await selectCountry(page, 'US');
+		const usPlaceholder = await input.evaluate(
+			(element) => (element as HTMLInputElement).placeholder
+		);
+		expect(usPlaceholder).toMatch(/\d/);
+
+		await selectCountry(page, 'HU');
+		const huPlaceholder = await input.evaluate(
+			(element) => (element as HTMLInputElement).placeholder
+		);
+		expect(huPlaceholder).toMatch(/\d/);
+		expect(huPlaceholder).not.toBe(usPlaceholder);
+
+		await setToggleState(page, 'autoPlaceholder', false, 'Auto-placeholder checkbox not found');
+		await expect(input).toHaveJSProperty('placeholder', '');
+	});
+
+	test('lockCountry prevents dial-code switching until disabled again', async ({ page }) => {
+		const input = page.getByTestId('tel-input');
+		const countryButton = page.locator('#states-button');
+
+		await selectCountry(page, 'US');
+		await setToggleState(page, 'lockCountry-', true, 'Lock country checkbox not found');
+
+		await clearTelInput(input);
+		await input.pressSequentially('+447947123456', { delay: 50 });
+		await expect(countryButton.locator('.flag-us')).toHaveCount(1);
+		await expect(countryButton.locator('.flag-gb')).toHaveCount(0);
+
+		await setToggleState(page, 'lockCountry-', false, 'Lock country checkbox not found');
+		await clearTelInput(input);
+		await input.pressSequentially('+447947123456', { delay: 50 });
+		await expect(countryButton.locator('.flag-gb')).toHaveCount(1);
 	});
 });
 
