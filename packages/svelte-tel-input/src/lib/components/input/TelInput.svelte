@@ -161,8 +161,18 @@
 	const getValidationError = (
 		isEmpty: boolean,
 		parseValid: boolean,
-		resolvedCountry: CountryCode | null | undefined
+		resolvedCountry: CountryCode | null | undefined,
+		currentCountry: CountryCode | null | undefined = country
 	): ValidationError => {
+		if (
+			combinedOptions.lockCountry &&
+			currentCountry != null &&
+			resolvedCountry != null &&
+			resolvedCountry !== currentCountry
+		) {
+			return 'COUNTRY_NOT_ALLOWED';
+		}
+
 		const allowed = combinedOptions.allowedCountries;
 		if (allowed?.length && resolvedCountry != null && !allowed.includes(resolvedCountry)) {
 			return 'COUNTRY_NOT_ALLOWED';
@@ -176,9 +186,10 @@
 	const applyValidity = (
 		isEmpty: boolean,
 		parseValid: boolean,
-		resolvedCountry?: CountryCode | null
+		resolvedCountry?: CountryCode | null,
+		currentCountry: CountryCode | null | undefined = country
 	) => {
-		const error = getValidationError(isEmpty, parseValid, resolvedCountry);
+		const error = getValidationError(isEmpty, parseValid, resolvedCountry, currentCountry);
 		valid = error === null;
 		validationError = error;
 		onValidityChange?.(valid, error);
@@ -193,7 +204,12 @@
 			if (inputValue === '') {
 				applyValidity(true, false, country);
 			} else {
-				applyValidity(false, detailedValue?.isValid ?? false, country);
+				applyValidity(
+					false,
+					detailedValue?.isPhoneValid ?? false,
+					detailedValue?.countryCode ?? country,
+					country
+				);
 			}
 		}
 		const { onblur } = rest;
@@ -319,21 +335,22 @@
 			}
 		}
 
-		// If the resolved country is not in allowedCountries, the phone number is
-		// intrinsically valid (libphonenumber-js says so) but the application rejects
-		// it. Patch detailedValue to reflect this so that detailedValue.isValid is
-		// consistent with the component's `valid` prop and `validationError`.
-		const _allowedCountries = combinedOptions.allowedCountries;
-		if (
-			detailedValue &&
-			_allowedCountries?.length &&
-			detailedValue.countryCode != null &&
-			!_allowedCountries.includes(detailedValue.countryCode)
-		) {
+		const resolvedCountry =
+			detailedValue?.countryCode ?? numberHasCountry?.iso2 ?? country ?? null;
+		const componentValidationError = detailedValue
+			? getValidationError(
+					false,
+					detailedValue.isPhoneValid ?? false,
+					resolvedCountry,
+					currCountry ?? country
+				)
+			: null;
+
+		if (detailedValue && componentValidationError !== detailedValue.validationError) {
 			detailedValue = {
 				...detailedValue,
-				isValid: false,
-				validationError: 'COUNTRY_NOT_ALLOWED'
+				isValid: componentValidationError === null && detailedValue.isPhoneValid,
+				validationError: componentValidationError
 			};
 		}
 
@@ -348,7 +365,12 @@
 		onValueChange?.(value, detailedValue);
 
 		if (shouldValidate) {
-			applyValidity(false, detailedValue?.isValid ?? false, country);
+			applyValidity(
+				false,
+				detailedValue?.isPhoneValid ?? false,
+				resolvedCountry,
+				currCountry ?? country
+			);
 		}
 	};
 

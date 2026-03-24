@@ -84,6 +84,7 @@
 	const activePurpose = $derived(
 		tabs.find((tab) => tab.id === activeTab)?.purpose ?? 'Interact with the component live.'
 	);
+	const showOptionsBar = $derived(activeTab !== 'usage');
 	const inputKey = $derived.by(() =>
 		[
 			activeTab,
@@ -130,7 +131,7 @@
 			case 'TOO_SHORT':
 				return 'Phone number is incomplete.';
 			case 'COUNTRY_NOT_ALLOWED':
-				return 'This number is outside the allowed countries.';
+				return 'This number is outside the allowed countries or conflicts with the locked country.';
 			default:
 				return `Phone number error: ${error.toLowerCase().replace(/_/g, ' ')}.`;
 		}
@@ -263,11 +264,11 @@
 </script>
 
 <div
-	class="not-content overflow-hidden rounded-[0.875rem] border border-[var(--sl-color-hairline)] bg-[var(--sl-color-bg-nav)]"
+	class="not-content overflow-visible rounded-[0.875rem] border border-[var(--sl-color-hairline)] bg-[var(--sl-color-bg-nav)]"
 >
 	<div
 		role="tablist"
-		class="flex items-center border-b border-[var(--sl-color-hairline)] bg-[var(--sl-color-bg-sidebar)] px-1"
+		class="flex items-center border-b border-[var(--sl-color-hairline)] bg-[var(--sl-color-bg-sidebar)] px-1 rounded-t-[0.875rem]"
 	>
 		{#each tabs as tab (tab.id)}
 			<button
@@ -300,7 +301,7 @@
 		<p class="mt-1 text-sm text-[var(--sl-color-text)]">{activePurpose}</p>
 	</div>
 
-	{#if activeTab === 'validation'}
+	{#if showOptionsBar}
 		<div
 			class="flex flex-wrap items-center gap-x-5 gap-y-3 border-b border-[var(--sl-color-hairline)] bg-[var(--sl-color-bg)] px-4 py-[0.6rem] text-xs"
 		>
@@ -351,7 +352,9 @@
 				</select>
 			</label>
 		</div>
+	{/if}
 
+	{#if activeTab === 'validation'}
 		<div
 			class="border-b border-[var(--sl-color-hairline)] bg-[var(--sl-color-bg)] px-4 py-3 text-xs"
 		>
@@ -529,9 +532,12 @@
 			</div>
 		</div>
 	{:else}
-		<div class="grid grid-cols-1 md:grid-cols-2">
+		<div class="grid grid-cols-1 {activeTab === 'events' ? '' : 'md:grid-cols-2'}">
 			<div
-				class="flex flex-col gap-4 border-b border-[var(--sl-color-hairline)] p-5 md:border-b-0 md:border-r md:border-r-[var(--sl-color-hairline)]"
+				class="flex flex-col gap-4 border-b border-[var(--sl-color-hairline)] p-5 {activeTab ===
+				'events'
+					? 'col-span-full'
+					: 'md:border-b-0 md:border-r md:border-r-[var(--sl-color-hairline)]'}"
 			>
 				{#key inputKey}
 					<AdvancedPhoneInput
@@ -672,7 +678,7 @@
 			</div>
 
 			{#if activeTab === 'events'}
-				<div data-testid="event-log-panel" class="p-5">
+				<div data-testid="event-log-panel" class="col-span-full px-5 pb-5 pt-0">
 					<div
 						class="overflow-hidden rounded-[0.6rem] border border-[var(--sl-color-hairline)]"
 					>
@@ -691,7 +697,7 @@
 							</div>
 							<button
 								data-testid="clear-event-log-btn"
-								class="rounded-[0.35rem] border border-[var(--sl-color-hairline)] bg-transparent px-3 py-[0.3rem] text-xs text-[var(--sl-color-text)] transition-[background,color] duration-150 hover:bg-[var(--sl-color-bg)]"
+								class="rounded-[0.35rem] border border-[var(--sl-color-hairline)] dark:border-gray-400 bg-transparent px-3 py-[0.3rem] text-xs text-[var(--sl-color-text)] transition-[background,color] duration-150 hover:bg-[var(--sl-color-bg)] enabled:cursor-pointer"
 								onclick={resetEventLog}
 							>
 								Clear log
@@ -772,7 +778,7 @@
 								<span data-testid="value-display" style="display:none">{value}</span
 								>
 								<button
-									class="inline-flex shrink-0 items-center justify-center rounded-[0.3rem] border border-[var(--sl-color-hairline)] bg-transparent px-[0.35rem] py-[0.2rem] text-[var(--sl-color-gray-3)] transition-[background,color] duration-150 hover:bg-[var(--sl-color-bg-sidebar)] hover:text-[var(--sl-color-text)]"
+									class="inline-flex shrink-0 items-center justify-center rounded-[0.3rem] border border-[var(--sl-color-hairline)] bg-transparent px-[0.35rem] py-[0.2rem] text-[var(--sl-color-gray-3)] transition-[background,color] duration-150 hover:bg-[var(--sl-color-bg-sidebar)] hover:text-[var(--sl-color-text)] enabled:cursor-pointer"
 									aria-label="Copy E.164 value"
 									onclick={copyE164}
 								>

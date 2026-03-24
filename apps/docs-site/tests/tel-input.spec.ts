@@ -570,6 +570,24 @@ test.describe('Option toggles', () => {
 		await input.pressSequentially('+447947123456', { delay: 50 });
 		await expect(countryButton.locator('.flag-gb')).toHaveCount(1);
 	});
+
+	test('lockCountry marks a mismatching international number invalid', async ({ page }) => {
+		const input = page.getByTestId('tel-input');
+		const countryButton = page.locator('#states-button');
+
+		await selectCountry(page, 'US');
+		await setToggleState(page, 'lockCountry-', true, 'Lock country checkbox not found');
+
+		await clearTelInput(input);
+		await input.pressSequentially('+36301234567', { delay: 50 });
+
+		await expect(countryButton.locator('.flag-us')).toHaveCount(1);
+		await expect(countryButton.locator('.flag-hu')).toHaveCount(0);
+		await expect(page.getByTestId('valid-display')).toHaveText('false');
+		await expect(page.getByTestId('validation-error-display')).toHaveText(
+			'COUNTRY_NOT_ALLOWED'
+		);
+	});
 });
 
 test.describe('Events tab', () => {

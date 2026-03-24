@@ -2,6 +2,7 @@ import { describe, it, expect, vi } from 'vitest';
 import { render } from '@testing-library/svelte';
 import userEvent from '@testing-library/user-event';
 import TelInput from '$lib/components/input/TelInput.svelte';
+import type { DetailedValue, ValidationError } from '../lib/types';
 
 describe('TelInput Component', () => {
 	const fireUserEvent = userEvent.setup();
@@ -777,6 +778,39 @@ describe('TelInput Component', () => {
 			expect(mockCountryChange).not.toHaveBeenCalled();
 		});
 
+		it('should mark a mismatching international number invalid when lockCountry is true', async () => {
+			let detailedValue: Partial<DetailedValue> | null = null;
+			let valid: boolean | undefined;
+			let validationError: ValidationError = null;
+
+			const { getByTestId } = render(TelInput, {
+				props: {
+					value: '',
+					country: 'US',
+					options: { lockCountry: true },
+					onValueChange: (_, nextDetailedValue) => {
+						detailedValue = nextDetailedValue;
+					},
+					onValidityChange: (nextValid, nextError) => {
+						valid = nextValid;
+						validationError = nextError;
+					}
+				}
+			});
+			const input = getByTestId('tel-input') as HTMLInputElement;
+
+			await fireUserEvent.type(input, '+36301234567');
+
+			expect(valid).toBe(false);
+			expect(validationError).toBe('COUNTRY_NOT_ALLOWED');
+			expect(detailedValue).toMatchObject({
+				countryCode: 'HU',
+				isPhoneValid: true,
+				isValid: false,
+				validationError: 'COUNTRY_NOT_ALLOWED'
+			});
+		});
+
 		it('should not switch country when value is set externally with lockCountry', async () => {
 			const mockCountryChange = vi.fn();
 			const { rerender } = render(TelInput, {
@@ -1182,17 +1216,17 @@ describe('TelInput Component', () => {
 
 	describe('allowedCountries option', () => {
 		it('sets detailedValue.isValid=false and validationError=country_not_allowed when country is not allowed', async () => {
-			let detailedValue: unknown = null;
+			let detailedValue: Partial<DetailedValue> | null = null;
 			let valid: boolean | undefined;
 			const { getByTestId } = render(TelInput, {
 				props: {
 					value: '',
 					country: null,
 					options: { allowedCountries: ['US', 'HU'] },
-					onValueChange: (_v: string, dv: unknown) => {
+					onValueChange: (_, dv) => {
 						detailedValue = dv;
 					},
-					onValidityChange: (v: boolean) => {
+					onValidityChange: (v) => {
 						valid = v;
 					}
 				}
@@ -1212,13 +1246,13 @@ describe('TelInput Component', () => {
 		});
 
 		it('does not affect detailedValue.isValid when country is in allowedCountries', async () => {
-			let detailedValue: unknown = null;
+			let detailedValue: Partial<DetailedValue> | null = null;
 			const { getByTestId } = render(TelInput, {
 				props: {
 					value: '',
 					country: null,
 					options: { allowedCountries: ['US', 'HU'] },
-					onValueChange: (_v: string, dv: unknown) => {
+					onValueChange: (_, dv) => {
 						detailedValue = dv;
 					}
 				}
@@ -1237,12 +1271,12 @@ describe('TelInput Component', () => {
 
 	describe('isPhoneValid in detailedValue', () => {
 		it('equals isValid for a valid number with no constraints', async () => {
-			let detailedValue: unknown = null;
+			let detailedValue: Partial<DetailedValue> | null = null;
 			const { getByTestId } = render(TelInput, {
 				props: {
 					value: '',
 					country: 'US',
-					onValueChange: (_v: string, dv: unknown) => {
+					onValueChange: (_, dv) => {
 						detailedValue = dv;
 					}
 				}
@@ -1255,13 +1289,13 @@ describe('TelInput Component', () => {
 		});
 
 		it('equals isValid for an invalid (too short) number', async () => {
-			let detailedValue: unknown = null;
+			let detailedValue: Partial<DetailedValue> | null = null;
 			const { getByTestId } = render(TelInput, {
 				props: {
 					value: '',
 					country: 'US',
 					options: { validateOn: 'input' },
-					onValueChange: (_v: string, dv: unknown) => {
+					onValueChange: (_, dv) => {
 						detailedValue = dv;
 					}
 				}
@@ -1274,13 +1308,13 @@ describe('TelInput Component', () => {
 		});
 
 		it('is true when the phone is valid but the country is not in allowedCountries (isValid false)', async () => {
-			let detailedValue: unknown = null;
+			let detailedValue: Partial<DetailedValue> | null = null;
 			const { getByTestId } = render(TelInput, {
 				props: {
 					value: '',
 					country: null,
 					options: { allowedCountries: ['US', 'HU'] },
-					onValueChange: (_v: string, dv: unknown) => {
+					onValueChange: (_, dv) => {
 						detailedValue = dv;
 					}
 				}

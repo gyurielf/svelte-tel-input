@@ -44,7 +44,7 @@ export interface DetailedValue {
 /**
  * The reason the current phone number input is invalid.
  * - `'REQUIRED'` — field is empty and `required` is `true`
- * - `'COUNTRY_NOT_ALLOWED'` — the resolved country is not in `options.allowedCountries`
+ * - `'COUNTRY_NOT_ALLOWED'` — the resolved country is not in `options.allowedCountries`, or `options.lockCountry` rejects an international number that resolves to a different country than the locked one
  * - `'TOO_SHORT'` — number has too few digits
  * - `'TOO_LONG'` — number has too many digits
  * - `'NOT_A_NUMBER'` — input does not look like a phone number at all
