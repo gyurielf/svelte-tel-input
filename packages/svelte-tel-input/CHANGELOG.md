@@ -1,5 +1,12 @@
 # svelte-tel-input
 
+## 4.0.1
+### Patch Changes
+
+
+
+- fix: lockCountry behavior ([#260](https://github.com/gyurielf/svelte-tel-input/pull/260))
+
 ## 4.0.0
 ### Major Changes
 
