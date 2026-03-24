@@ -13,16 +13,16 @@
 		"@astrojs/starlight": "^0.37.7",
 		"@astrojs/starlight-tailwind": "^4.0.2",
 		"@astrojs/svelte": "^7.2.5",
-		"@tailwindcss/vite": "^4.2.1",
+		"@tailwindcss/vite": "^4.2.2",
 		"astro": "~5.18.1",
-		"svelte": "^5.53.11",
+		"svelte": "^5.54.0",
 		"svelte-tel-input": "workspace:*",
-		"tailwindcss": "^4.2.1",
+		"tailwindcss": "^4.2.2",
 		"typescript": "^5.9.3"
 	},
 	"devDependencies": {
 		"@playwright/test": "^1.58.2",
-		"schema-dts": "^1.1.5",
+		"schema-dts": "^2.0.0",
 		"tailwind-merge": "^3.5.0"
 	}
 }

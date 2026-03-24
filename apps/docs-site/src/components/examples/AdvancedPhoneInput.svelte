@@ -14,6 +14,7 @@
 	interface Props {
 		clickOutside?: boolean;
 		closeOnClick?: boolean;
+		defaultCountry?: CountryCode | null;
 		disabled?: boolean;
 		required?: boolean;
 		detailedValue?: DetailedValue | null;
@@ -23,13 +24,22 @@
 		valid: boolean;
 		validationError?: ValidationError;
 		options: TelInputOptions;
+		onCountryChange?: (country: CountryCode | null) => void;
+		onError?: (error: string) => void;
 		onSelectChange?: (details: CountryCode) => void;
 		onSelectSame?: (details: CountryCode) => void;
+		onValidityChange?: (isValid: boolean, error: ValidationError) => void;
+		onValueChange?: (
+			newValue: string,
+			newDetails: Readonly<Partial<DetailedValue> | null>
+		) => void;
+		onLoad?: () => void;
 	}
 
 	let {
 		clickOutside = true,
 		closeOnClick = true,
+		defaultCountry = null,
 		disabled = false,
 		required = true,
 		detailedValue = $bindable(null),
@@ -39,8 +49,13 @@
 		valid = $bindable(),
 		validationError = $bindable<ValidationError>(null),
 		options,
+		onCountryChange,
+		onError,
+		onLoad,
 		onSelectChange,
-		onSelectSame
+		onSelectSame,
+		onValidityChange,
+		onValueChange
 	}: Props = $props();
 	let searchText = $state('');
 	let isOpen = $state(false);
@@ -48,7 +63,7 @@
 	let telInputRef: TelInput | undefined = $state();
 
 	export const checkValidity = () => telInputRef?.api.checkValidity();
-	export const reset = () => telInputRef?.api.reset();
+	export const reset = (options?: { country?: boolean }) => telInputRef?.api.reset(options);
 
 	// const selectedCountryDialCode = $derived(
 	// 	countries.find((el) => el.iso2 === selectedCountry)?.dialCode || null
@@ -128,7 +143,7 @@
 		<button
 			id="states-button"
 			data-dropdown-toggle="dropdown-states"
-			class="relative shrink-0 overflow-hidden z-10 whitespace-nowrap inline-flex items-center py-2.5 px-4 text-sm font-medium text-center text-gray-500 bg-gray-100 border border-gray-300 rounded-l-lg enabled:hover:bg-gray-200 focus:outline-none dark:bg-gray-700 enabled:dark:hover:bg-gray-600 dark:text-white dark:border-gray-600 enabled:cursor-pointer"
+			class="relative z-10 inline-flex shrink-0 items-center overflow-hidden whitespace-nowrap rounded-l-lg border border-gray-300 bg-gray-100 px-4 py-2.5 text-center text-sm font-medium text-gray-700 enabled:cursor-pointer enabled:hover:bg-gray-200 focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-white enabled:dark:hover:bg-gray-600"
 			type="button"
 			role="combobox"
 			aria-controls="dropdown-countries"
@@ -166,7 +181,7 @@
 		{#if isOpen}
 			<div
 				id="dropdown-countries"
-				class="absolute z-10 max-w-fit bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 overflow-hidden translate-y-11"
+				class="absolute z-10 max-w-fit translate-y-11 overflow-hidden rounded border border-gray-200 bg-white shadow-lg dark:border-gray-600 dark:bg-gray-700"
 				data-popper-reference-hidden=""
 				data-popper-escaped=""
 				data-popper-placement="bottom"
@@ -175,14 +190,14 @@
 				tabindex="-1"
 			>
 				<div
-					class="text-sm text-gray-700 dark:text-gray-200 max-h-48 overflow-y-auto"
+					class="max-h-48 overflow-y-auto text-sm text-gray-700 dark:text-gray-200"
 					aria-labelledby="countries-button"
 					role="listbox"
 				>
 					<input
 						aria-autocomplete="list"
 						type="text"
-						class="px-4 py-2 text-gray-900 focus:outline-none w-full sticky top-0"
+						class="sticky top-0 z-10 w-full border-b border-gray-200 bg-white px-4 py-2 text-gray-900 focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
 						bind:value={searchText}
 						placeholder={searchPlaceholder}
 					/>
@@ -192,11 +207,9 @@
 							<button
 								value={country.iso2}
 								type="button"
-								class="inline-flex py-2 px-4 w-full text-sm hover:bg-gray-100 dark:hover:bg-gray-600
-                             active:bg-gray-800 dark:active:bg-gray-800 overflow-hidden cursor-pointer
-                            {isActive
-									? 'bg-gray-600 dark:text-white'
-									: 'dark:hover:text-white dark:text-gray-400'}"
+								class="inline-flex w-full cursor-pointer overflow-hidden px-4 py-2 text-sm {isActive
+									? 'bg-gray-100 text-gray-900 dark:bg-gray-600 dark:text-white'
+									: 'text-gray-700 hover:bg-gray-100 active:bg-gray-200 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white dark:active:bg-gray-800'}"
 								onclick={(e) => {
 									handleSelect(country.iso2, e);
 								}}
@@ -206,7 +219,9 @@
 										class="flag flag-{country.iso2.toLowerCase()} shrink-0 mr-3"
 									></span>
 									<span class="mr-2">{country.name}</span>
-									<span class="text-gray-500">+{country.dialCode}</span>
+									<span class="text-gray-500 dark:text-gray-400"
+										>+{country.dialCode}</span
+									>
 								</div>
 							</button>
 						</div>
@@ -219,6 +234,7 @@
 	<TelInput
 		bind:this={telInputRef}
 		country={selectedCountry}
+		{defaultCountry}
 		bind:detailedValue
 		bind:value
 		bind:valid
@@ -227,10 +243,15 @@
 		{required}
 		onLoad={() => {
 			initLoading = false;
+			onLoad?.();
 		}}
 		onCountryChange={(detail) => {
 			selectedCountry = detail;
+			onCountryChange?.(detail);
 		}}
+		{onValidityChange}
+		{onValueChange}
+		{onError}
 		name="phone-input"
 		class="text-sm rounded-r-lg block w-full px-1.25 h-10.25 leading-10.25 focus:outline-none border border-gray-300 border-l-gray-100 dark:border-l-gray-700 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 
         dark:placeholder-gray-400 dark:text-white text-gray-900 box-border"
