@@ -1,7 +1,7 @@
 {
 	"name": "svelte-tel-input",
 	"description": "svelte-tel-input",
-	"version": "3.6.1",
+	"version": "4.0.0-next.4",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/gyurielf/svelte-tel-input.git"
@@ -21,64 +21,54 @@
 		"svelte intl tel input"
 	],
 	"engines": {
-		"npm": ">= 8",
+		"npm": ">= 10",
 		"yarn": ">= 1",
-		"node": ">= 18",
-		"pnpm": ">= 8"
+		"node": ">= 22",
+		"pnpm": ">= 10"
 	},
 	"scripts": {
 		"check:publint": "publint . --strict",
 		"convert": "node ./scripts/convertExamples.js",
-		"eslint": "eslint --ext .js,.ts,.svelte .",
-		"eslint:fix": "eslint --fix",
-		"lint": "pnpm run prettier:check && pnpm run eslint && pnpm run ts && pnpm run svelte-check",
-		"lint:fix": "pnpm run eslint:fix && pnpm run prettier:fix",
 		"package:watch": "svelte-kit sync && svelte-package --watch",
 		"package": "svelte-kit sync && pnpm run convert && svelte-package && pnpm run check:publint",
-		"prettier:check": "prettier --check .",
-		"prettier:fix": "prettier --write .",
-		"svelte-check": "svelte-kit sync && svelte-check --ignore 'dist,build,coverage,.svelte-kit,package' --fail-on-warnings",
+		"svelte-check": "svelte-kit sync && svelte-check --ignore 'dist,build,coverage,.svelte-kit,package' --fail-on-warnings --no-tsconfig",
 		"sync": "svelte-kit sync",
-		"test": "vitest",
+		"test": "vitest run",
+		"test:ui": "vitest --ui",
+		"test:watch": "vitest",
 		"ts": "tsc --noEmit"
 	},
 	"peerDependencies": {
-		"svelte": "^3.58.0 || ^4.0.0 || ^5.0.0"
+		"svelte": "^5.0.0"
 	},
 	"dependencies": {
-		"libphonenumber-js": "1.10.43"
+		"libphonenumber-js": "1.12.40"
 	},
 	"devDependencies": {
-		"@sveltejs/adapter-auto": "3.2.2",
-		"@sveltejs/kit": "^2.5.17",
-		"@sveltejs/package": "^2.3.2",
-		"@sveltejs/vite-plugin-svelte": "^3.1.1",
-		"@testing-library/svelte": "^5.1.0",
-		"@testing-library/user-event": "^14.5.2",
-		"@types/micromatch": "^4.0.8",
-		"@typescript-eslint/eslint-plugin": "^7.14.1",
-		"@typescript-eslint/parser": "^7.14.1",
-		"autoprefixer": "^10.4.19",
-		"cssnano": "^7.0.3",
-		"dotenv": "^16.4.5",
-		"eslint": "^8.57.0",
-		"eslint-config-prettier": "^9.1.0",
-		"eslint-plugin-import": "^2.29.1",
-		"eslint-plugin-svelte": "^2.41.0",
-		"jsdom": "^24.1.0",
-		"micromatch": "^4.0.7",
-		"postcss": "^8.4.38",
-		"prettier": "^3.3.2",
-		"prettier-plugin-svelte": "^3.2.5",
-		"publint": "^0.2.8",
-		"svelte": "^4.2.18",
-		"svelte-check": "^3.8.4",
-		"svelte2tsx": "^0.7.13",
-		"tailwindcss": "^3.4.4",
-		"tslib": "^2.6.3",
-		"typescript": "^5.5.2",
-		"vite": "^5.3.1",
-		"vitest": "^1.6.0"
+		"@sveltejs/adapter-auto": "7.0.1",
+		"@sveltejs/kit": "^2.55.0",
+		"@sveltejs/package": "^2.5.7",
+		"@sveltejs/vite-plugin-svelte": "^6.2.4",
+		"@tailwindcss/vite": "^4.2.2",
+		"@testing-library/jest-dom": "6.9.1",
+		"@testing-library/svelte": "^5.3.1",
+		"@testing-library/user-event": "^14.6.1",
+		"@types/micromatch": "^4.0.10",
+		"dotenv": "^17.3.1",
+		"jsdom": "^29.0.1",
+		"micromatch": "^4.0.8",
+		"postcss": "^8.5.8",
+		"publint": "^0.3.18",
+		"svelte": "^5.54.0",
+		"svelte-check": "^4.4.5",
+		"svelte2tsx": "^0.7.52",
+		"tailwindcss": "^4.2.2",
+		"tslib": "^2.8.1",
+		"typescript": "^5.9.3",
+		"valibot": "^1.3.1",
+		"vite": "^7.3.1",
+		"vitest": "^4.1.0",
+		"zod": "^4.3.6"
 	},
 	"type": "module",
 	"license": "MIT",
@@ -98,6 +88,9 @@
 			],
 			"assets": [
 				"./dist/assets/index.d.ts"
+			],
+			"validators": [
+				"./dist/validators/index.d.ts"
 			]
 		}
 	},
@@ -117,6 +110,10 @@
 		"./assets": {
 			"types": "./dist/assets/index.d.ts",
 			"default": "./dist/assets/index.js"
+		},
+		"./validators": {
+			"types": "./dist/validators/index.d.ts",
+			"default": "./dist/validators/index.js"
 		},
 		"./styles/flags.css": "./dist/styles/flags.css"
 	}

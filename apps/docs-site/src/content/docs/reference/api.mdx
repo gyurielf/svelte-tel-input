@@ -1,0 +1,74 @@
+---
+title: API Methods
+description: Imperative methods exposed by the TelInput component.
+---
+
+`TelInput` exposes an `api` object with imperative methods. Access it via `bind:this`:
+
+```svelte
+<script>
+  import { TelInput } from 'svelte-tel-input';
+
+  let telInput: TelInput;
+</script>
+
+<TelInput bind:this={telInput} />
+
+<button onclick={() => telInput.api.reset()}>Reset</button>
+<button onclick={() => console.log(telInput.api.checkValidity())}>
+  Check validity
+</button>
+```
+
+## `checkValidity()`
+
+```typescript
+checkValidity(): { valid: boolean; error: ValidationError }
+```
+
+Triggers validation immediately and returns the result with a granular error.
+
+| Input state | `required` not set | `required` set |
+|---|---|---|
+| Empty | `{ valid: true, error: null }` | `{ valid: false, error: 'REQUIRED' }` |
+| Valid number | `{ valid: true, error: null }` | `{ valid: true, error: null }` |
+| Invalid number | `{ valid: false, error: '...' }` | `{ valid: false, error: '...' }` |
+
+Also updates the `valid` and `validationError` bindings and fires `onValidityChange`.
+
+```svelte
+<button onclick={() => {
+  const { valid, error } = telInput.api.checkValidity();
+  if (!valid) {
+    alert(`Invalid: ${error}`);
+  }
+}}>
+  Submit
+</button>
+```
+
+## `reset()`
+
+```typescript
+reset(options?: { country?: boolean }): void
+```
+
+Resets the component to its empty state:
+
+- `value` → `''`
+- `country` → `defaultCountry` (or `null` if not set)
+- `detailedValue` → `null`
+- `valid` → `true` (or `false` if `required`)
+- `validationError` → `null` (or `'REQUIRED'` if `required`)
+
+Pass `{ country: true }` to force `country` to `null`, ignoring `defaultCountry`:
+
+```svelte
+<!-- Resets value, restores country to defaultCountry -->
+<button onclick={() => telInput.api.reset()}>Reset</button>
+
+<!-- Resets value AND country to null -->
+<button onclick={() => telInput.api.reset({ country: true })}>Full reset</button>
+```
+
+Fires `onValueChange` and `onValidityChange`.

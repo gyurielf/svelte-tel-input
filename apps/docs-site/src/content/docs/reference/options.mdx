@@ -1,0 +1,107 @@
+---
+title: Options
+description: Configuration options for TelInput behavior.
+---
+
+The `options` prop accepts a `TelInputOptions` object. All fields are optional — omitted fields use their defaults.
+
+```svelte
+<TelInput
+  options={{
+    autoPlaceholder: true,
+    spaces: true,
+    validateOn: 'always'
+  }}
+/>
+```
+
+## Available options
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `autoPlaceholder` | `boolean` | `true` | Generates a country-specific placeholder. E.g. for `US`: `201 555 0123`. Overridden by the `placeholder` prop. |
+| `spaces` | `boolean` | `true` | When `true`, the input displays `detailedValue.formattedNumber` (spaces-only format, e.g. `215 456 7890`). When `false`, shows raw digits without any separators. |
+| `validateOn` | `'input' \| 'blur' \| 'always'` | `'always'` | Controls when validation runs. See below. |
+| `allowedCountries` | `CountryCode[]` | `undefined` | Restrict to a set of countries. Numbers from other countries are marked invalid with `'COUNTRY_NOT_ALLOWED'`. |
+| `lockCountry` | `boolean` | `false` | Prevent the country from changing when the user types a different dial code. |
+
+## Validation modes
+
+### `'always'` (default)
+
+Validates on every keystroke **and** on blur. The `valid` prop updates in real-time.
+
+### `'input'`
+
+Validates on every keystroke only.
+
+### `'blur'`
+
+Validates only when the input loses focus. No red/invalid state flashing during typing — best for forms.
+
+## Allowed countries
+
+Restrict which countries are considered valid:
+
+```svelte
+<TelInput
+  options={{ allowedCountries: ['US', 'CA', 'GB'] }}
+  bind:value
+  bind:valid
+  bind:validationError
+/>
+
+<!-- If user types +49... (Germany), valid = false, validationError = 'COUNTRY_NOT_ALLOWED' -->
+```
+
+:::note
+`allowedCountries` marks disallowed countries as invalid but does **not** prevent the `country` binding from changing. If you need to lock the country entirely, use `lockCountry` instead.
+:::
+
+## Lock country
+
+Prevent the country from switching when the user types a different dial code:
+
+```svelte
+<script>
+  let country = $state('US');
+</script>
+
+<TelInput
+  bind:country
+  options={{ lockCountry: true }}
+/>
+
+<!-- Typing +44 will NOT switch to GB — country stays US -->
+```
+
+## Toggling spaces at runtime
+
+`spaces` is reactive — change it and the displayed value reformats instantly:
+
+```svelte
+<script>
+  let opts = $state({ spaces: true });
+</script>
+
+<label>
+  <input type="checkbox" bind:checked={opts.spaces} />
+  Spaces
+</label>
+
+<TelInput options={opts} />
+```
+
+## TypeScript
+
+```typescript
+import type { TelInputOptions } from 'svelte-tel-input/types';
+
+const options: TelInputOptions = {
+  autoPlaceholder: true,
+  spaces: true,
+  validateOn: 'blur',
+  allowedCountries: ['US', 'HU'],
+  lockCountry: false
+};
+```

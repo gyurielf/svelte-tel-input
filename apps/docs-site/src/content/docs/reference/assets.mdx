@@ -1,0 +1,119 @@
+---
+title: Assets
+description: Country data, unicode flag emoji map, and example phone numbers exported from svelte-tel-input/assets.
+---
+
+Static data assets are available from the `svelte-tel-input/assets` sub-path:
+
+```typescript
+import { countries, countryUnicodeFlags, examplePhoneNumbers } from 'svelte-tel-input/assets';
+```
+
+---
+
+## `countries`
+
+```typescript
+countries: Country[]
+```
+
+An array of every supported country, sorted alphabetically by name. Each entry is a [`Country`](/reference/types/#country) object:
+
+```typescript
+interface Country {
+  id: number;
+  iso2: CountryCode;      // e.g. 'HU'
+  name: string;           // e.g. 'Hungary'
+  dialCode: string;       // e.g. '36'
+}
+```
+
+**Example — building a country selector:**
+
+```svelte
+<script>
+  import { countries } from 'svelte-tel-input/assets';
+
+  let selectedCountry = $state('US');
+</script>
+
+<select bind:value={selectedCountry}>
+  {#each countries as c (c.iso2)}
+    <option value={c.iso2}>{c.name} (+{c.dialCode})</option>
+  {/each}
+</select>
+```
+
+Use [`pickCountries()`](/reference/utilities/#pickcountries) if you only want a restricted set.
+
+---
+
+## `countryUnicodeFlags`
+
+```typescript
+countryUnicodeFlags: Record<CountryCode, string>
+```
+
+A map of every `CountryCode` to its flag emoji as an HTML entity string (two regional indicator Unicode characters). Useful for enriching country selectors with flag icons.
+
+```typescript
+countryUnicodeFlags['US']  // '&#x1F1FA;&#x1F1F8;'  → 🇺🇸
+countryUnicodeFlags['HU']  // '&#x1F1ED;&#x1F1FA;'  → 🇭🇺
+countryUnicodeFlags['GB']  // '&#x1F1EC;&#x1F1E7;'  → 🇬🇧
+```
+
+The values are HTML entity strings — render them with [`{@html}`](https://svelte.dev/docs/svelte/@html) in Svelte or `innerHTML` in plain HTML.
+
+**Example — country selector with flag emoji:**
+
+```svelte
+<script>
+  import { countries } from 'svelte-tel-input/assets';
+  import { countryUnicodeFlags } from 'svelte-tel-input/assets';
+
+  let selectedCountry = $state('US');
+</script>
+
+<select bind:value={selectedCountry}>
+  {#each countries as c (c.iso2)}
+    <option value={c.iso2}>
+      {@html countryUnicodeFlags[c.iso2]} {c.name} (+{c.dialCode})
+    </option>
+  {/each}
+</select>
+```
+
+:::note
+The built-in `TelInput` component uses CSS class-based flags via `svelte-tel-input/styles/flags.css` rather than emoji. `countryUnicodeFlags` is provided for custom UIs that prefer emoji.
+:::
+
+---
+
+## `examplePhoneNumbers`
+
+```typescript
+examplePhoneNumbers: Examples
+```
+
+A map of `CountryCode` → example phone number string (national format, no country prefix). Used internally by the component to generate `autoPlaceholder` values.
+
+```typescript
+examplePhoneNumbers['US']  // '2015550123'
+examplePhoneNumbers['HU']  // '201234567'
+examplePhoneNumbers['GB']  // '7400123456'
+```
+
+`Examples` is a `Record<CountryCode, string>`.
+
+**Example — reading an example number for a country:**
+
+```typescript
+import { examplePhoneNumbers } from 'svelte-tel-input/assets';
+
+function getExampleNumber(countryCode: string): string {
+  return examplePhoneNumbers[countryCode] ?? '';
+}
+
+getPlaceholder('US');  // '+1 201 555 0123'
+getPlaceholder('HU');  // '+36 20 123 4567'
+```

@@ -1,0 +1,21 @@
+---
+title: svelte-tel-input
+description: A lightweight Svelte 5 phone input component. Parse, format, and validate international phone numbers — store in E.164.
+template: splash
+hero:
+  tagline: ""
+  actions: []
+head:
+  - tag: style
+    content: |
+      /* Hide the auto-generated hero title — HeroAnimation provides its own heading */
+      .hero h1 { display: none; }
+      /* Remove the large empty hero padding to close the gap */
+      .hero { padding-block: 0 !important; min-height: 0 !important; }
+---
+
+import HeroAnimation from '../../components/HeroAnimation.svelte';
+import LandingPage from '../../components/LandingPage.svelte';
+
+<HeroAnimation client:idle />
+<LandingPage client:visible />

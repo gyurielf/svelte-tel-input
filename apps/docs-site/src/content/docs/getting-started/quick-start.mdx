@@ -1,0 +1,111 @@
+---
+title: Quick Start
+description: Get a phone input running in minutes.
+---
+
+## Basic example
+
+A `<select>` for the country and `TelInput` for the phone number:
+
+```svelte
+<script lang="ts">
+  import { TelInput, countries } from 'svelte-tel-input';
+  import type { CountryCode } from 'svelte-tel-input/types';
+
+  let country: CountryCode | null = $state('HU');
+  let value = $state('');
+  let valid = $state(true);
+</script>
+
+<select bind:value={country} aria-label="Country">
+  <option value={null}>Select country</option>
+  {#each countries as c (c.id)}
+    <option value={c.iso2}>{c.name} (+{c.dialCode})</option>
+  {/each}
+</select>
+
+<TelInput bind:country bind:value bind:valid />
+
+{#if !valid}
+  <p role="alert">Please enter a valid phone number.</p>
+{/if}
+```
+
+## How it works
+
+1. The user types a phone number — with or without a leading `+`.
+2. `TelInput` parses the input, auto-detects the country from the dial code, and formats the display value.
+3. `value` always holds the phone number in **E.164** format (e.g. `+36301234567`), the standard for storage and APIs.
+4. `valid` reflects whether the current input is a valid phone number for the detected / selected country.
+
+## Country auto-detection
+
+If you provide a `value` that starts with `+` and contains enough digits to identify a country, `TelInput` will automatically set the `country` binding. For example, typing `+44` detects `GB`.
+
+If `country` is explicitly set (e.g. `'US'`), the component uses that for formatting. When the user types a number with a different dial code, `country` updates to match — unless `lockCountry` is enabled.
+
+## Adding detailed output
+
+Bind `detailedValue` to get the full parsed breakdown — national number, calling code, formatted variants, URI, and more:
+
+```svelte
+<script lang="ts">
+  import { TelInput } from 'svelte-tel-input';
+  import type { CountryCode, DetailedValue } from 'svelte-tel-input/types';
+
+  let country: CountryCode | null = $state('US');
+  let value = $state('');
+  let valid = $state(true);
+  let detailedValue: DetailedValue | null = $state(null);
+</script>
+
+<TelInput bind:country bind:value bind:valid bind:detailedValue />
+
+{#if detailedValue?.isValid}
+  <p>National: {detailedValue.formatNational}</p>
+  <p>International: {detailedValue.formatInternational}</p>
+  <p>URI: {detailedValue.uri}</p>
+{/if}
+```
+
+See [Types → DetailedValue](/reference/types/#detailedvalue) for all fields.
+
+## Validation errors
+
+Bind `validationError` to get a granular reason when the phone number is invalid:
+
+```svelte
+<script lang="ts">
+  import { TelInput } from 'svelte-tel-input';
+  import type { CountryCode, ValidationError } from 'svelte-tel-input/types';
+
+  let country: CountryCode | null = $state('US');
+  let value = $state('');
+  let valid = $state(true);
+  let validationError: ValidationError = $state(null);
+</script>
+
+<TelInput
+  bind:country
+  bind:value
+  bind:valid
+  bind:validationError
+  required
+/>
+
+{#if validationError}
+  <p role="alert">Error: {validationError}</p>
+{/if}
+```
+
+Possible values: `'REQUIRED'`, `'TOO_SHORT'`, `'TOO_LONG'`, `'NOT_A_NUMBER'`, `'INVALID_COUNTRY'`, `'INVALID_LENGTH'`, `'COUNTRY_NOT_ALLOWED'`, `'INVALID'`, or `null`.
+
+## Next steps
+
+- [Props](/reference/props/) — all available props
+- [Options](/reference/options/) — `autoPlaceholder`, `spaces`, `validateOn`, `allowedCountries`, `lockCountry`
+- [API methods](/reference/api/) — `checkValidity()` and `reset()`
+- [Events](/reference/events/) — callback props
+- [Utilities](/reference/utilities/) — `parse()`, `normalizeToE164()`, `pickCountries()`
+- [Validators](/reference/validators/) — Zod / Valibot / Yup integration
+- [Playground](/playground/) — interactive demo

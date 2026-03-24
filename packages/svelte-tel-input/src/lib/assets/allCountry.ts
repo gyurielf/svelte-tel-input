@@ -3,7 +3,6 @@
 // Here is the criteria for the plugin to support a given country/territory
 // - It has an iso2 code: https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
 // - It has it's own country calling code (it is not a sub-region of another country): https://en.wikipedia.org/wiki/List_of_country_calling_codes
-// - It has a flag in the region-flags project: https://github.com/behdad/region-flags/tree/gh-pages/png
 // - It is supported by libphonenumber (it must be listed on this page): https://github.com/googlei18n/libphonenumber/blob/master/resources/ShortNumberMetadata.xml
 
 // Each country array has the following information:
@@ -17,7 +16,15 @@
 
 import type { Country, CountryCode } from '$lib/types/index.js';
 
-const allCountries = [
+type CountryData = [
+	string, // Country name
+	string, // iso2 code
+	string, // International dial code
+	number?, // Order (if >1 country with the same dial code)
+	string[]? // Area codes
+];
+
+const allCountries: CountryData[] = [
 	['Afghanistan (‫افغانستان‬‎)', 'af', '93'],
 	['Albania (Shqipëri)', 'al', '355'],
 	['Algeria (‫الجزائر‬‎)', 'dz', '213'],
@@ -314,14 +321,14 @@ const allCountries = [
 	['Åland Islands', 'ax', '358', 1, ['18']]
 ];
 
-export const normalizedCountries = allCountries.map((country): Country => {
+export const countries = allCountries.map(([name, iso, dialCode, prio, area]): Country => {
 	return {
-		id: (country[1] as string).toUpperCase(),
-		label: `${country[0] as string} +${country[2] as string}`,
-		name: country[0] as string,
-		iso2: (country[1] as string).toUpperCase() as CountryCode,
-		dialCode: country[2] as string,
-		priority: country[3] || 0,
-		areaCodes: country[4] || null
+		id: iso.toUpperCase(),
+		label: `${name} +${dialCode}`,
+		name,
+		iso2: iso.toUpperCase() as CountryCode,
+		dialCode,
+		priority: prio ?? 0,
+		areaCodes: area ?? null
 	};
 });

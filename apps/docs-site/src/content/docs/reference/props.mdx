@@ -1,0 +1,100 @@
+---
+title: Props
+description: Complete reference of all TelInput component props.
+---
+
+All props are passed directly to the `<TelInput>` component. Props marked **bindable** support Svelte's `bind:` syntax.
+
+## Core props
+
+| Prop | Type | Default | Bindable | Description |
+|------|------|---------|----------|-------------|
+| `value` | `string` | `''` | Yes | E.164 formatted phone number (e.g. `+36301234567`). Source of truth for storage. |
+| `country` | `CountryCode \| null` | `null` | Yes | ISO 3166 Alpha-2 country code (e.g. `'HU'`, `'US'`). Auto-detected from `value` when not set. |
+| `valid` | `boolean` | `true` | Yes | Whether the current input is a valid phone number. |
+| `validationError` | `ValidationError` | `null` | Yes | Granular reason when `valid` is `false`. See [ValidationError](/reference/types/#validationerror). |
+| `detailedValue` | `DetailedValue \| null` | `null` | Yes | Full parsed result with multiple formats. See [DetailedValue](/reference/types/#detailedvalue). |
+| `el` | `HTMLInputElement` | — | Yes | Reference to the underlying `<input>` element. |
+| `defaultCountry` | `CountryCode \| null` | `null` | No | Country to restore when `api.reset()` is called. If not set, reset clears country to `null`. |
+| `options` | `TelInputOptions` | `{}` | No | Configuration object. See [Options](/reference/options/). |
+
+## HTML input props
+
+Forwarded to the underlying `<input type="tel">`:
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `id` | `string` | Auto-generated | Sets the `id` attribute. |
+| `name` | `string \| null` | `null` | Sets the `name` attribute. |
+| `class` | `string` | `''` | CSS class(es) applied to the input. |
+| `disabled` | `boolean` | `false` | Disables the input and the parser. |
+| `readonly` | `boolean \| null` | `null` | Makes the input read-only. |
+| `required` | `boolean \| null` | `null` | Marks the input as required. Empty input = invalid. |
+| `placeholder` | `string \| null` | `null` | Custom placeholder. Overrides `autoPlaceholder`. |
+| `size` | `number \| null` | `null` | HTML `size` attribute. |
+| `autocomplete` | `string \| null` | `null` | HTML `autocomplete` attribute (e.g. `'tel'`). |
+
+Any other standard HTML input attributes are spread onto the element — including `aria-*` attributes.
+
+## Bindable props in detail
+
+### `value`
+
+Always stored in [E.164 format](https://en.wikipedia.org/wiki/E.164) — the international standard. Example: `+12154567890`.
+
+```svelte
+<script>
+  let phoneNumber = $state('');
+</script>
+
+<TelInput bind:value={phoneNumber} />
+<p>Stored: {phoneNumber}</p>
+```
+
+### `country`
+
+Accepts any ISO 3166 Alpha-2 country code. Auto-detection behavior:
+
+- `value` is `+44...` and `country` not set → auto-detects `GB`
+- `country` explicitly set → used for formatting and validation
+- User types a different dial code → `country` updates to match (unless `lockCountry` is `true`)
+
+### `valid`
+
+Behavior depends on `validateOn` and `required`:
+
+| Input state | `required` not set | `required` set |
+|---|---|---|
+| Empty | `true` | `false` |
+| Partial / invalid | `false` | `false` |
+| Valid number | `true` | `true` |
+
+### `validationError`
+
+When `valid` is `false`, this tells you _why_:
+
+| Error | Meaning |
+|---|---|
+| `'REQUIRED'` | Empty input with `required` set |
+| `'TOO_SHORT'` | Not enough digits |
+| `'TOO_LONG'` | Too many digits |
+| `'NOT_A_NUMBER'` | Doesn't look like a phone number |
+| `'INVALID_COUNTRY'` | Country code not recognized |
+| `'INVALID_LENGTH'` | Length doesn't match any valid pattern |
+| `'COUNTRY_NOT_ALLOWED'` | Country not in `allowedCountries` |
+| `'INVALID'` | Fallback |
+| `null` | No error (valid) |
+
+### `defaultCountry`
+
+Country to restore when `api.reset()` is called without `{ country: true }`:
+
+```svelte
+<TelInput defaultCountry="US" bind:country bind:value />
+
+<!-- reset() restores country to 'US', not null -->
+```
+
+### Accessibility
+
+`aria-invalid` is automatically set to `"true"` when `valid` is `false`. You can override it explicitly if needed. All `aria-*` attributes pass through to the input element.

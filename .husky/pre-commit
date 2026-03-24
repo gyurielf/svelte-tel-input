@@ -1,11 +1,38 @@
 #!/bin/sh
-. "$(dirname "$0")/_/husky.sh"
+set -e
 
+echo_color() {
+    color="$1"
+    shift
+    printf "\033[${color}m%s\033[0m\n" "$*"
+}
+
+echo_color "33" "Starting pre-commit checks."
+
+# Check current branch
 currentBranch="$(git rev-parse --abbrev-ref HEAD)"
+if [ "$currentBranch" = "main" ]; then
+    echo_color "31" "Error: You can't commit directly to the main branch"
+    exit 1
+fi
 
-# if [ "$currentBranch" = "main" ]; then
-#   echo "You can't commit directly to main branch"
-#   exit 1
-# fi
+# Check if node_modules directory is empty or doesn't exist
+if [ ! -d "node_modules" ] || [ -z "$(ls -A node_modules)" ]; then
+    echo_color "33" "node_modules is empty or doesn't exist. Running pnpm install --frozen-lockfile..."
+    if ! pnpm install --frozen-lockfile; then
+        echo_color "31" "Error: pnpm install --frozen-lockfile failed. Aborting commit."
+        exit 1
+    fi
+else
+    echo_color "32" "node_modules exists and is not empty. Skipping pnpm install --frozen-lockfile."
+fi
 
-# pnpm install ; pnpm run package ; pnpm install ; pnpm lint
+echo_color "36" "Running lint command..."
+
+# Corrected command chain with proper error handling
+if ! (pnpm run package && pnpm install && pnpm lint); then
+    echo_color "31" "Error: Linting or package tasks failed. Please fix the issues and try committing again."
+    exit 1
+fi
+
+echo_color "32" "Pre-commit checks passed. Proceeding with commit."

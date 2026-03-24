@@ -1,0 +1,87 @@
+---
+title: Events
+description: Callback props for reacting to TelInput state changes.
+---
+
+`TelInput` uses callback props (not Svelte dispatched events) for state changes. All callbacks are optional.
+
+## Callbacks
+
+| Callback | Signature | Fires when |
+|----------|-----------|------------|
+| `onValueChange` | `(value: string, details: DetailedValue \| null) => void` | The E.164 value or detailed value changes |
+| `onCountryChange` | `(country: CountryCode \| null) => void` | The country is auto-detected from a dial code |
+| `onValidityChange` | `(valid: boolean, error: ValidationError) => void` | The validity state changes |
+| `onError` | `(error: string) => void` | A parse error occurs |
+| `onLoad` | `() => void` | The component has initialized (fires once) |
+
+## Usage
+
+```svelte
+<script lang="ts">
+  import { TelInput } from 'svelte-tel-input';
+  import type { DetailedValue, CountryCode, ValidationError } from 'svelte-tel-input/types';
+
+  const handleValueChange = (value: string, details: DetailedValue | null) => {
+    console.log('E.164:', value);
+    console.log('Details:', details);
+  };
+
+  const handleCountryChange = (country: CountryCode | null) => {
+    console.log('Country detected:', country);
+  };
+
+  const handleValidityChange = (valid: boolean, error: ValidationError) => {
+    console.log('Valid:', valid, 'Error:', error);
+  };
+</script>
+
+<TelInput
+  onValueChange={handleValueChange}
+  onCountryChange={handleCountryChange}
+  onValidityChange={handleValidityChange}
+  onError={(err) => console.error('Parse error:', err)}
+  onLoad={() => console.log('TelInput ready')}
+/>
+```
+
+## Callbacks vs. bindings
+
+Both approaches work simultaneously:
+
+- **Bindings** (`bind:value`, `bind:valid`, etc.) — reactive state in the parent
+- **Callbacks** — side effects (logging, analytics, API calls, form submission)
+
+```svelte
+<script>
+  let value = $state('');
+  let valid = $state(true);
+</script>
+
+<TelInput
+  bind:value
+  bind:valid
+  onValueChange={(v) => savePhoneNumber(v)}
+/>
+```
+
+## When does `onCountryChange` fire?
+
+Only when the country is **auto-detected from user input** (e.g. typing `+44` switches to `GB`). It does **not** fire when:
+
+- You set `country` programmatically via binding
+- `api.reset()` is called
+
+## `onValidityChange` includes the error
+
+Unlike a simple boolean callback, `onValidityChange` also receives the `ValidationError` — giving you the granular reason in one callback:
+
+```svelte
+<TelInput
+  onValidityChange={(valid, error) => {
+    if (!valid && error === 'TOO_SHORT') {
+      showHint('Keep typing...');
+    }
+  }}
+/>
+```

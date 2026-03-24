@@ -16,6 +16,7 @@ coverage
 .vscode
 .DS_Store
 *.pem
+.github/*.md
 
 # debug
 npm-debug.log*
@@ -32,3 +33,6 @@ yarn-error.log*
 
 # vercel build output
 .vercel
+.playwright-mcp
+test-results
+AGENTS.md

@@ -1,271 +1,466 @@
 <script lang="ts">
-	import { createEventDispatcher, onMount, tick } from 'svelte';
-	import { parsePhoneNumberWithError, ParseError } from 'libphonenumber-js/max';
-	import {
-		normalizeTelInput,
-		getCountryForPartialE164Number,
-		generatePlaceholder,
-		telInputAction,
-		allowedCharacters
-	} from '$lib/utils/index.js';
-	import type { DetailedValue, CountryCode, E164Number, TelInputOptions } from '$lib/types';
-
-	const dispatch = createEventDispatcher<{
-		updateCountry: CountryCode | null;
-		parseError: string;
-		updateDetailedValue: Partial<DetailedValue> | null;
-		updateValid: boolean;
-		updateValue: E164Number | null;
-	}>();
+	import { onMount, untrack } from 'svelte';
+	import { ParseError } from 'libphonenumber-js/max';
+	import { generatePlaceholder, parsePhoneInput, telInputAction } from '$lib/utils/index.js';
+	import type { CountryCode, TelInputOptions, Props, ValidationError } from '$lib/types';
+	import { getCountry, guessCountryByPartialNumber } from '$lib/utils/directives/countryHelpers';
 
 	const defaultOptions = {
 		autoPlaceholder: true,
 		spaces: true,
-		invalidateOnCountryChange: false,
-		format: 'national',
-		strictCountry: false
+		validateOn: 'always'
 	} satisfies TelInputOptions;
 
-	export let autocomplete: string | null = null;
-	let classes = '';
-	/** You can set the classes of the input field*/
-	export { classes as class };
-	/** You can disable the component and set the disabled attribute of the input field */
-	export let disabled = false;
-	/** You can set the id attribute of the input field */
-	export let id =
-		'phone-input-' + new Date().getTime().toString(36) + Math.random().toString(36).slice(2);
-	/** You can set the name attribute of the input field */
-	export let name: string | null = null;
-	/** It will overwrite the autoPlaceholder ! */
-	export let placeholder: string | null = null;
-	/** You can set the readonly attribute of the input field */
-	export let readonly: boolean | null = null;
-	/** Set the required attribute on the input element */
-	export let required: boolean | null = null;
-	/** You can set the size attribute of the input field */
-	export let size: number | null = null;
-	/** The core value of the input, this is the only one what you can store. It's an E164 phone number.*/
-	export let value: E164Number | null;
-	/** It's accept any Country Code Alpha-2 (ISO 3166) */
-	export let country: CountryCode | null | undefined = undefined;
-	/** Detailed parse of the E164 phone number */
-	export let detailedValue: Partial<DetailedValue> | null = null;
-	/** Validity of the input based on the config settings.*/
-	export let valid = true;
-	/** You can turn on and off certain features by this object */
-	export let options: TelInputOptions = defaultOptions;
-	/** Binding to the underlying `<input>` element */
-	export let el: HTMLInputElement | undefined = undefined;
+	let {
+		autocomplete = null,
+		class: classes = '',
+		disabled = false,
+		id: idProp = '',
+		name = null,
+		placeholder = null,
+		readonly = null,
+		required = null,
+		size = null,
+		onLoad,
+		onCountryChange,
+		onValidityChange,
+		onValueChange,
+		onError,
+		value = $bindable(''),
+		country = $bindable(null),
+		defaultCountry = null,
+		detailedValue = $bindable(null),
+		valid = $bindable(true),
+		validationError = $bindable<ValidationError>(null),
+		options = defaultOptions,
+		el = $bindable(undefined),
+		'aria-invalid': ariaInvalidProp = undefined,
+		...rest
+	}: Props = $props();
 
-	let inputValue = value;
-	let prevCountry = country;
+	untrack(() => {
+		const badProp = (prop: string, expected: string, got: unknown): never => {
+			const gotDesc =
+				got !== null && typeof got === 'object'
+					? Array.isArray(got)
+						? 'array'
+						: `object { ${Object.keys(got as object)
+								.slice(0, 4)
+								.join(', ')}${Object.keys(got as object).length > 4 ? ', …' : ''} }`
+					: typeof got;
+			throw new TypeError(
+				`<TelInput> invalid prop "${prop}": expected ${expected}, but received ${gotDesc}.`
+			);
+		};
 
-	/** Merge options into default opts, to be able to set just one config option. */
-	const combinedOptions = {
+		if (typeof value !== 'string') badProp('value', 'string', value);
+		if (country !== null && country !== undefined && typeof country !== 'string')
+			badProp('country', 'CountryCode | null | undefined', country);
+		if (name !== null && name !== undefined && typeof name !== 'string')
+			badProp('name', 'string | null', name);
+		if (placeholder !== null && placeholder !== undefined && typeof placeholder !== 'string')
+			badProp('placeholder', 'string | null', placeholder);
+		if (disabled !== undefined && disabled !== null && typeof disabled !== 'boolean')
+			badProp('disabled', 'boolean', disabled);
+		if (readonly !== null && readonly !== undefined && typeof readonly !== 'boolean')
+			badProp('readonly', 'boolean | null', readonly);
+		if (required !== null && required !== undefined && typeof required !== 'boolean')
+			badProp('required', 'boolean | null', required);
+		if (size !== null && size !== undefined && typeof size !== 'number')
+			badProp('size', 'number | null', size);
+		if (
+			options !== undefined &&
+			(typeof options !== 'object' || options === null || Array.isArray(options))
+		)
+			badProp('options', 'TelInputOptions object', options);
+	});
+
+	// Fix: initialize to null so server and client start with an identical render.
+	// The ID is generated only in onMount (client-only), avoiding UUID hydration mismatches.
+	let generatedId = $state<string | null>(null);
+	const id = $derived.by(() => (idProp && idProp.trim() ? idProp : generatedId));
+
+	// Initialize country immediately if value exists
+	const initialCountry = $derived.by(() => {
+		if (country !== undefined) return country;
+		if (value) {
+			const { country: detectedCountry, fullDialCodeMatch } = guessCountryByPartialNumber({
+				partialE164Number: value,
+				currentCountryIso2: null
+			});
+			return fullDialCodeMatch ? detectedCountry?.iso2 || null : null;
+		}
+		return null;
+	});
+
+	// Apply the detected country to the mutable prop (client-only, via $effect).
+	$effect(() => {
+		if (country === undefined && initialCountry !== null) {
+			country = initialCountry;
+			// Stamp the shadow so the external country watcher doesn't treat this
+			// auto-detection as an incoming change from the parent.
+			_lastWrittenCountry = initialCountry;
+		}
+	});
+
+	// Compute the initial formatted display value synchronously.
+	// Runs on both server and client at initialization time, so SSR renders the
+	// formatted number and the client's first render matches — no hydration mismatch.
+
+	const computeInitialDisplayValue = (): string => {
+		if (!value) return '';
+		let effectiveCountryIso2: CountryCode | null = null;
+		if (country !== undefined && country !== null) {
+			effectiveCountryIso2 = country;
+		} else if (country === undefined) {
+			const { country: detected, fullDialCodeMatch } = guessCountryByPartialNumber({
+				partialE164Number: value,
+				currentCountryIso2: null
+			});
+			if (fullDialCodeMatch) effectiveCountryIso2 = detected?.iso2 ?? null;
+		}
+		const countryObj = effectiveCountryIso2
+			? getCountry({ field: 'iso2', value: effectiveCountryIso2 })
+			: undefined;
+		try {
+			const details = parsePhoneInput(value, countryObj);
+			const spaces = options?.spaces ?? defaultOptions.spaces;
+			return spaces ? (details.formattedNumber ?? value) : value;
+		} catch {
+			return value;
+		}
+	};
+
+	let inputValue = $state(computeInitialDisplayValue());
+	let prevCountry = $state<CountryCode | null | undefined>(undefined);
+	$effect(() => {
+		// Initialize once (we don't want to mirror country forever; we want "previous")
+		if (prevCountry === undefined) prevCountry = country;
+	});
+
+	//Shadow trackers — record every value this component writes internally so the
+	//external-change watchers below can distinguish "we set it" vs "parent set it".
+	//Plain let (not $state) because they are only ever read inside untrack(), never
+	//as reactive dependencies.
+	//Initialized to the incoming prop values so the first render never false-fires.
+	let _lastWrittenValue: string = value;
+	let _lastWrittenCountry: CountryCode | null | undefined = untrack(() => country);
+	// let isInitialized = $state(false);
+
+	// Merge options into default opts, to be able to set just one config option.
+	const combinedOptions = $derived({
 		...defaultOptions,
 		...options
-	};
+	});
 
 	const handleInputAction = (value: string) => {
 		if (disabled || readonly) return;
-		handleParsePhoneNumber(value, country);
+		handleParsePhoneNumber(value, country, combinedOptions.validateOn !== 'blur');
 	};
 
-	// Update the country and dispatch event
-	const updateCountry = (countryCode: CountryCode | null) => {
+	const getValidationError = (
+		isEmpty: boolean,
+		parseValid: boolean,
+		resolvedCountry: CountryCode | null | undefined
+	): ValidationError => {
+		const allowed = combinedOptions.allowedCountries;
+		if (allowed?.length && resolvedCountry != null && !allowed.includes(resolvedCountry)) {
+			return 'COUNTRY_NOT_ALLOWED';
+		}
+		if (isEmpty) return required ? 'REQUIRED' : null;
+		if (parseValid) return null;
+		// Use the granular error from detailedValue when available
+		return detailedValue?.validationError ?? 'INVALID';
+	};
+
+	const applyValidity = (
+		isEmpty: boolean,
+		parseValid: boolean,
+		resolvedCountry?: CountryCode | null
+	) => {
+		const error = getValidationError(isEmpty, parseValid, resolvedCountry);
+		valid = error === null;
+		validationError = error;
+		onValidityChange?.(valid, error);
+	};
+
+	const handleBlur = (
+		e: FocusEvent & {
+			currentTarget: EventTarget & HTMLInputElement;
+		}
+	) => {
+		if (!disabled && !readonly && combinedOptions.validateOn !== 'input') {
+			if (inputValue === '') {
+				applyValidity(true, false, country);
+			} else {
+				applyValidity(false, detailedValue?.isValid ?? false, country);
+			}
+		}
+		const { onblur } = rest;
+		onblur?.(e);
+	};
+
+	// Update the internal country state and stamp the shadow tracker.
+	// onCountryChange is intentionally NOT called here; it is fired explicitly
+	// only when the country is auto-detected from dial-code parsing.
+	const countryUpdater = (countryCode: CountryCode | null) => {
 		if (countryCode !== country) {
 			country = countryCode;
-			prevCountry = country;
-			dispatch('updateCountry', country);
-			dispatch('updateDetailedValue', detailedValue);
+			_lastWrittenCountry = countryCode; // stamp — internal write
 		}
 		return country;
 	};
 
-	const findNewCursorPosition = (
-		newValue: string,
-		formattedValue: string,
-		initialCursorPosition: number
-	) => {
-		// If cursor was at the end of the original input, keep it at the end of the formatted input
-		if (initialCursorPosition >= newValue.length) {
-			return formattedValue.length;
-		}
+	const getCountryObj = (iso2: CountryCode | null | undefined) =>
+		iso2 ? getCountry({ field: 'iso2', value: iso2 }) : undefined;
 
-		// For other cursor positions, use the existing logic to map cursor position
-		let fvIndex = 0;
-		for (let nvIndex = 0; nvIndex < initialCursorPosition; nvIndex++) {
-			// Since newValue has not been normalized yet, we need to map any non standard digits.
-			const nvChar = allowedCharacters(newValue[nvIndex], { spaces: false });
-
-			// For each non-formatting character encountered in the value entered by the user,
-			// find the corresponding digit in the formatted value.
-			if (nvChar >= '0' && nvChar <= '9') {
-				while (
-					!(formattedValue[fvIndex] >= '0' && formattedValue[fvIndex] <= '9') &&
-					fvIndex < formattedValue.length
-				) {
-					fvIndex++;
-				}
-				fvIndex++;
-			}
-		}
-
-		return fvIndex;
-	};
-
-	const handleParsePhoneNumber = async (
+	const handleParsePhoneNumber = (
 		rawInput: string | null,
-		currCountry: CountryCode | null = null
+		currCountry: CountryCode | null = null,
+		shouldValidate = true
 	) => {
-		const input = rawInput as E164Number;
-		if (input !== null) {
-			const detectedCountry = getCountryForPartialE164Number(input);
-			const useCountry = options?.strictCountry
-				? currCountry
-				: detectedCountry ?? currCountry;
-
-			if (!options?.strictCountry && detectedCountry && detectedCountry !== prevCountry) {
-				updateCountry(detectedCountry);
-			}
-
-			try {
-				detailedValue = normalizeTelInput(
-					parsePhoneNumberWithError(input, useCountry ?? undefined)
-				);
-			} catch (err) {
-				if (err instanceof ParseError) {
-					detailedValue = {
-						isValid: false,
-						error: err.message
-					};
-					dispatch('parseError', err.message);
-				} else {
-					throw err;
-				}
-			}
-
-			const formatOption = combinedOptions.format === 'national' ? 'nationalNumber' : 'e164';
-			const formattedValue =
-				combinedOptions.format === 'national' ? 'formatOriginal' : 'formatInternational';
-			const initialCursorPosition = el?.selectionStart || 0;
-			if (combinedOptions.spaces && detailedValue?.[formattedValue]) {
-				inputValue = detailedValue[formattedValue] ?? null;
-
-				// Need to wait for input element to update before cursor position can be restored
-				await tick();
-				if (el) {
-					const newCursorPosition = findNewCursorPosition(
-						input,
-						inputValue,
-						initialCursorPosition
-					);
-
-					el.selectionStart = newCursorPosition;
-					el.selectionEnd = newCursorPosition;
-				}
-			} else if (detailedValue?.[formatOption]) {
-				inputValue = detailedValue[formatOption] ?? null;
-
-				// Need to wait for input element to update before cursor position can be restored
-				await tick();
-				if (el) {
-					const newCursorPosition = findNewCursorPosition(
-						input,
-						inputValue,
-						initialCursorPosition
-					);
-
-					el.selectionStart = newCursorPosition;
-					el.selectionEnd = newCursorPosition;
-				}
-			}
-
-			// keep the input value as value
-			value = detailedValue?.e164 ?? input ?? null;
-			valid = detailedValue?.isValid ?? false;
-			dispatch('updateValid', valid);
-			dispatch('updateValue', value);
-			dispatch('updateDetailedValue', detailedValue);
-		} else if (input === null && currCountry !== null) {
-			// If the user modifies the country, reset the input value and don't dispatch the country change event.
+		// Country-only change: reset state unless option says to keep valid.
+		if (rawInput === null && currCountry !== null) {
 			if (currCountry !== prevCountry) {
 				prevCountry = currCountry;
-				valid = !options.invalidateOnCountryChange;
-				value = null;
-				inputValue = null;
+				applyValidity(true, false, currCountry);
+				value = '';
+				_lastWrittenValue = ''; // stamp
+				inputValue = '';
 				detailedValue = null;
-				dispatch('updateValid', valid);
-				dispatch('updateValue', value);
-				dispatch('updateDetailedValue', detailedValue);
+				onValueChange?.(value, detailedValue);
 			}
-		} else {
-			// Otherwise, reset all values
-			valid = true;
-			value = null;
+			return;
+		}
+
+		// Full reset.
+		if (rawInput === null) {
+			if (shouldValidate) {
+				applyValidity(true, false, null);
+			}
+			value = '';
+			_lastWrittenValue = ''; // stamp
 			detailedValue = null;
 			prevCountry = currCountry;
-			dispatch('updateValid', valid);
-			dispatch('updateDetailedValue', detailedValue);
-			inputValue = null;
+			inputValue = '';
+			countryUpdater(null);
+			onCountryChange?.(null);
+			onValueChange?.('', null);
+			return;
+		}
+
+		// Treat input with no digits and no '+' as empty (e.g. "", whitespace-only, letters-only)
+		const isEffectivelyEmpty = !/[0-9+]/.test(rawInput);
+		if (isEffectivelyEmpty) {
+			if (shouldValidate) {
+				applyValidity(true, false, country);
+			}
+			value = '';
+			_lastWrittenValue = ''; // stamp
+			detailedValue = null;
+			inputValue = '';
+			onValueChange?.(value, detailedValue);
+			return;
+		}
+
+		const startsWithPlus = rawInput.trimStart().startsWith('+');
+		const selectedCountry = getCountryObj(currCountry) ?? getCountryObj(country);
+
+		// If a country is selected, only infer+switch country from the number when user types an E.164 number (leading '+').
+		const { country: numberHasCountry, fullDialCodeMatch } = startsWithPlus
+			? guessCountryByPartialNumber({
+					partialE164Number: rawInput,
+					currentCountryIso2: currCountry
+				})
+			: { country: undefined, fullDialCodeMatch: false };
+
+		// Only switch country when we have a FULL dial-code match.
+		// This prevents switching on partial prefixes like "+3" while backspacing.
+		if (
+			!combinedOptions.lockCountry &&
+			startsWithPlus &&
+			fullDialCodeMatch &&
+			numberHasCountry?.iso2 &&
+			numberHasCountry.iso2 !== prevCountry
+		) {
+			countryUpdater(numberHasCountry.iso2);
+			// Keep prevCountry in sync so that a subsequent external country change
+			// (e.g. parent sets country='DE' again) is correctly detected as a change
+			// and triggers a value reset. Without this, prevCountry would still hold
+			// the last externally-written value and the reset guard would short-circuit.
+			prevCountry = numberHasCountry.iso2;
+			// Fire the callback only here — when the country is inferred from the
+			// user's input (dial-code parsing). reset() and external prop changes
+			// do NOT fire onCountryChange.
+			onCountryChange?.(numberHasCountry.iso2);
+		}
+
+		// If dial code is incomplete (e.g. "+3"), keep using the currently selected country
+		// so we don't bounce countries during deletions.
+		// When lockCountry is enabled, always use the selected country regardless of dial code.
+		const normalizerCountry = combinedOptions.lockCountry
+			? selectedCountry
+			: startsWithPlus && fullDialCodeMatch
+				? numberHasCountry
+				: selectedCountry;
+
+		try {
+			detailedValue = parsePhoneInput(rawInput, normalizerCountry);
+		} catch (err) {
+			if (err instanceof ParseError) {
+				detailedValue = {
+					isPhoneValid: false,
+					isValid: false,
+					validationError: err.message as ValidationError
+				};
+				onError?.(err.message);
+			} else {
+				throw err;
+			}
+		}
+
+		// If the resolved country is not in allowedCountries, the phone number is
+		// intrinsically valid (libphonenumber-js says so) but the application rejects
+		// it. Patch detailedValue to reflect this so that detailedValue.isValid is
+		// consistent with the component's `valid` prop and `validationError`.
+		const _allowedCountries = combinedOptions.allowedCountries;
+		if (
+			detailedValue &&
+			_allowedCountries?.length &&
+			detailedValue.countryCode != null &&
+			!_allowedCountries.includes(detailedValue.countryCode)
+		) {
+			detailedValue = {
+				...detailedValue,
+				isValid: false,
+				validationError: 'COUNTRY_NOT_ALLOWED'
+			};
+		}
+
+		// `inputValue` is the displayed value (must stay in sync with the directive's formatting).
+		inputValue = combinedOptions.spaces
+			? (detailedValue?.formattedNumber ?? rawInput)
+			: rawInput;
+
+		// `value` is the stored value (E.164 when possible).
+		value = detailedValue?.e164 ?? rawInput;
+		_lastWrittenValue = value; // stamp
+		onValueChange?.(value, detailedValue);
+
+		if (shouldValidate) {
+			applyValidity(false, detailedValue?.isValid ?? false, country);
 		}
 	};
 
-	// Watch user's country change.
-	let countryWatchInitRun = true;
-	const countryChangeWatchFunction = (current: CountryCode | null | undefined) => {
-		if (!countryWatchInitRun) {
-			handleParsePhoneNumber(null, current);
-		}
-		countryWatchInitRun = false;
-	};
-
-	$: countryChangeWatchFunction(country);
-
-	// Generate placeholder based on the autoPlaceholder option
-	$: getPlaceholder =
-		combinedOptions.autoPlaceholder && country
-			? generatePlaceholder(country, {
-					format: combinedOptions.format,
+	// Generate placeholder based on the autoPlaceholder option.
+	// Uses initialCountry (a $derived) so SSR renders the correct placeholder even
+	// when country is auto-detected from the value prop rather than explicitly provided.
+	const getPlaceholder = $derived(
+		combinedOptions.autoPlaceholder && initialCountry
+			? generatePlaceholder(initialCountry, {
 					spaces: combinedOptions.spaces
 				})
-			: placeholder;
+			: placeholder
+	);
 
-	// Handle reset value only
-	$: if (value === null && inputValue !== null && detailedValue !== null) {
-		inputValue = null;
-		detailedValue = null;
-		dispatch('updateDetailedValue', detailedValue);
-	}
+	// Re-format displayed value when spaces option changes
+	$effect(() => {
+		const spaces = combinedOptions.spaces;
+		untrack(() => {
+			if (inputValue !== '' && detailedValue) {
+				inputValue = spaces
+					? (detailedValue.formattedNumber ?? inputValue)
+					: (detailedValue.e164 ?? inputValue);
+			}
+		});
+	});
 
-	export const updateValue = (
-		newValue: string | E164Number | null,
-		newCountry?: CountryCode | null
-	) => {
-		const castedValue = newValue as E164Number;
-		if (castedValue) {
-			handleParsePhoneNumber(
-				castedValue,
-				options?.strictCountry
-					? country
-					: getCountryForPartialE164Number(castedValue) || newCountry
-			);
-		}
-	};
+	//Detect externally driven value changes (e.g. parent sets bind:value, or resets to null).
+	//The shadow `_lastWrittenValue` is stamped on every internal write inside
+	//handleParsePhoneNumber, so any difference here means the parent changed it.
+	$effect(() => {
+		const currentValue = value;
+		untrack(() => {
+			if (currentValue !== _lastWrittenValue) {
+				handleParsePhoneNumber(currentValue, country ?? null);
+			}
+		});
+	});
+
+	// Detect externally driven country changes (e.g. parent's <select bind:value={country}>).
+	// Stamps `_lastWrittenCountry` eagerly so the watcher doesn't re-fire when
+	// handleParsePhoneNumber later writes country through countryUpdater.
+	$effect(() => {
+		const currentCountry = country;
+		untrack(() => {
+			if (currentCountry !== _lastWrittenCountry) {
+				_lastWrittenCountry = currentCountry;
+				handleParsePhoneNumber(null, currentCountry ?? null);
+			}
+		});
+	});
 
 	onMount(() => {
-		if (value) {
-			handleParsePhoneNumber(
-				value,
-				options?.strictCountry ? country : getCountryForPartialE164Number(value) || country
-			);
+		// generatedId is null on the server; assign here so both server and client
+		// agree on the initial render (null → no id attr), then the DOM gets the id after mount.
+		if (!idProp?.trim()) {
+			generatedId =
+				'phone-input-' +
+				(crypto?.randomUUID?.() ||
+					new Date().getTime().toString(36) + Math.random().toString(36).slice(2));
 		}
+		if (value) {
+			// If country is specified, use it; otherwise, use the initial country (which is figured out from value)
+			const currentCountry = country || initialCountry;
+			handleParsePhoneNumber(value, currentCountry);
+		}
+		// isInitialized = true;
+		onLoad?.();
 	});
+
+	/**
+	 * Resets the input value and validation state.
+	 *
+	 * @param {Object} [options] - Optional settings.
+	 * @param {boolean} [options.country=false] - If true, resets the country to null; otherwise, resets to defaultCountry.
+	 * @returns {void}
+	 */
+	const reset = ({ country: resetCountry = false }: { country?: boolean } = {}) => {
+		const targetCountry = resetCountry ? null : (defaultCountry ?? null);
+		applyValidity(true, false, targetCountry);
+		value = '';
+		_lastWrittenValue = '';
+		detailedValue = null;
+		prevCountry = targetCountry;
+		inputValue = '';
+		countryUpdater(targetCountry);
+		onCountryChange?.(targetCountry);
+		onValueChange?.('', null);
+	};
+
+	/**
+	 * Checks the validity of the current input value and updates validation state.
+	 *
+	 * @returns {{ valid: boolean; error: ValidationError }} - The validity status and error type.
+	 */
+	const checkValidity = (): { valid: boolean; error: ValidationError } => {
+		if (inputValue === '') {
+			applyValidity(true, false, country);
+		} else {
+			handleParsePhoneNumber(inputValue, country, true);
+		}
+		return { valid, error: validationError };
+	};
+
+	export const api = {
+		checkValidity,
+		reset
+	};
 </script>
 
 <input
-	{...$$restProps}
+	data-testid="tel-input"
+	{...rest}
 	bind:this={el}
 	{autocomplete}
 	class={classes}
@@ -275,23 +470,15 @@
 	{readonly}
 	{required}
 	{size}
+	aria-invalid={ariaInvalidProp !== undefined ? ariaInvalidProp : valid ? undefined : true}
 	placeholder={getPlaceholder}
 	type="tel"
 	value={inputValue}
-	on:beforeinput
-	on:blur
-	on:change
-	on:click
-	on:focus
-	on:input
-	on:keydown
-	on:keypress
-	on:keyup
-	on:paste
+	onblur={handleBlur}
 	use:telInputAction={{
 		handler: handleInputAction,
 		spaces: combinedOptions.spaces,
-		value,
-		strictCountryCode: combinedOptions.strictCountry
+		country,
+		value
 	}}
 />

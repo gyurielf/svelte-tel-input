@@ -4,6 +4,7 @@ on:
     push:
         branches:
             - 'main'
+            - 'next'
 
 permissions: {}
 
@@ -23,12 +24,10 @@ jobs:
                   # This makes Actions fetch all Git history so that Changesets can generate changelogs with the correct commits
                   fetch-depth: 0
             - uses: pnpm/action-setup@v4
-              with:
-                  version: 8.6.0
-            - name: Setup Node.js 18.x
+            - name: Setup Node.js 22.x
               uses: actions/setup-node@v4
               with:
-                  node-version: 18.x
+                  node-version: 22.x
                   cache: pnpm
 
             - name: Install dependencies
@@ -42,6 +41,7 @@ jobs:
               uses: changesets/action@v1
               with:
                   # This expects you to have a script called release which does a build for your packages and calls changeset publish
+                  version: pnpm ci:version
                   publish: pnpm ci:release
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

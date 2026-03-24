@@ -1,0 +1,160 @@
+---
+title: Types
+description: TypeScript type definitions exported by svelte-tel-input.
+---
+
+All types are importable from `svelte-tel-input/types`:
+
+```typescript
+import type {
+  CountryCode,
+  Country,
+  DetailedValue,
+  TelInputOptions,
+  ValidationError,
+  Props
+} from 'svelte-tel-input/types';
+```
+
+## `CountryCode`
+
+ISO 3166 Alpha-2 country code string (e.g. `'US'`, `'GB'`, `'HU'`).
+
+```typescript
+type CountryCode = 'US' | 'GB' | 'HU' | 'DE' | /* ... all ISO 3166 codes */;
+```
+
+## `Country`
+
+A country entry in the `countries` array:
+
+```typescript
+interface Country {
+  id: string;
+  label: string;
+  name: string;
+  iso2: CountryCode;
+  dialCode: string;
+  priority: number;
+  areaCodes: string[] | null;
+}
+```
+
+## `DetailedValue`
+
+The full parsed result returned via `bind:detailedValue`:
+
+```typescript
+interface DetailedValue {
+  countryCode?: CountryCode | null;
+  isPossible: boolean;
+  /** The phone number itself is structurally valid for its country (correct digit count and format).
+   * Can be `true` even when `isValid` is `false` — e.g. the number is real but its country
+   * is blocked by `allowedCountries`. Use `isValid` for form validation. */
+  isPhoneValid: boolean;
+  /** Overall validity: `true` only when the number is structurally valid AND all
+   * component-level constraints (such as `allowedCountries`) are satisfied.
+   * This is the field to check in your application logic. */
+  isValid: boolean;
+  phoneNumber: string | null;
+  countryCallingCode: string | null;
+  formattedNumber: string | null;
+  formatOriginal: string | null;
+  nationalNumber: string | null;
+  formatInternational: string | null;
+  formatNational: string | null;
+  uri: string | null;
+  e164: string | null;
+  error?: string;
+  validationError?: ValidationError;
+}
+```
+
+### Field reference
+
+| Field | Example | Description |
+|-------|---------|-------------|
+| `e164` | `+36301234567` | E.164 formatted (storage format) |
+| `isPhoneValid` | `true` | The number itself is structurally valid — can be `true` even when `isValid` is `false` (e.g. country blocked by `allowedCountries`) |
+| `isValid` | `true` | Overall validity — `false` if phone is invalid **or** country is not allowed |
+| `isPossible` | `true` | Has the right length |
+| `countryCode` | `'HU'` | Detected ISO country code |
+| `countryCallingCode` | `'36'` | Numeric calling code |
+| `nationalNumber` | `'301234567'` | Without country calling code |
+| `formatInternational` | `'+36 30 123 4567'` | Internationally formatted |
+| `formatNational` | `'(06 30) 123 4567'` | Nationally formatted (may include parentheses) |
+| `formattedNumber` | `'+36 30 123 4567'` | Display-friendly format — always spaces only, no parentheses or hyphens. Used for the input display when `options.spaces` is `true`. |
+| `formatOriginal` | `'30 123 4567'` | International without calling code prefix |
+| `uri` | `'tel:+36301234567'` | `tel:` URI for `<a href>` links |
+| `phoneNumber` | `'+36301234567'` | Same as `e164` |
+| `error` | `'TOO_SHORT'` | Parse error message |
+| `validationError` | `'TOO_SHORT'` | Granular [ValidationError](#validationerror) |
+
+## `ValidationError`
+
+The reason the current phone number is invalid:
+
+```typescript
+type ValidationError =
+  | 'REQUIRED'
+  | 'COUNTRY_NOT_ALLOWED'
+  | 'TOO_SHORT'
+  | 'TOO_LONG'
+  | 'NOT_A_NUMBER'
+  | 'INVALID_COUNTRY'
+  | 'INVALID_LENGTH'
+  | 'INVALID'
+  | null;
+```
+
+| Value | Meaning |
+|---|---|
+| `'REQUIRED'` | Field is empty and `required` is `true` |
+| `'COUNTRY_NOT_ALLOWED'` | Country not in `options.allowedCountries` |
+| `'TOO_SHORT'` | Number has too few digits |
+| `'TOO_LONG'` | Number has too many digits |
+| `'NOT_A_NUMBER'` | Input doesn't look like a phone number |
+| `'INVALID_COUNTRY'` | Country code not recognized |
+| `'INVALID_LENGTH'` | Length doesn't match any valid pattern for the country |
+| `'INVALID'` | Fallback when the specific reason can't be determined |
+| `null` | No error — input is valid |
+
+`REQUIRED` and `COUNTRY_NOT_ALLOWED` are component-level errors. `INVALID` is a fallback when no specific reason can be determined. The remaining values reflect the specific structural issue with the number.
+
+## `TelInputOptions`
+
+Configuration object for the `options` prop:
+
+```typescript
+interface TelInputOptions {
+  autoPlaceholder?: boolean;       // default: true
+  spaces?: boolean;                // default: true
+  validateOn?: 'input' | 'blur' | 'always';  // default: 'always'
+  allowedCountries?: CountryCode[];
+  lockCountry?: boolean;           // default: false
+}
+```
+
+See [Options](/reference/options/) for details and examples.
+
+## `Props`
+
+The full component props interface. Extends Svelte's `HTMLInputAttributes`:
+
+```typescript
+interface Props extends HTMLInputAttributes {
+  value: string;
+  country?: CountryCode | null | undefined;
+  defaultCountry?: CountryCode | null;
+  valid?: boolean;
+  validationError?: ValidationError;
+  detailedValue?: Readonly<Partial<DetailedValue> | null>;
+  options?: TelInputOptions;
+  el?: HTMLInputElement | undefined;
+  onValueChange?: (value: string, details: Readonly<Partial<DetailedValue> | null>) => void;
+  onCountryChange?: (country: CountryCode | null) => void;
+  onValidityChange?: (valid: boolean, error: ValidationError) => void;
+  onError?: (error: string) => void;
+  onLoad?: () => void;
+}
+```
