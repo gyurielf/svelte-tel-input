@@ -1,5 +1,68 @@
 # svelte-tel-input
 
+## 4.0.0
+### Major Changes
+
+
+
+- breaking: refactor
+  
+  The library has been fully rewritten from scratch using **Svelte 5** and its runes-based reactivity system (`$state`, `$derived`, `$effect`, `$props`, `$bindable`). The Svelte 4 options API is no longer supported.
+  
+  ### Breaking changes
+  
+  - Requires **Svelte 5** as a peer dependency.
+  - All event props have been renamed to callbacks (`on:valueChange` → `onValueChange`, etc.) in line with the Svelte 5 event model.
+  - The component no longer uses `createEventDispatcher`. Bind to the callback props directly.
+  - Several deprecated types have been removed from the public API: `CountrySelectEvents`, `PhoneNumberError`, `PhoneNumberParseError`, `PhoneType`, and `TelInputValidity`.
+  
+  ### New features
+  
+  - Full SSR / SSG compatibility with no hydration mismatches.
+  - `detailedValue` now includes a granular `validationError` field instead of a generic boolean.
+  - New `validateOn` option (`'input' | 'blur' | 'always'`) to control when validation is triggered.
+  - New `lockCountry` option to prevent automatic country switching from dial-code detection.
+  - New `allowedCountries` option to restrict valid countries.
+  - Imperative `api` object (`bind:this`) with `checkValidity()` and `reset()` methods.
+  - `defaultCountry` prop for resetting to a specific country.
+  - Prop type guards throw descriptive `TypeError` messages on incorrect usage.
+  
+  and much more...
+
+### Patch Changes
+
+
+
+- chore: update deps ([#250](https://github.com/gyurielf/svelte-tel-input/pull/250))
+
+
+
+- feat: differentiate isValid and isPhoneValid ([#250](https://github.com/gyurielf/svelte-tel-input/pull/250))
+
+
+
+- chore: test job & cleanup
+
+
+
+- chore: extend docs according to changes ([#250](https://github.com/gyurielf/svelte-tel-input/pull/250))
+
+
+
+- fix: no more brackets and hyphens in the parsed number
+
+
+
+- chore: cleanup ([#250](https://github.com/gyurielf/svelte-tel-input/pull/250))
+
+
+
+- fix: country change behavior ([#250](https://github.com/gyurielf/svelte-tel-input/pull/250))
+
+
+
+- chore: tweak component jsdoc ([#253](https://github.com/gyurielf/svelte-tel-input/pull/253))
+
 ## 4.0.0-next.4
 ### Patch Changes
 
