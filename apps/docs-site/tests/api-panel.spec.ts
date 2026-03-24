@@ -8,8 +8,8 @@ test.describe('API & Binding playground', () => {
 		// Wait for the Svelte component to be fully hydrated before clicking any tab
 		await expect(page.locator('#states-button')).toBeEnabled({ timeout: 15_000 });
 		await expect(page.getByTestId('tel-input')).toBeVisible();
-		// Switch to the API Test tab to reveal action buttons
-		await page.getByRole('tab', { name: 'API Test' }).click();
+		// Switch to the API tab to reveal action buttons
+		await page.getByRole('tab', { name: 'API' }).click();
 		await expect(page.getByTestId('bind-set-value-btn')).toBeVisible();
 	});
 

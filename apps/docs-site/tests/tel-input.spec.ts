@@ -44,7 +44,8 @@ async function selectCountry(page: import('@playwright/test').Page, country: str
 }
 
 async function openOptionsPanel(_page: import('@playwright/test').Page) {
-	// Options bar is always visible in the current Playground — no button to click.
+	await _page.getByRole('tab', { name: 'Validation' }).click();
+	await expect(_page.locator('select[id^="validateOn-"]')).toBeVisible();
 }
 
 test.describe('TelInput (demo)', () => {
@@ -296,6 +297,8 @@ test.describe('TelInput (demo)', () => {
 	});
 
 	test('country change shows invalid styling when required is set', async ({ page }) => {
+		await openOptionsPanel(page);
+
 		const input = page.getByTestId('tel-input');
 		await clearTelInput(input);
 		await input.pressSequentially('+12154567890', { delay: 30 });
@@ -521,6 +524,7 @@ test.describe('Option toggles', () => {
 		await page.goto('/playground');
 		await expect(page.locator('#states-button')).toBeEnabled();
 		await expect(page.getByTestId('tel-input')).toBeVisible();
+		await openOptionsPanel(page);
 	});
 
 	test('autoPlaceholder follows the selected country and clears when disabled', async ({
@@ -565,6 +569,28 @@ test.describe('Option toggles', () => {
 		await clearTelInput(input);
 		await input.pressSequentially('+447947123456', { delay: 50 });
 		await expect(countryButton.locator('.flag-gb')).toHaveCount(1);
+	});
+});
+
+test.describe('Events tab', () => {
+	test.beforeEach(async ({ page }) => {
+		await page.goto('/playground');
+		await expect(page.locator('#states-button')).toBeEnabled();
+		await expect(page.getByTestId('tel-input')).toBeVisible();
+		await page.getByRole('tab', { name: 'Events' }).click();
+		await expect(page.getByTestId('event-log-panel')).toBeVisible();
+	});
+
+	test('logs callbacks and clears the event panel', async ({ page }) => {
+		const input = page.getByTestId('tel-input');
+		await clearTelInput(input);
+		await input.pressSequentially('+12154567890', { delay: 40 });
+
+		await expect(page.getByTestId('event-log-entry')).not.toHaveCount(0);
+		await expect(page.getByTestId('event-log-panel')).toContainText('onValueChange');
+
+		await page.getByTestId('clear-event-log-btn').click();
+		await expect(page.getByTestId('event-log-entry')).toHaveCount(0);
 	});
 });
 
