@@ -1,5 +1,16 @@
 # svelte-tel-input
 
+## 4.0.2
+### Patch Changes
+
+
+
+- chore: og and favicon change ([#262](https://github.com/gyurielf/svelte-tel-input/pull/262))
+
+
+
+- chore: cleanup ([#262](https://github.com/gyurielf/svelte-tel-input/pull/262))
+
 ## 4.0.1
 ### Patch Changes
 
