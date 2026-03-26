@@ -29,7 +29,8 @@
 		title: 'Svelte Tel Input',
 		description: 'Phone number standardization easily via svelte tel input.',
 		url: `${pageHref}`,
-		type: 'website'
+		type: 'website',
+		images: [{ url: '/svelte_tel_input_og.png' }]
 	}}
 	jsonLd={[
 		{
@@ -63,5 +64,6 @@
 			</span>
 		</h2>
 	</div>
+	dasdasdasdasdsa
 	<Usage />
 </div>

@@ -17,6 +17,22 @@ export default defineConfig({
 	integrations: [
 		svelte(),
 		starlight({
+			head: [
+				{
+					tag: 'meta',
+					attrs: {
+						property: 'og:image',
+						content: 'https://svelte-tel-input.vercel.app/svelte_tel_input_og.png'
+					}
+				},
+				{
+					tag: 'meta',
+					attrs: {
+						name: 'twitter:image',
+						content: 'https://svelte-tel-input.vercel.app/svelte_tel_input_og.png'
+					}
+				}
+			],
 			expressiveCode: {
 				themes: ['github-dark', 'github-light'],
 				useStarlightDarkModeSwitch: true
