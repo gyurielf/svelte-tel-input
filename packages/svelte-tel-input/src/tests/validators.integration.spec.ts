@@ -4,7 +4,7 @@
 import { describe, it, expect } from 'vitest';
 import { z } from 'zod';
 import * as v from 'valibot';
-import { validateTelInput } from '$lib/validators/index.js';
+import { validateTelInput } from '../lib/validators/index.js';
 
 // ---------------------------------------------------------------------------
 // Zod integration

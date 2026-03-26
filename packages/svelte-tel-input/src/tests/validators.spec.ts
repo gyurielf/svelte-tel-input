@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { validateTelInput } from '$lib/validators/index.js';
-import type { CountryCode } from '$lib/types';
+import { validateTelInput } from '../lib/validators/index.js';
+import type { CountryCode } from '../lib/types';
 
 describe('validateTelInput()', () => {
 	describe('empty input', () => {

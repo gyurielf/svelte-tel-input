@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render } from '@testing-library/svelte';
 import userEvent from '@testing-library/user-event';
-import TelInput from '$lib/components/input/TelInput.svelte';
+import TelInput from '../lib/components/input/TelInput.svelte';
 import type { DetailedValue, ValidationError } from '../lib/types';
 
 describe('TelInput Component', () => {

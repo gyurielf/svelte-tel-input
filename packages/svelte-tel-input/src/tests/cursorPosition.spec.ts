@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { calculateCursorPosition, isDigit } from '$lib/utils/directives/cursorPosition';
+import { calculateCursorPosition, isDigit } from '../lib/utils/cursorPosition.js';
 
 describe('Cursor Position Utilities', () => {
 	describe('isDigit', () => {

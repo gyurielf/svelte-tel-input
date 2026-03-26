@@ -10,7 +10,7 @@
  */
 
 import { describe, it, expect } from 'vitest';
-import { parse } from '$lib/utils/index.js';
+import { parse } from '../lib/utils/index.js';
 
 // ---------------------------------------------------------------------------
 // Hungarian inputs (country = 'HU', callingCode = 36)

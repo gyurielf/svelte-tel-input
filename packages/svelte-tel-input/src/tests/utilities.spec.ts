@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { parse, normalizeToE164, pickCountries } from '$lib/utils/index.js';
+import { parse, normalizeToE164, pickCountries } from '../lib/utils/index.js';
 
 describe('parse()', () => {
 	it('parses a full E.164 number without a country hint', () => {

@@ -1,4 +1,4 @@
-import type { CountryCallingCode, CountryCode, MetadataJson, PhoneNumber } from 'libphonenumber-js';
+import type { CountryCode } from 'libphonenumber-js';
 import type { HTMLInputAttributes } from 'svelte/elements';
 
 export interface Country {
@@ -38,7 +38,7 @@ export interface DetailedValue {
 	uri: string | null;
 	e164: string | null;
 	/** Granular validation error when `isValid` is `false`. */
-	validationError?: ValidationError;
+	validationError: ValidationError;
 }
 
 /**
@@ -133,7 +133,7 @@ export interface Props extends HTMLInputAttributes {
 	/** Validity of the input based on the config settings. */
 	valid?: boolean;
 	/** The reason the current value is invalid, or `null` when valid. */
-	validationError?: ValidationError;
+	validationError?: Readonly<ValidationError>;
 	/** You can turn on and off certain features by this object */
 	options?: TelInputOptions;
 	/** Binding to the underlying `<input>` element */
@@ -148,7 +148,7 @@ export interface Props extends HTMLInputAttributes {
 	 * @param newValidity The new validity state.
 	 * @param error The validation error type.
 	 */
-	onValidityChange?: (newValidity: boolean, error: ValidationError) => void;
+	onValidityChange?: (newValidity: boolean, error: Readonly<ValidationError>) => void;
 	/**
 	 * Callback fired when the value or details change.
 	 * @param newValue The new E164 value.
@@ -166,4 +166,4 @@ export interface Props extends HTMLInputAttributes {
 	onLoad?: () => void;
 }
 
-export type { CountryCallingCode, CountryCode, PhoneNumber, MetadataJson };
+export type { CountryCode };
