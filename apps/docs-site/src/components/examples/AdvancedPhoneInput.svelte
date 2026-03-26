@@ -1,6 +1,8 @@
 <script lang="ts">
-	import { clickOutsideAction } from 'svelte-tel-input/utils';
-	import { TelInput, isSelected, countries } from 'svelte-tel-input';
+	import { clickOutsideAction } from '../../utils/directives/clickOutsideAction.js';
+	import { isSelected } from '../../utils/helpers.js';
+	import { TelInput, countries } from 'svelte-tel-input';
+
 	import type {
 		DetailedValue,
 		CountryCode,

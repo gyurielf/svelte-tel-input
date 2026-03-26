@@ -7,7 +7,7 @@ import {
 import type { Country, DetailedValue, ValidationError } from '$lib/types/index.js';
 import type { CountryCode } from 'libphonenumber-js';
 import { examplePhoneNumbers, countries } from '$lib/assets/index.js';
-import { getCountry } from './directives/countryHelpers.js';
+import { getCountry } from './countryHelpers.js';
 
 const whiteSpaceRegex = new RegExp(
 	'[\\t\\n\\v\\f\\r \\u00a0\\u2000\\u2001\\u2002\\u2003\\u2004\\u2005\\u2006\\u2007\\u2008\\u2009\\u200a\\u200b\\u2028\\u2029\\u3000]',

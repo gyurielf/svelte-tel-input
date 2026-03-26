@@ -42,7 +42,7 @@
 
 	const presets = [
 		{ label: '🇺🇸 US', value: '+12015551234' },
-		{ label: '🇬🇧 UK', value: '+447911123456' },
+		{ label: '🇬🇧 UK', value: '+441234567890' },
 		{ label: '🇩🇪 DE', value: '+4915123456789' },
 		{ label: '🇫🇷 FR', value: '+33612345678' },
 		{ label: '🇧🇷 BR', value: '+5511987654321' },
@@ -453,7 +453,10 @@
 								bind:detailedValue
 								bind:validationError
 								{defaultCountry}
-								{options}
+								options={{
+									...options,
+									allowedCountries: ['US', 'GB', 'DE', 'FR', 'BR']
+								}}
 								required={true}
 								onCountryChange={handleCountryChange}
 								onError={handleError}

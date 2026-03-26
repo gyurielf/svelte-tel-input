@@ -1,9 +1,11 @@
 <script lang="ts">
 	import { onMount, untrack } from 'svelte';
 	import { ParseError } from 'libphonenumber-js/max';
-	import { generatePlaceholder, parsePhoneInput, telInputAction } from '$lib/utils/index.js';
+	import { generatePlaceholder } from '$lib/utils/index.js';
+	import { parsePhoneInput } from '$lib/utils/helpers.js';
+	import { telInputAction } from '$lib/utils/directives/telInputAction.js';
+	import { getCountry, guessCountryByPartialNumber } from '$lib/utils/countryHelpers.js';
 	import type { CountryCode, TelInputOptions, Props, ValidationError } from '$lib/types';
-	import { getCountry, guessCountryByPartialNumber } from '$lib/utils/directives/countryHelpers';
 
 	const defaultOptions = {
 		autoPlaceholder: true,
@@ -31,7 +33,7 @@
 		defaultCountry = null,
 		detailedValue = $bindable(null),
 		valid = $bindable(true),
-		validationError = $bindable<ValidationError>(null),
+		validationError = $bindable<Readonly<ValidationError>>(null),
 		options = defaultOptions,
 		el = $bindable(undefined),
 		'aria-invalid': ariaInvalidProp = undefined,

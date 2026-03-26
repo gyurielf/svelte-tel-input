@@ -1,4 +1,4 @@
-import { inputParser } from '$lib/utils/index.js';
+import { inputParser } from '../lib/utils/helpers.js';
 import { describe, it, expect } from 'vitest';
 
 describe('Hello.svelte', () => {

@@ -1,7 +1,7 @@
 import type { CountryCode } from '$lib/types/index.js';
-import { getCountry } from '$lib/utils/directives/countryHelpers.js';
+import { getCountry } from '$lib/utils/countryHelpers.js';
 import { parsePhoneInput } from '$lib/utils/helpers.js';
-import { calculateCursorPosition } from './cursorPosition.js';
+import { calculateCursorPosition } from '../cursorPosition.js';
 
 interface TelInputActionParams {
 	handler: (val: string) => void;
