@@ -14,6 +14,7 @@ export default defineConfig({
 			}
 		}
 	},
+	site: 'https://svelte-tel-input.vercel.app',
 	integrations: [
 		svelte(),
 		starlight({
@@ -30,6 +31,13 @@ export default defineConfig({
 					attrs: {
 						name: 'twitter:image',
 						content: 'https://svelte-tel-input.vercel.app/svelte_tel_input_og.png'
+					}
+				},
+				{
+					tag: 'meta',
+					attrs: {
+						property: 'og:logo',
+						content: 'https://svelte-tel-input.vercel.app/favicon-96x96.png'
 					}
 				}
 			],
