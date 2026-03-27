@@ -9,7 +9,7 @@ A **headless**, fully customizable **Svelte 5** phone input toolkit.
 All the ingredients to parse, format, and validate international phone numbers — you build the UI.
 Store in [E.164](https://en.wikipedia.org/wiki/E.164). Ship with any CSS framework, design system, or custom markup.
 
-[Documentation](https://svelte-tel-input.vercel.app/) · [Playground](https://svelte-tel-input.vercel.app/playground/) · [Changelog](CHANGELOG.md)
+[Documentation](https://svelte-tel-input.vercel.app/) · [Playground](https://svelte-tel-input.vercel.app/playground/) · [Changelog](https://github.com/gyurielf/svelte-tel-input/blob/main/packages/svelte-tel-input/CHANGELOG.md)
 
 </div>
 
@@ -80,7 +80,10 @@ Full API reference, options, events, types, and examples are on the **[documenta
 - [Options](https://svelte-tel-input.vercel.app/reference/options/)
 - [Events / Callbacks](https://svelte-tel-input.vercel.app/reference/events/)
 - [API Methods](https://svelte-tel-input.vercel.app/reference/api/)
+- [Validators](https://svelte-tel-input.vercel.app/reference/validators/)
+- [Utilities](https://svelte-tel-input.vercel.app/reference/utilities/)
 - [Types](https://svelte-tel-input.vercel.app/reference/types/)
+- [Assets](https://svelte-tel-input.vercel.app/reference/assets/)
 - [Playground](https://svelte-tel-input.vercel.app/playground/)
 
 ## Support
