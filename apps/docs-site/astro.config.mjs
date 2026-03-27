@@ -39,6 +39,22 @@ export default defineConfig({
 						property: 'og:logo',
 						content: 'https://svelte-tel-input.vercel.app/favicon-96x96.png'
 					}
+				},
+				{
+					tag: 'script',
+					attrs: {
+						async: 'true',
+						src: 'https://www.googletagmanager.com/gtag/js?id=G-XERJ0BPT0H'
+					}
+				},
+				{
+					tag: 'script',
+					content: `
+                        window.dataLayer = window.dataLayer || [];
+                        function gtag(){dataLayer.push(arguments);}
+                        gtag('js', new Date());
+                        gtag('config', 'G-XERJ0BPT0H');
+                    `
 				}
 			],
 			expressiveCode: {
