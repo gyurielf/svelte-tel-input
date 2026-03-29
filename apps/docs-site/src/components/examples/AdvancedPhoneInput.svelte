@@ -255,7 +255,7 @@
 		{onValueChange}
 		{onError}
 		name="phone-input"
-		class="text-sm rounded-r-lg block w-full px-1.25 h-10.25 leading-10.25 focus:outline-none border border-gray-300 border-l-gray-100 dark:border-l-gray-700 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 
+		class="text-base rounded-r-lg block w-full px-1.25 h-10.25 leading-10.25 focus:outline-none border border-gray-300 border-l-gray-100 dark:border-l-gray-700 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 
         dark:placeholder-gray-400 dark:text-white text-gray-900 box-border"
 	/>
 </div>

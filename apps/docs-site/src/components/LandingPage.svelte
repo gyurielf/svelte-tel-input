@@ -42,7 +42,7 @@
 	// ── Demo presets ────────────────────────────────────────────────────
 	const presets = [
 		{ label: '🇺🇸 US', value: '+12015551234' },
-		{ label: '🇬🇧 UK', value: '+447911123456' },
+		{ label: '🇬🇧 UK', value: '+441234567890' },
 		{ label: '🇩🇪 DE', value: '+4915123456789' },
 		{ label: '🇯🇵 JP', value: '+819012345678' },
 		{ label: '⚠️ Invalid', value: '+1999' }

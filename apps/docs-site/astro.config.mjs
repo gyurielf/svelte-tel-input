@@ -14,6 +14,7 @@ export default defineConfig({
 			}
 		}
 	},
+	site: 'https://svelte-tel-input.vercel.app',
 	integrations: [
 		svelte(),
 		starlight({
@@ -31,6 +32,29 @@ export default defineConfig({
 						name: 'twitter:image',
 						content: 'https://svelte-tel-input.vercel.app/svelte_tel_input_og.png'
 					}
+				},
+				{
+					tag: 'meta',
+					attrs: {
+						property: 'og:logo',
+						content: 'https://svelte-tel-input.vercel.app/favicon-96x96.png'
+					}
+				},
+				{
+					tag: 'script',
+					attrs: {
+						async: 'true',
+						src: 'https://www.googletagmanager.com/gtag/js?id=G-XERJ0BPT0H'
+					}
+				},
+				{
+					tag: 'script',
+					content: `
+                        window.dataLayer = window.dataLayer || [];
+                        function gtag(){dataLayer.push(arguments);}
+                        gtag('js', new Date());
+                        gtag('config', 'G-XERJ0BPT0H');
+                    `
 				}
 			],
 			expressiveCode: {

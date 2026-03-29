@@ -2,7 +2,6 @@
 import config from 'virtual:starlight/user-config';
 import LanguageSelect from 'virtual:starlight/components/LanguageSelect';
 import Search from 'virtual:starlight/components/Search';
-import SiteTitle from 'virtual:starlight/components/SiteTitle';
 import SocialIcons from 'virtual:starlight/components/SocialIcons';
 import ThemeSelect from 'virtual:starlight/components/ThemeSelect';
 
@@ -13,7 +12,9 @@ const shouldRenderSearch =
 <div class="header">
 	<div class="left-group sl-flex">
 		<div class="title-wrapper sl-flex">
-			<SiteTitle />
+			<a href="/" class="site-logo" aria-label="Svelte Tel Input home">
+				<img src="/favicon.svg" alt="Svelte Tel Input" width="32" height="32" />
+			</a>
 		</div>
 		<nav class="top-nav sl-hidden md:sl-flex print:hidden" aria-label="Main navigation">
 			<a href="/getting-started/installation/">Docs</a>
@@ -23,12 +24,13 @@ const shouldRenderSearch =
 	<div class="sl-flex print:hidden">
 		{shouldRenderSearch && <Search />}
 	</div>
-	<div class="sl-hidden md:sl-flex print:hidden right-group">
+	<div class="sl-flex print:hidden right-group">
 		<div class="sl-flex social-icons">
 			<SocialIcons />
 		</div>
-		<ThemeSelect />
-		<LanguageSelect />
+		<div class="hidden md:flex">
+			<ThemeSelect />
+		</div>
 	</div>
 </div>
 
@@ -53,6 +55,17 @@ const shouldRenderSearch =
 			padding: 0.25rem;
 			margin: -0.25rem;
 			min-width: 0;
+		}
+
+		.site-logo {
+			display: flex;
+			align-items: center;
+			text-decoration: none;
+			border-radius: 0.25rem;
+		}
+
+		.site-logo img {
+			display: block;
 		}
 
 		.top-nav {
@@ -86,6 +99,16 @@ const shouldRenderSearch =
 			content: '';
 			height: 2rem;
 			border-inline-end: 1px solid var(--sl-color-gray-5);
+		}
+
+		/* Mobile: compact icon row, no separator */
+		@media (max-width: 49.999rem) {
+			.right-group {
+				gap: 0.25rem;
+			}
+			.social-icons::after {
+				display: none;
+			}
 		}
 
 		@media (min-width: 50rem) {
