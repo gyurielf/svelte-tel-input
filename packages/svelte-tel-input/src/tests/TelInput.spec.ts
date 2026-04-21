@@ -1461,6 +1461,122 @@ describe('TelInput Component', () => {
 		});
 	});
 
+	describe('initialFormat prop', () => {
+		it('defaults to international format (dial code prefix shown)', () => {
+			const { getByTestId } = render(TelInput, {
+				props: { value: '+36203435150', country: 'HU' }
+			});
+			const input = getByTestId('tel-input') as HTMLInputElement;
+			expect(input.value).toBe('+36 20 343 5150');
+		});
+
+		it('displays national format when initialFormat is "national"', () => {
+			const { getByTestId } = render(TelInput, {
+				props: { value: '+36203435150', country: 'HU', initialFormat: 'national' }
+			});
+			const input = getByTestId('tel-input') as HTMLInputElement;
+			expect(input.value).toBe('20 343 5150');
+		});
+
+		it('displays international format when initialFormat is "international" (explicit)', () => {
+			const { getByTestId } = render(TelInput, {
+				props: { value: '+36203435150', country: 'HU', initialFormat: 'international' }
+			});
+			const input = getByTestId('tel-input') as HTMLInputElement;
+			expect(input.value).toBe('+36 20 343 5150');
+		});
+
+		it('auto-detects country from E164 value in national mode', () => {
+			const { getByTestId } = render(TelInput, {
+				props: {
+					value: '+36203435150',
+					initialFormat: 'national'
+				}
+			});
+			const input = getByTestId('tel-input') as HTMLInputElement;
+			// Country auto-detected as HU, display in national format
+			expect(input.value).toBe('20 343 5150');
+		});
+
+		it('does not change the E164 value prop when initialFormat is "national"', () => {
+			let capturedValue: string | undefined;
+			render(TelInput, {
+				props: {
+					value: '+36203435150',
+					country: 'HU',
+					initialFormat: 'national',
+					onValueChange: (v) => {
+						capturedValue = v;
+					}
+				}
+			});
+			// onValueChange fires once on mount with the E164 value
+			expect(capturedValue).toBe('+36203435150');
+		});
+
+		it('strips spaces in national format when spaces option is false', () => {
+			const { getByTestId } = render(TelInput, {
+				props: {
+					value: '+36203435150',
+					country: 'HU',
+					initialFormat: 'national',
+					options: { spaces: false }
+				}
+			});
+			const input = getByTestId('tel-input') as HTMLInputElement;
+			// "20 343 5150" without spaces → "203435150"
+			expect(input.value).toBe('203435150');
+			expect(input.value).not.toContain(' ');
+		});
+
+		it('user typing continues to work normally after national initial format', async () => {
+			const mockValueChange = vi.fn();
+			const { getByTestId } = render(TelInput, {
+				props: {
+					value: '+36203435150',
+					country: 'HU',
+					initialFormat: 'national',
+					onValueChange: mockValueChange
+				}
+			});
+			const input = getByTestId('tel-input') as HTMLInputElement;
+			expect(input.value).toBe('20 343 5150');
+
+			// Clear and retype a different number
+			mockValueChange.mockClear();
+			await fireUserEvent.clear(input);
+			await fireUserEvent.type(input, '301234567');
+
+			expect(mockValueChange.mock.calls.at(-1)?.[0]).toBe('+36301234567');
+		});
+
+		it('works with US national format', () => {
+			const { getByTestId } = render(TelInput, {
+				props: { value: '+12154567890', country: 'US', initialFormat: 'national' }
+			});
+			const input = getByTestId('tel-input') as HTMLInputElement;
+			// NANP: component strips parens/hyphens via stripSpecialChars → "215 456 7890"
+			expect(input.value).toBe('215 456 7890');
+		});
+
+		it('works with GB national format', () => {
+			const { getByTestId } = render(TelInput, {
+				props: { value: '+447947123456', country: 'GB', initialFormat: 'national' }
+			});
+			const input = getByTestId('tel-input') as HTMLInputElement;
+			// GB: "+44 7947 123456" → strip "+44 " → "7947 123456"
+			expect(input.value).toBe('7947 123456');
+		});
+
+		it('has no effect when value is empty', () => {
+			const { getByTestId } = render(TelInput, {
+				props: { value: '', country: 'HU', initialFormat: 'national' }
+			});
+			const input = getByTestId('tel-input') as HTMLInputElement;
+			expect(input.value).toBe('');
+		});
+	});
+
 	describe('Accessibility attribute passthrough', () => {
 		it('should forward aria-label to the input element', () => {
 			const { getByTestId } = render(TelInput, {

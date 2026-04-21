@@ -36,6 +36,7 @@
 			newDetails: Readonly<Partial<DetailedValue> | null>
 		) => void;
 		onLoad?: () => void;
+		initialFormat?: 'international' | 'national';
 	}
 
 	let {
@@ -57,7 +58,8 @@
 		onSelectChange,
 		onSelectSame,
 		onValidityChange,
-		onValueChange
+		onValueChange,
+		initialFormat = 'international'
 	}: Props = $props();
 	let searchText = $state('');
 	let isOpen = $state(false);
@@ -237,6 +239,7 @@
 		bind:this={telInputRef}
 		country={selectedCountry}
 		{defaultCountry}
+		{initialFormat}
 		bind:detailedValue
 		bind:value
 		bind:valid
