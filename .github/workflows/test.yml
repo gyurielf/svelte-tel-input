@@ -38,6 +38,9 @@ jobs:
                   cache: pnpm
             - run: pnpm install --no-frozen-lockfile
               working-directory: .
+            - name: Build svelte-tel-input package
+              run: pnpm --filter svelte-tel-input package
+              working-directory: .
             - name: Install Playwright browsers
               run: pnpm exec playwright install --with-deps chromium
             - name: Run e2e tests
