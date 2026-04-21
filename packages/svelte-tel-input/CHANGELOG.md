@@ -1,5 +1,16 @@
 # svelte-tel-input
 
+## 4.1.1
+### Patch Changes
+
+
+
+- imp: national parse quality improvement ([#270](https://github.com/gyurielf/svelte-tel-input/pull/270))
+
+
+
+- docs: update initialFormat documentation ([#270](https://github.com/gyurielf/svelte-tel-input/pull/270))
+
 ## 4.1.0
 ### Minor Changes
 
