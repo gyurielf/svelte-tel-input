@@ -27,7 +27,7 @@ async function clearTelInput(input: ReturnType<import('@playwright/test').Page['
 test.describe('National partial-number formatting consistency (HU)', () => {
 	test.beforeEach(async ({ page }) => {
 		await page.goto('/playground');
-		await expect(page.locator('#states-button')).toBeEnabled({ timeout: 15_000 });
+		await expect(page.locator('#states-button')).toBeEnabled({ timeout: 15000 });
 		await expect(page.getByTestId('tel-input')).toBeVisible();
 	});
 
