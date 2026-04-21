@@ -146,7 +146,7 @@ export const inputParser = (
 };
 
 // ---------------------------------------------------------------------------
-// Phone-number normalizer (merged from newHelpers.ts)
+// Phone-number normalizer
 // ---------------------------------------------------------------------------
 
 const normalizeForLibphonenumber = (input: string): string => {
@@ -239,8 +239,24 @@ export const parsePhoneInput = (input: string, country: Country | undefined): De
 				capped,
 				defaultCountryIso2 as CountryCode
 			);
-			if (formatted === capped && formatInternational && countryCallingCode) {
-				formattedNumber = formatInternational.slice(countryCallingCode.length + 1).trim();
+			if (formatted === capped && country?.dialCode) {
+				if (phone && phone.nationalNumber !== capped) {
+					// Trunk-prefixed complete number (e.g. GB "07947…" → nationalNumber
+					// "7947…"). Synthesis would be invalid; use the actual international
+					// format which correctly omits the trunk prefix.
+					formattedNumber =
+						formatInternational && countryCallingCode
+							? formatInternational.slice(countryCallingCode.length + 1).trim()
+							: stripSpecialChars(capped);
+				} else {
+					// National significant digits (partial or complete, no trunk prefix).
+					// Synthesize an international string to get consistent spacing from
+					// the first digit, then strip "+{dialCode} ".
+					const intl = formatIncompletePhoneNumber(`+${country.dialCode}${capped}`);
+					formattedNumber = stripSpecialChars(
+						intl.slice(country.dialCode.length + 1).trim()
+					);
+				}
 			} else {
 				formattedNumber = stripSpecialChars(formatted || capped);
 			}

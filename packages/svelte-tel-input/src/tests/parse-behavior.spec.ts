@@ -98,3 +98,61 @@ describe('parsePhoneInput US — spaces-only display', () => {
 		expect(parse('', 'HU').formattedNumber).toBeNull();
 	});
 });
+
+// ---------------------------------------------------------------------------
+// HU partial national input — consistent spacing
+// Covers the inconsistency where typing without a '+36' prefix produced no
+// spaces until ~8 digits, but typing with '+36' prefix produced spaces from
+// the first digit after the calling code.
+// ---------------------------------------------------------------------------
+
+describe('HU partial national input — consistent spacing', () => {
+	// Short inputs where synthesis is bypassed (national formatter already agrees)
+	it("'2' — single digit, no change", () => {
+		expect(parse('2', 'HU').formattedNumber).toBe('2');
+	});
+
+	it("'20' — two digits, no spaces yet", () => {
+		expect(parse('20', 'HU').formattedNumber).toBe('20');
+	});
+
+	// Inputs where the bug was: national formatter returned unchanged, no spaces
+	it("'201' — should format '20 1' (was '201')", () => {
+		expect(parse('201', 'HU').formattedNumber).toBe('20 1');
+	});
+
+	it("'2012' — should format '20 12' (was '2012')", () => {
+		expect(parse('2012', 'HU').formattedNumber).toBe('20 12');
+	});
+
+	it("'20123' — should format '20 123' (was '20123')", () => {
+		expect(parse('20123', 'HU').formattedNumber).toBe('20 123');
+	});
+
+	it("'201234' — should format '20 123 4' (was '201234')", () => {
+		expect(parse('201234', 'HU').formattedNumber).toBe('20 123 4');
+	});
+
+	it("'2012345' — should format '20 123 45' (was '2012345')", () => {
+		expect(parse('2012345', 'HU').formattedNumber).toBe('20 123 45');
+	});
+
+	// Inputs that already worked via the old formatInternational fallback
+	it("'20123456' — 8 digits, '20 123 456'", () => {
+		expect(parse('20123456', 'HU').formattedNumber).toBe('20 123 456');
+	});
+
+	it("'201234567' — complete number, '20 123 4567'", () => {
+		expect(parse('201234567', 'HU').formattedNumber).toBe('20 123 4567');
+	});
+
+	// Regression: trunk-prefix inputs must be unaffected (national formatter
+	// returns them with spaces, so formatted !== capped → synthesis never triggers)
+	it("'0620' — trunk prefix, national formatter applies correctly", () => {
+		expect(parse('0620', 'HU').formattedNumber).toBe('06 20');
+	});
+
+	it("'06201234567' — full trunk-prefix number unaffected", () => {
+		expect(parse('06201234567', 'HU').formattedNumber).toBe('06 20 123 4567');
+	});
+});

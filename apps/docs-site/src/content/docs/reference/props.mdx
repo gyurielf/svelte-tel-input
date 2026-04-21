@@ -16,6 +16,7 @@ All props are passed directly to the `<TelInput>` component. Props marked **bind
 | `detailedValue` | `DetailedValue \| null` | `null` | Yes | Full parsed result with multiple formats. See [DetailedValue](/reference/types/#detailedvalue). |
 | `el` | `HTMLInputElement` | — | Yes | Reference to the underlying `<input>` element. |
 | `defaultCountry` | `CountryCode \| null` | `null` | No | Country to restore when `api.reset()` is called. If not set, reset clears country to `null`. |
+| `initialFormat` | `'international' \| 'national'` | `'international'` | No | Controls how the phone number is displayed on initial render and on externally-driven value changes. `'national'` strips the dial code from the visible input while keeping `value` in E.164. |
 | `options` | `TelInputOptions` | `{}` | No | Configuration object. See [Options](/reference/options/). |
 
 ## HTML input props
@@ -94,6 +95,36 @@ Country to restore when `api.reset()` is called without `{ country: true }`:
 
 <!-- reset() restores country to 'US', not null -->
 ```
+
+### `initialFormat`
+
+Controls how the phone number is displayed on initial render and whenever the `value` prop is changed externally by a parent component.
+
+| Value | Display | `value` binding |
+|---|---|---|
+| `'international'` (default) | `+1 215 456 7890` | `+12154567890` |
+| `'national'` | `215 456 7890` | `+12154567890` |
+
+The stored `value` is always E.164 regardless of this setting. `initialFormat` only affects what the user sees in the input field.
+So the original format does not affect how the user chooses to enter the phone number; the user can type it in any format (national or international).
+
+**Example — show national format on load:**
+
+```svelte
+<script>
+  let phone = $state('+12154567890');
+  let country = $state('US');
+</script>
+
+<!-- Input shows "215 456 7890", but phone.value stays "+12154567890" -->
+<TelInput
+  bind:value={phone}
+  bind:country
+  initialFormat="national"
+/>
+```
+
+**External value changes re-apply `initialFormat`:** if the parent sets `value` programmatically (e.g. via a preset button), the display is updated in the requested format — not left in whatever state the user had reached.
 
 ### Accessibility
 

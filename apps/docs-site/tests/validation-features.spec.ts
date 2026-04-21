@@ -14,7 +14,7 @@ async function enableRequiredInValidation(page: import('@playwright/test').Page)
 test.describe('validationError binding', () => {
 	test.beforeEach(async ({ page }) => {
 		await page.goto('/playground');
-		await expect(page.locator('#states-button')).toBeEnabled({ timeout: 15_000 });
+		await expect(page.locator('#states-button')).toBeEnabled({ timeout: 15000 });
 		await expect(page.getByTestId('tel-input')).toBeVisible();
 		await page.getByRole('tab', { name: 'API' }).click();
 		await expect(page.getByTestId('bind-set-value-btn')).toBeVisible();
@@ -54,7 +54,7 @@ test.describe('validationError binding', () => {
 test.describe('api.checkValidity() returns { valid, error }', () => {
 	test.beforeEach(async ({ page }) => {
 		await page.goto('/playground');
-		await expect(page.locator('#states-button')).toBeEnabled({ timeout: 15_000 });
+		await expect(page.locator('#states-button')).toBeEnabled({ timeout: 15000 });
 		await page.getByRole('tab', { name: 'API' }).click();
 		await expect(page.getByTestId('bind-set-value-btn')).toBeVisible();
 	});
@@ -93,7 +93,7 @@ test.describe('api.checkValidity() returns { valid, error }', () => {
 test.describe('allowedCountries option', () => {
 	test.beforeEach(async ({ page }) => {
 		await page.goto('/playground');
-		await expect(page.locator('#states-button')).toBeEnabled({ timeout: 15_000 });
+		await expect(page.locator('#states-button')).toBeEnabled({ timeout: 15000 });
 		await expect(page.getByTestId('tel-input')).toBeVisible();
 		await page.getByRole('tab', { name: 'Validation' }).click();
 		await expect(page.getByTestId('set-allowed-us-hu-btn')).toBeVisible();
