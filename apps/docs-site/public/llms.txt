@@ -1,0 +1,233 @@
+# svelte-tel-input
+
+> A lightweight Svelte 5 telephone input component with international phone number formatting, parsing, and validation. Powered by libphonenumber-js.
+
+- Requires Svelte 5 (uses runes: `$state`, `$derived`, `$effect`)
+- Install: `pnpm add svelte-tel-input`
+- npm: https://www.npmjs.com/package/svelte-tel-input
+- Source: https://github.com/gyurielf/svelte-tel-input
+
+## Core concept
+
+`value` is always stored in **E.164 format** (e.g. `+36301234567`). The component handles display formatting — the consumer only ever stores and reads E.164.
+
+## Minimal usage
+
+```svelte
+<script lang="ts">
+  import { TelInput } from 'svelte-tel-input';
+  import type { CountryCode } from 'svelte-tel-input/types';
+
+  let country: CountryCode | null = $state('US');
+  let value = $state('');
+  let valid = $state(true);
+</script>
+
+<TelInput bind:country bind:value bind:valid />
+```
+
+## Key props (all optional except the bindings you need)
+
+| Prop | Type | Default | Bindable | Notes |
+|------|------|---------|----------|-------|
+| `value` | `string` | `''` | Yes | E.164 phone number. Source of truth. |
+| `country` | `CountryCode \| null` | `null` | Yes | ISO 3166 Alpha-2. Auto-detected from `value` when not set. |
+| `valid` | `boolean` | `true` | Yes | Overall validity. |
+| `validationError` | `ValidationError` | `null` | Yes | Granular error reason. |
+| `detailedValue` | `DetailedValue \| null` | `null` | Yes | Full parsed result (all formats, national number, URI, …). |
+| `el` | `HTMLInputElement` | — | Yes | Ref to the underlying `<input>`. |
+| `defaultCountry` | `CountryCode \| null` | `null` | No | Country restored by `api.reset()`. |
+| `initialFormat` | `'international' \| 'national'` | `'international'` | No | Display format on load and on external value changes. `'national'` hides the dial code in the input; `value` stays E.164. |
+| `options` | `TelInputOptions` | `{}` | No | See options below. |
+| `id`, `name`, `class`, `disabled`, `readonly`, `required`, `placeholder`, `autocomplete` | standard HTML | | No | Forwarded to the inner `<input type="tel">`. |
+
+## Options (`TelInputOptions`)
+
+```typescript
+interface TelInputOptions {
+  autoPlaceholder?: boolean;          // default: true  — country-specific placeholder
+  spaces?: boolean;                   // default: true  — show "215 456 7890" vs "2154567890"
+  validateOn?: 'input' | 'blur' | 'always';  // default: 'always'
+  allowedCountries?: CountryCode[];   // mark other countries invalid
+  lockCountry?: boolean;              // default: false — prevent country auto-switch
+}
+```
+
+## Callback props (all optional)
+
+```typescript
+onValueChange?: (value: string, details: DetailedValue | null) => void;
+onCountryChange?: (country: CountryCode | null) => void;  // fires on auto-detection only
+onValidityChange?: (valid: boolean, error: ValidationError) => void;
+onError?: (error: string) => void;
+onLoad?: () => void;
+```
+
+## Imperative API (`bind:this`)
+
+```svelte
+<script>
+  let tel: TelInput;
+</script>
+
+<TelInput bind:this={tel} />
+<button onclick={() => tel.api.reset()}>Reset</button>
+<button onclick={() => console.log(tel.api.checkValidity())}>Validate</button>
+```
+
+- `checkValidity(): { valid: boolean; error: ValidationError }` — triggers validation and returns the result.
+- `reset(options?: { country?: boolean }): void` — clears value; restores country to `defaultCountry` (pass `{ country: true }` to reset country to `null`).
+
+## Exports
+
+```typescript
+// Main package
+import { TelInput, countries, parse, normalizeToE164, pickCountries } from 'svelte-tel-input';
+
+// Types
+import type { CountryCode, Country, DetailedValue, TelInputOptions, ValidationError, Props } from 'svelte-tel-input/types';
+
+// Schema validator (Zod / Valibot / Yup)
+import { validateTelInput } from 'svelte-tel-input/validators';
+```
+
+## `DetailedValue` shape
+
+```typescript
+interface DetailedValue {
+  e164: string | null;               // "+36301234567"
+  countryCode: CountryCode | null;   // "HU"
+  countryCallingCode: string | null; // "36"
+  nationalNumber: string | null;     // "301234567"
+  formattedNumber: string | null;    // "+36 30 123 4567" (spaces only, no dashes/parens)
+  formatInternational: string | null;// "+36 30 123 4567"
+  formatNational: string | null;     // "(06 30) 123 4567"
+  formatOriginal: string | null;     // "30 123 4567" (national significant digits, spaces)
+  uri: string | null;                // "tel:+36301234567"
+  isPossible: boolean;
+  isPhoneValid: boolean;             // structurally valid (can be true even if country blocked)
+  isValid: boolean;                  // overall — false if phone invalid OR country not allowed
+  validationError: ValidationError;
+}
+```
+
+## `ValidationError` values
+
+`null` (valid) | `'TOO_SHORT'` | `'TOO_LONG'` | `'NOT_A_NUMBER'` | `'INVALID_COUNTRY'` | `'INVALID_LENGTH'` | `'INVALID'` | `'REQUIRED'` | `'COUNTRY_NOT_ALLOWED'`
+
+## Utility functions
+
+```typescript
+// Parse any raw input
+parse(raw: string, country?: CountryCode | null): Partial<DetailedValue>
+
+// Normalize to E.164 or null
+normalizeToE164(raw: string, country?: CountryCode | null): string | null
+normalizeToE164('+36 30 123 4567')  // '+36301234567'
+normalizeToE164('301234567', 'HU')  // '+36301234567'
+normalizeToE164('not a phone')      // null
+
+// Filtered country list in specified order
+pickCountries(codes: CountryCode[]): Country[]
+```
+
+## Schema validation
+
+```typescript
+import { validateTelInput } from 'svelte-tel-input/validators';
+// Returns null when valid, or a ValidationError string when not.
+
+// Zod
+const schema = z.object({
+  phone: z.string().superRefine((val, ctx) => {
+    const error = validateTelInput(val, { required: true });
+    if (error) ctx.addIssue({ code: 'custom', message: error });
+  })
+});
+
+// validateTelInput options
+validateTelInput(value, {
+  required?: boolean,
+  allowedCountries?: CountryCode[],
+  country?: CountryCode | null,   // hint for numbers without '+'
+})
+```
+
+## Common patterns
+
+### Country selector + phone input
+
+```svelte
+<script lang="ts">
+  import { TelInput, countries } from 'svelte-tel-input';
+  import type { CountryCode } from 'svelte-tel-input/types';
+
+  let country: CountryCode | null = $state('US');
+  let value = $state('');
+  let valid = $state(true);
+</script>
+
+<select bind:value={country}>
+  {#each countries as c (c.id)}
+    <option value={c.iso2}>{c.name} (+{c.dialCode})</option>
+  {/each}
+</select>
+
+<TelInput bind:country bind:value bind:valid required />
+{#if !valid}<p role="alert">Invalid phone number</p>{/if}
+```
+
+### National format display
+
+```svelte
+<!-- Shows "215 456 7890" in the input; value stays "+12154567890" -->
+<TelInput bind:value bind:country initialFormat="national" />
+```
+
+### Restricted countries
+
+```svelte
+<TelInput
+  bind:value bind:valid bind:validationError
+  options={{ allowedCountries: ['US', 'CA', 'GB'] }}
+/>
+<!-- validationError = 'COUNTRY_NOT_ALLOWED' for any other country -->
+```
+
+### Validate on blur only
+
+```svelte
+<TelInput bind:value bind:valid options={{ validateOn: 'blur' }} />
+```
+
+### Lock country
+
+```svelte
+<TelInput bind:country bind:value options={{ lockCountry: true }} />
+<!-- Typing +44 will NOT switch country away from the pre-set value -->
+```
+
+### Reset and check validity imperatively
+
+```svelte
+<script>
+  let tel: TelInput;
+</script>
+
+<TelInput bind:this={tel} bind:value defaultCountry="US" required />
+<button onclick={() => tel.api.reset()}>Clear</button>
+<button onclick={() => {
+  const { valid, error } = tel.api.checkValidity();
+  if (!valid) alert(error);
+}}>Submit</button>
+```
+
+### Event-driven (no bindings)
+
+```svelte
+<TelInput
+  onValueChange={(v, details) => console.log(v, details)}
+  onCountryChange={(c) => console.log(c)}
+  onValidityChange={(ok, err) => console.log(ok, err)}
+/>
+```
