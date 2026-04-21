@@ -1,5 +1,15 @@
 # svelte-tel-input
 
+## 4.1.0
+### Minor Changes
+
+
+
+- feat: initial format ([#268](https://github.com/gyurielf/svelte-tel-input/pull/268))
+  
+  Now we have option to show international (default) or national format of the phone number on initial render.
+  Then we let the user to type any format.
+
 ## 4.0.2
 ### Patch Changes
 
