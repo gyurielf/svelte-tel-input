@@ -28,6 +28,7 @@
 		onValidityChange,
 		onValueChange,
 		onError,
+		initialFormat = 'international',
 		value = $bindable(''),
 		country = $bindable(null),
 		defaultCountry = null,
@@ -127,6 +128,17 @@
 		try {
 			const details = parsePhoneInput(value, countryObj);
 			const spaces = options?.spaces ?? defaultOptions.spaces;
+			if (
+				initialFormat === 'national' &&
+				details.formattedNumber &&
+				details.countryCallingCode
+			) {
+				const prefix = `+${details.countryCallingCode} `;
+				if (details.formattedNumber.startsWith(prefix)) {
+					const national = details.formattedNumber.slice(prefix.length);
+					return spaces ? national : national.replace(/\s/g, '');
+				}
+			}
 			return spaces ? (details.formattedNumber ?? value) : value;
 		} catch {
 			return value;
@@ -149,6 +161,11 @@
 	let _lastWrittenCountry: CountryCode | null | undefined = untrack(() => country);
 	// let isInitialized = $state(false);
 
+	// When true, `handleParsePhoneNumber` and the spaces-effect will display the
+	// national (dial-code-stripped) format.  Starts as `true` when
+	// `initialFormat='national'` and is cleared the first time the user types.
+	let _showNationalFormat = untrack(() => initialFormat === 'national');
+
 	// Merge options into default opts, to be able to set just one config option.
 	const combinedOptions = $derived({
 		...defaultOptions,
@@ -157,6 +174,8 @@
 
 	const handleInputAction = (value: string) => {
 		if (disabled || readonly) return;
+		// First user keystroke exits the "initial national format" display mode.
+		_showNationalFormat = false;
 		handleParsePhoneNumber(value, country, combinedOptions.validateOn !== 'blur');
 	};
 
@@ -357,9 +376,27 @@
 		}
 
 		// `inputValue` is the displayed value (must stay in sync with the directive's formatting).
-		inputValue = combinedOptions.spaces
-			? (detailedValue?.formattedNumber ?? rawInput)
-			: rawInput;
+		// When `_showNationalFormat` is true (initial render, user hasn't typed yet),
+		// strip the dial-code prefix so the value appears in national format.
+		if (
+			_showNationalFormat &&
+			detailedValue?.formattedNumber &&
+			detailedValue?.countryCallingCode
+		) {
+			const _prefix = `+${detailedValue.countryCallingCode} `;
+			if (detailedValue.formattedNumber.startsWith(_prefix)) {
+				const _national = detailedValue.formattedNumber.slice(_prefix.length);
+				inputValue = combinedOptions.spaces ? _national : _national.replace(/\s/g, '');
+			} else {
+				inputValue = combinedOptions.spaces
+					? (detailedValue.formattedNumber ?? rawInput)
+					: rawInput;
+			}
+		} else {
+			inputValue = combinedOptions.spaces
+				? (detailedValue?.formattedNumber ?? rawInput)
+				: rawInput;
+		}
 
 		// `value` is the stored value (E.164 when possible).
 		value = detailedValue?.e164 ?? rawInput;
@@ -387,11 +424,24 @@
 			: placeholder
 	);
 
-	// Re-format displayed value when spaces option changes
+	// Re-format displayed value when spaces option changes.
+	// Also respects _showNationalFormat so the initial national rendering is preserved.
 	$effect(() => {
 		const spaces = combinedOptions.spaces;
 		untrack(() => {
 			if (inputValue !== '' && detailedValue) {
+				if (
+					_showNationalFormat &&
+					detailedValue.formattedNumber &&
+					detailedValue.countryCallingCode
+				) {
+					const prefix = `+${detailedValue.countryCallingCode} `;
+					if (detailedValue.formattedNumber.startsWith(prefix)) {
+						const national = detailedValue.formattedNumber.slice(prefix.length);
+						inputValue = spaces ? national : national.replace(/\s/g, '');
+						return;
+					}
+				}
 				inputValue = spaces
 					? (detailedValue.formattedNumber ?? inputValue)
 					: (detailedValue.e164 ?? inputValue);
@@ -399,13 +449,16 @@
 		});
 	});
 
-	//Detect externally driven value changes (e.g. parent sets bind:value, or resets to null).
+	//Detect externally driven value changes (e.g. parent sets bind:value, or resets to '').
 	//The shadow `_lastWrittenValue` is stamped on every internal write inside
 	//handleParsePhoneNumber, so any difference here means the parent changed it.
 	$effect(() => {
 		const currentValue = value;
 		untrack(() => {
 			if (currentValue !== _lastWrittenValue) {
+				// External change (parent set value): re-apply initialFormat so the
+				// display respects it, just like on initial load.
+				_showNationalFormat = initialFormat === 'national';
 				handleParsePhoneNumber(currentValue, country ?? null);
 			}
 		});
@@ -436,6 +489,8 @@
 		if (value) {
 			// If country is specified, use it; otherwise, use the initial country (which is figured out from value)
 			const currentCountry = country || initialCountry;
+			// handleParsePhoneNumber respects _showNationalFormat internally,
+			// so national format is applied automatically when initialFormat='national'. Later maybe this could be optional.
 			handleParsePhoneNumber(value, currentCountry);
 		}
 		// isInitialized = true;

@@ -68,6 +68,7 @@
 	});
 	let required = $state(false);
 	let defaultCountry = $state<CountryCode | null>(null);
+	let initialFormat = $state<'international' | 'national'>('international');
 
 	let advancedRef = $state<AdvancedPhoneInput | undefined>(undefined);
 	let checkResult = $state<{ valid: boolean; error: ValidationError } | null>(null);
@@ -95,7 +96,8 @@
 			required ? '1' : '0',
 			defaultCountry ?? '',
 			(options.allowedCountries ?? []).join(','),
-			activeTab === 'usage' ? 'usage-required' : 'shared-required'
+			activeTab === 'usage' ? 'usage-required' : 'shared-required',
+			initialFormat
 		].join('|')
 	);
 	const allowedCountriesLabel = $derived.by(() =>
@@ -351,6 +353,22 @@
 					<option value="blur">blur</option>
 				</select>
 			</label>
+			<label class="inline-flex items-center gap-1.5 text-xs text-[var(--sl-color-text)]">
+				Initial format
+				<select
+					id="initialFormat-0"
+					class="rounded-[0.35rem] border border-[var(--sl-color-hairline)] bg-[var(--sl-color-bg-nav)] px-2 py-[0.2rem] text-[0.78rem] text-[var(--sl-color-text)]"
+					value={initialFormat}
+					onchange={(event) => {
+						initialFormat = (event.currentTarget as HTMLSelectElement).value as
+							| 'international'
+							| 'national';
+					}}
+				>
+					<option value="international">international</option>
+					<option value="national">national</option>
+				</select>
+			</label>
 		</div>
 	{/if}
 
@@ -457,6 +475,7 @@
 									...options,
 									allowedCountries: ['US', 'GB', 'DE', 'FR', 'BR']
 								}}
+								{initialFormat}
 								required={true}
 								onCountryChange={handleCountryChange}
 								onError={handleError}
@@ -473,7 +492,6 @@
 								{formatValidationMessage(validationError)}
 							</p>
 						{/if}
-
 						<button
 							data-testid="usage-submit-btn"
 							class="mt-1 inline-flex items-center justify-center rounded-[0.8rem] bg-[#111827] px-4 py-3 text-sm font-semibold text-white transition-opacity duration-150 enabled:cursor-pointer enabled:hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-45 dark:bg-[#f8fafc] dark:text-[#111827]"
@@ -553,6 +571,7 @@
 						{defaultCountry}
 						{options}
 						{required}
+						{initialFormat}
 						onCountryChange={handleCountryChange}
 						onError={handleError}
 						onValidityChange={handleValidityChange}

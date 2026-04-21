@@ -164,6 +164,15 @@ export interface Props extends HTMLInputAttributes {
 	 * Callback fired after component initialization.
 	 */
 	onLoad?: () => void;
+	/**
+	 * Controls how the initial `value` is displayed in the input field.
+	 * - `'international'` — displays the number with the country dial code prefix (e.g. `+36 20 123 4567`). This is the default.
+	 * - `'national'` — displays the national part only (e.g. `20 123 4567`), while `value` remains E164. The `country` prop will be auto-detected from the value if not explicitly set.
+	 *
+	 * This only affects the initial render and outside change from the provided `value` prop; user input behaviour is unchanged.
+	 * @default 'international'
+	 */
+	initialFormat?: 'international' | 'national';
 }
 
 export type { CountryCode };
