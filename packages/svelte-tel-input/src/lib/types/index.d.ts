@@ -173,6 +173,14 @@ export interface Props extends HTMLInputAttributes {
 	 * @default 'international'
 	 */
 	initialFormat?: 'international' | 'national';
+	/**
+	 * Controls the format of the auto-generated placeholder (when `autoPlaceholder` is enabled).
+	 * - `'international'` — placeholder includes the country dial code prefix (e.g. `+1 201 555 0123`).
+	 * - `'national'` — placeholder shows the national part only (e.g. `201 555 0123`).
+	 *
+	 * When not provided, `initialFormat` is used as the fallback. If neither is provided, defaults to `'international'`.
+	 */
+	placeholderFormat?: 'international' | 'national';
 }
 
 export type { CountryCode };

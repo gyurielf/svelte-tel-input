@@ -8,7 +8,7 @@ const config: PlaywrightTestConfig = {
 	},
 	webServer: {
 		command: isCI
-			? 'pnpm build:apps && pnpm preview -- --host 127.0.0.1 --port 4321'
+			? 'pnpm build && pnpm preview -- --host 127.0.0.1 --port 4321'
 			: 'pnpm dev -- --host 127.0.0.1 --port 4321',
 		url: 'http://127.0.0.1:4321',
 		reuseExistingServer: !isCI,
