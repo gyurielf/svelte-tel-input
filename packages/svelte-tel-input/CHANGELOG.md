@@ -1,5 +1,12 @@
 # svelte-tel-input
 
+## 4.2.0
+### Minor Changes
+
+
+
+- feat: placeholderFormat option ([#272](https://github.com/gyurielf/svelte-tel-input/pull/272))
+
 ## 4.1.1
 ### Patch Changes
 
