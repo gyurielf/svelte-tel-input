@@ -17,6 +17,7 @@ All props are passed directly to the `<TelInput>` component. Props marked **bind
 | `el` | `HTMLInputElement` | — | Yes | Reference to the underlying `<input>` element. |
 | `defaultCountry` | `CountryCode \| null` | `null` | No | Country to restore when `api.reset()` is called. If not set, reset clears country to `null`. |
 | `initialFormat` | `'international' \| 'national'` | `'international'` | No | Controls how the phone number is displayed on initial render and on externally-driven value changes. `'national'` strips the dial code from the visible input while keeping `value` in E.164. |
+| `placeholderFormat` | `'international' \| 'national'` | `undefined` | No | Controls the format of the auto-generated placeholder (when `autoPlaceholder` is enabled). Falls back to `initialFormat` when not set. See [placeholderFormat](#placeholderformat). |
 | `options` | `TelInputOptions` | `{}` | No | Configuration object. See [Options](/reference/options/). |
 
 ## HTML input props
@@ -125,6 +126,45 @@ So the original format does not affect how the user chooses to enter the phone n
 ```
 
 **External value changes re-apply `initialFormat`:** if the parent sets `value` programmatically (e.g. via a preset button), the display is updated in the requested format — not left in whatever state the user had reached.
+
+### `placeholderFormat`
+
+Controls the format of the auto-generated example placeholder shown when the input is empty (requires `autoPlaceholder: true` in `options`, which is the default).
+
+| `placeholderFormat` | `initialFormat` | Resulting placeholder |
+|---|---|---|
+| not set | not set / `'international'` | `+1 201 555 0123` |
+| not set | `'national'` | `201 555 0123` |
+| `'international'` | any | `+1 201 555 0123` |
+| `'national'` | any | `201 555 0123` |
+
+**Priority rule:** `placeholderFormat` always wins when explicitly set. When omitted, `initialFormat` is used as the fallback.
+
+This lets you decouple the placeholder appearance from how the value is initially displayed:
+
+```svelte
+<!-- Show value in national format, but placeholder in international format -->
+<TelInput
+  bind:value
+  bind:country
+  initialFormat="national"
+  placeholderFormat="international"
+/>
+```
+
+```svelte
+<!-- Show value in international format, but placeholder without the dial code -->
+<TelInput
+  bind:value
+  bind:country
+  initialFormat="international"
+  placeholderFormat="national"
+/>
+```
+
+:::note
+The placeholder is only shown when the input is empty **and** `autoPlaceholder` is enabled. Setting `options={{ autoPlaceholder: false }}` or providing a custom `placeholder` prop disables auto-generation entirely — `placeholderFormat` has no effect in those cases.
+:::
 
 ### Accessibility
 

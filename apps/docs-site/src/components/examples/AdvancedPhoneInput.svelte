@@ -37,6 +37,7 @@
 		) => void;
 		onLoad?: () => void;
 		initialFormat?: 'international' | 'national';
+		placeholderFormat?: 'international' | 'national';
 	}
 
 	let {
@@ -59,7 +60,8 @@
 		onSelectSame,
 		onValidityChange,
 		onValueChange,
-		initialFormat = 'international'
+		initialFormat = 'international',
+		placeholderFormat = undefined
 	}: Props = $props();
 	let searchText = $state('');
 	let isOpen = $state(false);
@@ -240,6 +242,7 @@
 		country={selectedCountry}
 		{defaultCountry}
 		{initialFormat}
+		{placeholderFormat}
 		bind:detailedValue
 		bind:value
 		bind:valid

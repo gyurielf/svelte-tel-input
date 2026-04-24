@@ -13,11 +13,11 @@
 		"@astrojs/starlight": "^0.38.3",
 		"@astrojs/starlight-tailwind": "^5.0.0",
 		"@astrojs/svelte": "^8.0.5",
-		"@tailwindcss/vite": "^4.2.3",
-		"astro": "~6.1.8",
+		"@tailwindcss/vite": "^4.2.4",
+		"astro": "~6.1.9",
 		"svelte": "^5.55.4",
 		"svelte-tel-input": "workspace:*",
-		"tailwindcss": "^4.2.3",
+		"tailwindcss": "^4.2.4",
 		"typescript": "^5.9.3"
 	},
 	"devDependencies": {

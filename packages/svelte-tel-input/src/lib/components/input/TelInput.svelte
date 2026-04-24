@@ -29,6 +29,7 @@
 		onValueChange,
 		onError,
 		initialFormat = 'international',
+		placeholderFormat = undefined,
 		value = $bindable(''),
 		country = $bindable(null),
 		defaultCountry = null,
@@ -419,7 +420,8 @@
 	const getPlaceholder = $derived(
 		combinedOptions.autoPlaceholder && initialCountry
 			? generatePlaceholder(initialCountry, {
-					spaces: combinedOptions.spaces
+					spaces: combinedOptions.spaces,
+					format: placeholderFormat ?? initialFormat
 				})
 			: placeholder
 	);

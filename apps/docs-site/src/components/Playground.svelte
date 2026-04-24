@@ -69,6 +69,7 @@
 	let required = $state(false);
 	let defaultCountry = $state<CountryCode | null>(null);
 	let initialFormat = $state<'international' | 'national'>('international');
+	let placeholderFormat = $state<'international' | 'national' | undefined>(undefined);
 
 	let advancedRef = $state<AdvancedPhoneInput | undefined>(undefined);
 	let checkResult = $state<{ valid: boolean; error: ValidationError } | null>(null);
@@ -97,7 +98,8 @@
 			defaultCountry ?? '',
 			(options.allowedCountries ?? []).join(','),
 			activeTab === 'usage' ? 'usage-required' : 'shared-required',
-			initialFormat
+			initialFormat,
+			placeholderFormat ?? ''
 		].join('|')
 	);
 	const allowedCountriesLabel = $derived.by(() =>
@@ -369,6 +371,23 @@
 					<option value="national">national</option>
 				</select>
 			</label>
+			<label class="inline-flex items-center gap-1.5 text-xs text-[var(--sl-color-text)]">
+				Placeholder format
+				<select
+					id="placeholderFormat-0"
+					class="rounded-[0.35rem] border border-[var(--sl-color-hairline)] bg-[var(--sl-color-bg-nav)] px-2 py-[0.2rem] text-[0.78rem] text-[var(--sl-color-text)]"
+					value={placeholderFormat ?? ''}
+					onchange={(event) => {
+						const v = (event.currentTarget as HTMLSelectElement).value;
+						placeholderFormat =
+							v === '' ? undefined : (v as 'international' | 'national');
+					}}
+				>
+					<option value="">auto</option>
+					<option value="international">international</option>
+					<option value="national">national</option>
+				</select>
+			</label>
 		</div>
 	{/if}
 
@@ -476,6 +495,7 @@
 									allowedCountries: ['US', 'GB', 'DE', 'FR', 'BR']
 								}}
 								{initialFormat}
+								{placeholderFormat}
 								required={true}
 								onCountryChange={handleCountryChange}
 								onError={handleError}
@@ -572,6 +592,7 @@
 						{options}
 						{required}
 						{initialFormat}
+						{placeholderFormat}
 						onCountryChange={handleCountryChange}
 						onError={handleError}
 						onValidityChange={handleValidityChange}

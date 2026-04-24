@@ -17,12 +17,21 @@ const plusSignRegex = new RegExp('\\+', 'g');
 
 export const generatePlaceholder = (
 	country: CountryCode,
-	{ spaces }: { spaces: boolean } = {
-		spaces: true
+	{ spaces, format }: { spaces: boolean; format?: 'international' | 'national' } = {
+		spaces: true,
+		format: 'international'
 	}
 ) => {
 	const examplePhoneNumber = getExampleNumber(country, examplePhoneNumbers);
 	if (examplePhoneNumber) {
+		if (format === 'national') {
+			const international = examplePhoneNumber.formatInternational().trim();
+			const prefix = `+${examplePhoneNumber.countryCallingCode} `;
+			const national = international.startsWith(prefix)
+				? international.slice(prefix.length)
+				: international;
+			return spaces ? national : national.replace(/\s/g, '');
+		}
 		return spaces ? examplePhoneNumber.formatInternational().trim() : examplePhoneNumber.number;
 	} else {
 		console.error(`No country found with this country code: ${country}`);

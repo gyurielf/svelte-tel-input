@@ -1577,6 +1577,163 @@ describe('TelInput Component', () => {
 		});
 	});
 
+	describe('placeholderFormat prop', () => {
+		// Scenario 1: neither initialFormat nor placeholderFormat provided → international
+		it('uses international placeholder by default when neither prop is provided', () => {
+			const { getByTestId } = render(TelInput, {
+				props: { value: '', country: 'US' }
+			});
+			const input = getByTestId('tel-input') as HTMLInputElement;
+			const placeholder = input.getAttribute('placeholder');
+			expect(placeholder).toBeTruthy();
+			expect(placeholder).toMatch(/^\+/);
+		});
+
+		// Scenario 2: only initialFormat='national' → national placeholder
+		it('uses national placeholder when only initialFormat="national" is provided', () => {
+			const { getByTestId } = render(TelInput, {
+				props: { value: '', country: 'US', initialFormat: 'national' }
+			});
+			const input = getByTestId('tel-input') as HTMLInputElement;
+			const placeholder = input.getAttribute('placeholder');
+			expect(placeholder).toBeTruthy();
+			expect(placeholder).not.toMatch(/^\+/);
+		});
+
+		// Scenario 2b: only initialFormat='international' → international placeholder
+		it('uses international placeholder when only initialFormat="international" is provided', () => {
+			const { getByTestId } = render(TelInput, {
+				props: { value: '', country: 'US', initialFormat: 'international' }
+			});
+			const input = getByTestId('tel-input') as HTMLInputElement;
+			const placeholder = input.getAttribute('placeholder');
+			expect(placeholder).toBeTruthy();
+			expect(placeholder).toMatch(/^\+/);
+		});
+
+		// Scenario 3: only placeholderFormat='national' → national placeholder (initialFormat defaults to international)
+		it('uses national placeholder when only placeholderFormat="national" is provided', () => {
+			const { getByTestId } = render(TelInput, {
+				props: { value: '', country: 'US', placeholderFormat: 'national' }
+			});
+			const input = getByTestId('tel-input') as HTMLInputElement;
+			const placeholder = input.getAttribute('placeholder');
+			expect(placeholder).toBeTruthy();
+			expect(placeholder).not.toMatch(/^\+/);
+		});
+
+		// Scenario 3b: only placeholderFormat='international' → international placeholder
+		it('uses international placeholder when only placeholderFormat="international" is provided', () => {
+			const { getByTestId } = render(TelInput, {
+				props: { value: '', country: 'US', placeholderFormat: 'international' }
+			});
+			const input = getByTestId('tel-input') as HTMLInputElement;
+			const placeholder = input.getAttribute('placeholder');
+			expect(placeholder).toBeTruthy();
+			expect(placeholder).toMatch(/^\+/);
+		});
+
+		// Scenario 4: both provided, placeholderFormat wins — national over international
+		it('placeholderFormat="national" wins over initialFormat="international"', () => {
+			const { getByTestId } = render(TelInput, {
+				props: {
+					value: '',
+					country: 'US',
+					initialFormat: 'international',
+					placeholderFormat: 'national'
+				}
+			});
+			const input = getByTestId('tel-input') as HTMLInputElement;
+			const placeholder = input.getAttribute('placeholder');
+			expect(placeholder).toBeTruthy();
+			expect(placeholder).not.toMatch(/^\+/);
+		});
+
+		// Scenario 4b: both provided, placeholderFormat wins — international over national
+		it('placeholderFormat="international" wins over initialFormat="national"', () => {
+			const { getByTestId } = render(TelInput, {
+				props: {
+					value: '',
+					country: 'US',
+					initialFormat: 'national',
+					placeholderFormat: 'international'
+				}
+			});
+			const input = getByTestId('tel-input') as HTMLInputElement;
+			const placeholder = input.getAttribute('placeholder');
+			expect(placeholder).toBeTruthy();
+			expect(placeholder).toMatch(/^\+/);
+		});
+
+		// Verify placeholderFormat does not affect the display value (only the placeholder)
+		it('placeholderFormat="national" does not affect the displayed value', () => {
+			const { getByTestId } = render(TelInput, {
+				props: {
+					value: '+12154567890',
+					country: 'US',
+					placeholderFormat: 'national'
+				}
+			});
+			const input = getByTestId('tel-input') as HTMLInputElement;
+			// Display value is still international (initialFormat defaults to 'international')
+			expect(input.value).toBe('+1 215 456 7890');
+			// But placeholder is national
+			expect(input.getAttribute('placeholder')).not.toMatch(/^\+/);
+		});
+
+		// autoPlaceholder=false → placeholder attribute is null regardless of placeholderFormat
+		it('returns null placeholder when autoPlaceholder is false', () => {
+			const { getByTestId } = render(TelInput, {
+				props: {
+					value: '',
+					country: 'US',
+					options: { autoPlaceholder: false },
+					placeholderFormat: 'national'
+				}
+			});
+			const input = getByTestId('tel-input') as HTMLInputElement;
+			expect(input.getAttribute('placeholder')).toBeNull();
+		});
+
+		// Works for non-US countries too
+		it('produces national placeholder for HU country', () => {
+			const { getByTestId } = render(TelInput, {
+				props: { value: '', country: 'HU', placeholderFormat: 'national' }
+			});
+			const input = getByTestId('tel-input') as HTMLInputElement;
+			const placeholder = input.getAttribute('placeholder');
+			expect(placeholder).toBeTruthy();
+			expect(placeholder).not.toMatch(/^\+/);
+		});
+
+		it('produces international placeholder for HU country', () => {
+			const { getByTestId } = render(TelInput, {
+				props: { value: '', country: 'HU', placeholderFormat: 'international' }
+			});
+			const input = getByTestId('tel-input') as HTMLInputElement;
+			const placeholder = input.getAttribute('placeholder');
+			expect(placeholder).toBeTruthy();
+			expect(placeholder).toMatch(/^\+36/);
+		});
+
+		// spaces=false should produce compact national placeholder
+		it('produces compact national placeholder when spaces=false', () => {
+			const { getByTestId } = render(TelInput, {
+				props: {
+					value: '',
+					country: 'US',
+					placeholderFormat: 'national',
+					options: { spaces: false }
+				}
+			});
+			const input = getByTestId('tel-input') as HTMLInputElement;
+			const placeholder = input.getAttribute('placeholder');
+			expect(placeholder).toBeTruthy();
+			expect(placeholder).not.toMatch(/^\+/);
+			expect(placeholder).not.toContain(' ');
+		});
+	});
+
 	describe('Accessibility attribute passthrough', () => {
 		it('should forward aria-label to the input element', () => {
 			const { getByTestId } = render(TelInput, {
