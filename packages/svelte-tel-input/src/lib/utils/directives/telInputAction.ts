@@ -153,7 +153,6 @@ const onInput = (event: InputEvent, params: TelInputActionParams, node: HTMLInpu
 	const newPosition = calculateCursorPosition({
 		beforeValue: state.beforeValue,
 		beforeCursor: state.beforeCursor,
-		beforeSelection: state.beforeSelection,
 		afterInputValue: userInput,
 		afterInputCursor: currentCursor,
 		afterValue: formattedInput,

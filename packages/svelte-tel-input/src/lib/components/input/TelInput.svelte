@@ -160,7 +160,6 @@
 	//Initialized to the incoming prop values so the first render never false-fires.
 	let _lastWrittenValue: string = value;
 	let _lastWrittenCountry: CountryCode | null | undefined = untrack(() => country);
-	// let isInitialized = $state(false);
 
 	// When true, `handleParsePhoneNumber` and the spaces-effect will display the
 	// national (dial-code-stripped) format.  Starts as `true` when
@@ -495,7 +494,6 @@
 			// so national format is applied automatically when initialFormat='national'. Later maybe this could be optional.
 			handleParsePhoneNumber(value, currentCountry);
 		}
-		// isInitialized = true;
 		onLoad?.();
 	});
 
