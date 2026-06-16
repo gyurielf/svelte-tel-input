@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { onMount, untrack } from 'svelte';
-	import { ParseError } from 'libphonenumber-js/max';
+	import { ParseError } from 'libphonenumber-js/max/es6';
 	import { generatePlaceholder } from '$lib/utils/index.js';
 	import { parsePhoneInput } from '$lib/utils/helpers.js';
 	import { telInputAction } from '$lib/utils/directives/telInputAction.js';
-	import { getCountry, guessCountryByPartialNumber } from '$lib/utils/countryHelpers.js';
+	import { getCountryByIso2, guessCountryByPartialNumber } from '$lib/utils/countryHelpers.js';
 	import type { CountryCode, TelInputOptions, Props, ValidationError } from '$lib/types';
 
 	const defaultOptions = {
@@ -38,46 +38,59 @@
 		validationError = $bindable<Readonly<ValidationError>>(null),
 		options = defaultOptions,
 		el = $bindable(undefined),
+		validateProps = false,
 		'aria-invalid': ariaInvalidProp = undefined,
 		...rest
 	}: Props = $props();
 
-	untrack(() => {
-		const badProp = (prop: string, expected: string, got: unknown): never => {
-			const gotDesc =
-				got !== null && typeof got === 'object'
-					? Array.isArray(got)
-						? 'array'
-						: `object { ${Object.keys(got as object)
-								.slice(0, 4)
-								.join(', ')}${Object.keys(got as object).length > 4 ? ', …' : ''} }`
-					: typeof got;
-			throw new TypeError(
-				`<TelInput> invalid prop "${prop}": expected ${expected}, but received ${gotDesc}.`
-			);
-		};
+	// Runtime prop type-checking, opt-in via `validateProps`. Off by default so the
+	// checks add nothing to production bundles; enable it (e.g. in development) to
+	// get descriptive errors on malformed props.
+	// Intentionally reads the initial value only — this is a one-time init guard.
+	// svelte-ignore state_referenced_locally
+	if (validateProps)
+		untrack(() => {
+			const badProp = (prop: string, expected: string, got: unknown): never => {
+				const gotDesc =
+					got !== null && typeof got === 'object'
+						? Array.isArray(got)
+							? 'array'
+							: `object { ${Object.keys(got as object)
+									.slice(0, 4)
+									.join(
+										', '
+									)}${Object.keys(got as object).length > 4 ? ', …' : ''} }`
+						: typeof got;
+				throw new TypeError(
+					`<TelInput> invalid prop "${prop}": expected ${expected}, but received ${gotDesc}.`
+				);
+			};
 
-		if (typeof value !== 'string') badProp('value', 'string', value);
-		if (country !== null && country !== undefined && typeof country !== 'string')
-			badProp('country', 'CountryCode | null | undefined', country);
-		if (name !== null && name !== undefined && typeof name !== 'string')
-			badProp('name', 'string | null', name);
-		if (placeholder !== null && placeholder !== undefined && typeof placeholder !== 'string')
-			badProp('placeholder', 'string | null', placeholder);
-		if (disabled !== undefined && disabled !== null && typeof disabled !== 'boolean')
-			badProp('disabled', 'boolean', disabled);
-		if (readonly !== null && readonly !== undefined && typeof readonly !== 'boolean')
-			badProp('readonly', 'boolean | null', readonly);
-		if (required !== null && required !== undefined && typeof required !== 'boolean')
-			badProp('required', 'boolean | null', required);
-		if (size !== null && size !== undefined && typeof size !== 'number')
-			badProp('size', 'number | null', size);
-		if (
-			options !== undefined &&
-			(typeof options !== 'object' || options === null || Array.isArray(options))
-		)
-			badProp('options', 'TelInputOptions object', options);
-	});
+			if (typeof value !== 'string') badProp('value', 'string', value);
+			if (country !== null && country !== undefined && typeof country !== 'string')
+				badProp('country', 'CountryCode | null | undefined', country);
+			if (name !== null && name !== undefined && typeof name !== 'string')
+				badProp('name', 'string | null', name);
+			if (
+				placeholder !== null &&
+				placeholder !== undefined &&
+				typeof placeholder !== 'string'
+			)
+				badProp('placeholder', 'string | null', placeholder);
+			if (disabled !== undefined && disabled !== null && typeof disabled !== 'boolean')
+				badProp('disabled', 'boolean', disabled);
+			if (readonly !== null && readonly !== undefined && typeof readonly !== 'boolean')
+				badProp('readonly', 'boolean | null', readonly);
+			if (required !== null && required !== undefined && typeof required !== 'boolean')
+				badProp('required', 'boolean | null', required);
+			if (size !== null && size !== undefined && typeof size !== 'number')
+				badProp('size', 'number | null', size);
+			if (
+				options !== undefined &&
+				(typeof options !== 'object' || options === null || Array.isArray(options))
+			)
+				badProp('options', 'TelInputOptions object', options);
+		});
 
 	// Fix: initialize to null so server and client start with an identical render.
 	// The ID is generated only in onMount (client-only), avoiding UUID hydration mismatches.
@@ -124,7 +137,7 @@
 			if (fullDialCodeMatch) effectiveCountryIso2 = detected?.iso2 ?? null;
 		}
 		const countryObj = effectiveCountryIso2
-			? getCountry({ field: 'iso2', value: effectiveCountryIso2 })
+			? getCountryByIso2(effectiveCountryIso2)
 			: undefined;
 		try {
 			const details = parsePhoneInput(value, countryObj);
@@ -249,7 +262,7 @@
 	};
 
 	const getCountryObj = (iso2: CountryCode | null | undefined) =>
-		iso2 ? getCountry({ field: 'iso2', value: iso2 }) : undefined;
+		iso2 ? getCountryByIso2(iso2) : undefined;
 
 	const handleParsePhoneNumber = (
 		rawInput: string | null,

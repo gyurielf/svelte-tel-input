@@ -139,6 +139,13 @@ export interface Props extends HTMLInputAttributes {
 	/** Binding to the underlying `<input>` element */
 	el?: HTMLInputElement | undefined;
 	/**
+	 * Run runtime type-checking on incoming props, throwing a descriptive
+	 * `TypeError` on a mismatch. Off by default so it adds nothing to production
+	 * bundles; enable it (e.g. in development) to catch malformed props early.
+	 * @default false
+	 */
+	validateProps?: boolean;
+	/**
 	 * Callback fired when the country changes (auto-detected or user-selected).
 	 * @param newCountry The new country code or null.
 	 */

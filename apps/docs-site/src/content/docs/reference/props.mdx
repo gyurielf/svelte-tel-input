@@ -19,6 +19,7 @@ All props are passed directly to the `<TelInput>` component. Props marked **bind
 | `initialFormat` | `'international' \| 'national'` | `'international'` | No | Controls how the phone number is displayed on initial render and on externally-driven value changes. `'national'` strips the dial code from the visible input while keeping `value` in E.164. |
 | `placeholderFormat` | `'international' \| 'national'` | `undefined` | No | Controls the format of the auto-generated placeholder (when `autoPlaceholder` is enabled). Falls back to `initialFormat` when not set. See [placeholderFormat](#placeholderformat). |
 | `options` | `TelInputOptions` | `{}` | No | Configuration object. See [Options](/reference/options/). |
+| `validateProps` | `boolean` | `false` | No | When `true`, runs runtime type-checking on incoming props and throws a descriptive `TypeError` on a mismatch. Off by default so it adds nothing to production bundles — enable it during development to catch malformed props early. |
 
 ## HTML input props
 

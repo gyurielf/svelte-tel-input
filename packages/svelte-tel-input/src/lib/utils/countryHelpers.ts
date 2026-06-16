@@ -1,6 +1,18 @@
 import type { CountryCode, Country } from '$lib/types/index.js';
 import { countries as normalizedCountries } from '$lib/assets/index.js';
 
+// O(1) lookup index for the default country list, keyed by ISO 3166-1 alpha-2.
+// Built once at module load. iso2 lookups run on every keystroke, so they go
+// through this Map instead of a linear scan over ~249 countries.
+const iso2Index = new Map<CountryCode, Country>(normalizedCountries.map((c) => [c.iso2, c]));
+
+/**
+ * Look up a country by its ISO 3166-1 alpha-2 code (e.g. `'US'`, `'HU'`).
+ *
+ * O(1) against the bundled country list. Returns `undefined` if not found.
+ */
+export const getCountryByIso2 = (iso2: CountryCode): Country | undefined => iso2Index.get(iso2);
+
 export const getCountry = ({
 	field,
 	value,
@@ -18,6 +30,10 @@ export const getCountry = ({
 }) => {
 	if (['priority'].includes(field)) {
 		throw new Error(`Field "${field}" is not supported`);
+	}
+	// Fast path: iso2 lookups against the default list hit the prebuilt index.
+	if (field === 'iso2' && countries === normalizedCountries) {
+		return iso2Index.get(value as CountryCode);
 	}
 	return countries.find((currentCountry) => {
 		return value === currentCountry[field];

@@ -3,11 +3,11 @@ import {
 	getExampleNumber,
 	formatIncompletePhoneNumber,
 	validatePhoneNumberLength
-} from 'libphonenumber-js/max';
+} from 'libphonenumber-js/max/es6';
 import type { Country, DetailedValue, ValidationError } from '$lib/types/index.js';
 import type { CountryCode } from 'libphonenumber-js';
 import { examplePhoneNumbers, countries } from '$lib/assets/index.js';
-import { getCountry } from './countryHelpers.js';
+import { getCountryByIso2 } from './countryHelpers.js';
 
 export const generatePlaceholder = (
 	country: CountryCode,
@@ -194,7 +194,7 @@ export const parsePhoneInput = (input: string, country: Country | undefined): De
  *                  default country when the number has no leading `+`.
  */
 export const parse = (raw: string, country?: CountryCode | null): DetailedValue => {
-	const countryObj = country ? getCountry({ field: 'iso2', value: country }) : undefined;
+	const countryObj = country ? getCountryByIso2(country) : undefined;
 	return parsePhoneInput(raw, countryObj);
 };
 
