@@ -1,7 +1,6 @@
 interface CalculateCursorPositionProps {
 	beforeValue: string;
 	beforeCursor: number;
-	beforeSelection: number;
 	afterInputValue?: string;
 	afterInputCursor?: number;
 	afterValue: string;
@@ -137,46 +136,4 @@ export const calculateCursorPosition = ({
 	// Default: try to maintain relative position
 	const newPos = findNthRelevantPosition(afterValue, digitsBefore, true);
 	return Math.min(skipFormattingChars(afterValue, newPos), afterValue.length);
-};
-
-// Legacy exports for backward compatibility
-interface GetCursorPositionProps {
-	phoneBeforeInput: string;
-	phoneAfterInput: string;
-	phoneAfterFormatted: string;
-	cursorPositionAfterInput: number;
-	leftOffset?: number;
-	deletion?: 'forward' | 'backward' | undefined;
-	isReplacement?: boolean;
-}
-
-export const isNumeric = isDigit;
-
-export const getCursorPosition = (props: GetCursorPositionProps): number => {
-	return calculateCursorPosition({
-		beforeValue: props.phoneBeforeInput,
-		beforeCursor: props.cursorPositionAfterInput,
-		beforeSelection: 0,
-		afterInputValue: props.phoneAfterInput,
-		afterInputCursor: props.cursorPositionAfterInput,
-		afterValue: props.phoneAfterFormatted,
-		isDeletion: !!props.deletion,
-		deletionDirection: props.deletion || null,
-		hasSelection: false
-	});
-};
-
-export const setCursorPosition = (node: HTMLInputElement, cursorPosition: number) => {
-	/**
-	 * HACK: should set cursor on the next tick to make sure that the phone value is updated
-	 * useTimeout with 0ms provides issues when two keys are pressed same time
-	 */
-	Promise.resolve().then(() => {
-		// workaround for safari autofocus bug:
-		// Check if the input is focused before setting the cursor, otherwise safari sometimes autofocuses on setSelectionRange
-		if (typeof window === 'undefined' || node !== document?.activeElement) {
-			return;
-		}
-		node?.setSelectionRange(cursorPosition, cursorPosition);
-	});
 };

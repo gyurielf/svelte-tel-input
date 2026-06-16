@@ -1336,32 +1336,45 @@ describe('TelInput Component', () => {
 
 		it('should throw when value is an object', () => {
 			expect(() =>
-				render(TelInput, { props: { value: {} as unknown as string, country: 'US' } })
+				render(TelInput, {
+					props: { validateProps: true, value: {} as unknown as string, country: 'US' }
+				})
 			).toThrow(badPropMsg('value'));
 		});
 
 		it('should throw when value is an array', () => {
 			expect(() =>
-				render(TelInput, { props: { value: [] as unknown as string, country: 'US' } })
+				render(TelInput, {
+					props: { validateProps: true, value: [] as unknown as string, country: 'US' }
+				})
 			).toThrow(badPropMsg('value'));
 		});
 
 		it('should throw when value is a number', () => {
 			expect(() =>
-				render(TelInput, { props: { value: 123 as unknown as string, country: 'US' } })
+				render(TelInput, {
+					props: { validateProps: true, value: 123 as unknown as string, country: 'US' }
+				})
 			).toThrow(badPropMsg('value'));
 		});
 
 		it('should throw when country is an object', () => {
 			expect(() =>
-				render(TelInput, { props: { value: '', country: {} as unknown as null } })
+				render(TelInput, {
+					props: { validateProps: true, value: '', country: {} as unknown as null }
+				})
 			).toThrow(badPropMsg('country'));
 		});
 
 		it('should throw when name is an object', () => {
 			expect(() =>
 				render(TelInput, {
-					props: { value: '', country: 'US', name: {} as unknown as string }
+					props: {
+						validateProps: true,
+						value: '',
+						country: 'US',
+						name: {} as unknown as string
+					}
 				})
 			).toThrow(badPropMsg('name'));
 		});
@@ -1369,7 +1382,12 @@ describe('TelInput Component', () => {
 		it('should throw when placeholder is an array', () => {
 			expect(() =>
 				render(TelInput, {
-					props: { value: '', country: 'US', placeholder: [] as unknown as string }
+					props: {
+						validateProps: true,
+						value: '',
+						country: 'US',
+						placeholder: [] as unknown as string
+					}
 				})
 			).toThrow(badPropMsg('placeholder'));
 		});
@@ -1377,7 +1395,12 @@ describe('TelInput Component', () => {
 		it('should throw when disabled is a string', () => {
 			expect(() =>
 				render(TelInput, {
-					props: { value: '', country: 'US', disabled: 'yes' as unknown as boolean }
+					props: {
+						validateProps: true,
+						value: '',
+						country: 'US',
+						disabled: 'yes' as unknown as boolean
+					}
 				})
 			).toThrow(badPropMsg('disabled'));
 		});
@@ -1385,7 +1408,12 @@ describe('TelInput Component', () => {
 		it('should throw when readonly is a number', () => {
 			expect(() =>
 				render(TelInput, {
-					props: { value: '', country: 'US', readonly: 1 as unknown as boolean }
+					props: {
+						validateProps: true,
+						value: '',
+						country: 'US',
+						readonly: 1 as unknown as boolean
+					}
 				})
 			).toThrow(badPropMsg('readonly'));
 		});
@@ -1393,7 +1421,12 @@ describe('TelInput Component', () => {
 		it('should throw when required is a string', () => {
 			expect(() =>
 				render(TelInput, {
-					props: { value: '', country: 'US', required: 'true' as unknown as boolean }
+					props: {
+						validateProps: true,
+						value: '',
+						country: 'US',
+						required: 'true' as unknown as boolean
+					}
 				})
 			).toThrow(badPropMsg('required'));
 		});
@@ -1401,33 +1434,48 @@ describe('TelInput Component', () => {
 		it('should throw when size is a string', () => {
 			expect(() =>
 				render(TelInput, {
-					props: { value: '', country: 'US', size: '10' as unknown as number }
+					props: {
+						validateProps: true,
+						value: '',
+						country: 'US',
+						size: '10' as unknown as number
+					}
 				})
 			).toThrow(badPropMsg('size'));
 		});
 
 		it('should throw when options is an array', () => {
 			expect(() =>
-				render(TelInput, { props: { value: '', country: 'US', options: [] as any } })
+				render(TelInput, {
+					props: { validateProps: true, value: '', country: 'US', options: [] as any }
+				})
 			).toThrow(badPropMsg('options'));
 		});
 
 		it('should throw when options is a string', () => {
 			expect(() =>
-				render(TelInput, { props: { value: '', country: 'US', options: 'blur' as any } })
+				render(TelInput, {
+					props: { validateProps: true, value: '', country: 'US', options: 'blur' as any }
+				})
 			).toThrow(badPropMsg('options'));
 		});
 
 		it('should include the received type in the error message', () => {
 			expect(() =>
-				render(TelInput, { props: { value: 42 as unknown as string, country: 'US' } })
+				render(TelInput, {
+					props: { validateProps: true, value: 42 as unknown as string, country: 'US' }
+				})
 			).toThrow(/received number/);
 		});
 
 		it('should include object key hints in the error message when an object is passed', () => {
 			expect(() =>
 				render(TelInput, {
-					props: { value: { foo: 1, bar: 2 } as unknown as string, country: 'US' }
+					props: {
+						validateProps: true,
+						value: { foo: 1, bar: 2 } as unknown as string,
+						country: 'US'
+					}
 				})
 			).toThrow(/object \{ foo, bar \}/);
 		});
@@ -1436,6 +1484,7 @@ describe('TelInput Component', () => {
 			expect(() =>
 				render(TelInput, {
 					props: {
+						validateProps: true,
 						value: '',
 						country: 'US',
 						name: 'phone',
@@ -1450,6 +1499,7 @@ describe('TelInput Component', () => {
 			expect(() =>
 				render(TelInput, {
 					props: {
+						validateProps: true,
 						value: '',
 						country: null,
 						name: null,
@@ -1458,6 +1508,12 @@ describe('TelInput Component', () => {
 					}
 				})
 			).not.toThrow();
+		});
+
+		it('should not validate props when validateProps is false (default)', () => {
+			expect(() =>
+				render(TelInput, { props: { value: 123 as unknown as string, country: 'US' } })
+			).not.toThrow(badPropMsg('value'));
 		});
 	});
 

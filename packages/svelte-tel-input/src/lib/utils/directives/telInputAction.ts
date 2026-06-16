@@ -1,5 +1,5 @@
 import type { CountryCode } from '$lib/types/index.js';
-import { getCountry } from '$lib/utils/countryHelpers.js';
+import { getCountryByIso2 } from '$lib/utils/countryHelpers.js';
 import { parsePhoneInput } from '$lib/utils/helpers.js';
 import { calculateCursorPosition } from '../cursorPosition.js';
 
@@ -136,9 +136,7 @@ const onInput = (event: InputEvent, params: TelInputActionParams, node: HTMLInpu
 	const currentCursor = node.selectionStart ?? 0;
 
 	const normalized = normalizeUserInput(userInput);
-	const countryObj = params.country
-		? getCountry({ field: 'iso2', value: params.country })
-		: undefined;
+	const countryObj = params.country ? getCountryByIso2(params.country) : undefined;
 	const details = parsePhoneInput(normalized, countryObj);
 
 	// Display formatting:
@@ -153,7 +151,6 @@ const onInput = (event: InputEvent, params: TelInputActionParams, node: HTMLInpu
 	const newPosition = calculateCursorPosition({
 		beforeValue: state.beforeValue,
 		beforeCursor: state.beforeCursor,
-		beforeSelection: state.beforeSelection,
 		afterInputValue: userInput,
 		afterInputCursor: currentCursor,
 		afterValue: formattedInput,

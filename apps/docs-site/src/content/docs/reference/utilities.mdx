@@ -6,7 +6,7 @@ description: Standalone utility functions exported by svelte-tel-input.
 These functions are exported from the main `svelte-tel-input` package. They work independently of the component — use them server-side, in form handlers, or anywhere you need to parse phone numbers.
 
 ```typescript
-import { parse, normalizeToE164, pickCountries } from 'svelte-tel-input';
+import { parse, normalizeToE164, pickCountries, getCountryByIso2 } from 'svelte-tel-input';
 ```
 
 ## `parse()`
@@ -98,6 +98,24 @@ Pairs well with `options.allowedCountries`:
   bind:country
   options={{ allowedCountries: codes }}
 />
+```
+
+## `getCountryByIso2()`
+
+```typescript
+getCountryByIso2(iso2: CountryCode): Country | undefined
+```
+
+Looks up a single country by its ISO 3166 Alpha-2 code (e.g. `'US'`, `'HU'`). Returns the full [`Country`](/reference/types/#country) object, or `undefined` when the code is unknown. Backed by an O(1) index, so it's safe to call on hot paths.
+
+```typescript
+import { getCountryByIso2 } from 'svelte-tel-input';
+
+getCountryByIso2('US');
+// { iso2: 'US', name: 'United States', dialCode: '1', ... }
+
+getCountryByIso2('ZZ');
+// undefined
 ```
 
 

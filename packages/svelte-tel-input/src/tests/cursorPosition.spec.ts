@@ -24,7 +24,6 @@ describe('Cursor Position Utilities', () => {
 				const result = calculateCursorPosition({
 					beforeValue: '',
 					beforeCursor: 0,
-					beforeSelection: 0,
 					afterValue: '+3',
 					currentCursor: 2,
 					isDeletion: false,
@@ -38,7 +37,6 @@ describe('Cursor Position Utilities', () => {
 				const result = calculateCursorPosition({
 					beforeValue: '+36',
 					beforeCursor: 3,
-					beforeSelection: 0,
 					afterValue: '+36 3',
 					currentCursor: 5,
 					isDeletion: false,
@@ -52,7 +50,6 @@ describe('Cursor Position Utilities', () => {
 				const result = calculateCursorPosition({
 					beforeValue: '+36 30',
 					beforeCursor: 6,
-					beforeSelection: 0,
 					afterValue: '+36 30 1',
 					currentCursor: 8,
 					isDeletion: false,
@@ -66,7 +63,6 @@ describe('Cursor Position Utilities', () => {
 				const result = calculateCursorPosition({
 					beforeValue: '+36 30 12',
 					beforeCursor: 9,
-					beforeSelection: 0,
 					afterValue: '+36 30 123',
 					currentCursor: 10,
 					isDeletion: false,
@@ -82,7 +78,6 @@ describe('Cursor Position Utilities', () => {
 				const result = calculateCursorPosition({
 					beforeValue: '+36 30 123',
 					beforeCursor: 10,
-					beforeSelection: 0,
 					afterValue: '+36 30 12',
 					currentCursor: 9,
 					isDeletion: true,
@@ -97,7 +92,6 @@ describe('Cursor Position Utilities', () => {
 				const result = calculateCursorPosition({
 					beforeValue: '+36 30 123',
 					beforeCursor: 6,
-					beforeSelection: 0,
 					afterValue: '+36 3 123',
 					currentCursor: 5,
 					isDeletion: true,
@@ -112,7 +106,6 @@ describe('Cursor Position Utilities', () => {
 				const result = calculateCursorPosition({
 					beforeValue: '+36 30 123',
 					beforeCursor: 4,
-					beforeSelection: 0,
 					afterValue: '+36 30 123',
 					currentCursor: 3,
 					isDeletion: true,
@@ -127,7 +120,6 @@ describe('Cursor Position Utilities', () => {
 				const result = calculateCursorPosition({
 					beforeValue: '+36 30 123',
 					beforeCursor: 8,
-					beforeSelection: 0,
 					afterValue: '+36 30 23',
 					currentCursor: 7,
 					isDeletion: true,
@@ -144,7 +136,6 @@ describe('Cursor Position Utilities', () => {
 				const result = calculateCursorPosition({
 					beforeValue: '+36 30 123',
 					beforeCursor: 5,
-					beforeSelection: 0,
 					afterValue: '+36 3 123',
 					currentCursor: 5,
 					isDeletion: true,
@@ -159,7 +150,6 @@ describe('Cursor Position Utilities', () => {
 				const result = calculateCursorPosition({
 					beforeValue: '+36 30 123',
 					beforeCursor: 4,
-					beforeSelection: 0,
 					afterValue: '+36 0 123',
 					currentCursor: 4,
 					isDeletion: true,
@@ -173,7 +163,6 @@ describe('Cursor Position Utilities', () => {
 				const result = calculateCursorPosition({
 					beforeValue: '+36 30 123',
 					beforeCursor: 8,
-					beforeSelection: 0,
 					afterValue: '+36 30 23',
 					currentCursor: 7,
 					isDeletion: true,
@@ -190,7 +179,6 @@ describe('Cursor Position Utilities', () => {
 				const result = calculateCursorPosition({
 					beforeValue: '+36 30 123',
 					beforeCursor: 4,
-					beforeSelection: 5, // "30 12" selected
 					afterValue: '+36 3',
 					currentCursor: 4,
 					isDeletion: true,
@@ -205,7 +193,6 @@ describe('Cursor Position Utilities', () => {
 				const result = calculateCursorPosition({
 					beforeValue: '+36 30 123',
 					beforeCursor: 4,
-					beforeSelection: 5,
 					afterValue: '+36 93',
 					currentCursor: 6,
 					isDeletion: false,
@@ -220,7 +207,6 @@ describe('Cursor Position Utilities', () => {
 				const result = calculateCursorPosition({
 					beforeValue: '+36 30',
 					beforeCursor: 4,
-					beforeSelection: 2,
 					afterValue: '+36 45',
 					currentCursor: 6,
 					isDeletion: false,
@@ -235,7 +221,6 @@ describe('Cursor Position Utilities', () => {
 				const result = calculateCursorPosition({
 					beforeValue: '+36 30 123',
 					beforeCursor: 0,
-					beforeSelection: 10,
 					afterValue: '+1',
 					currentCursor: 2,
 					isDeletion: false,
@@ -251,7 +236,6 @@ describe('Cursor Position Utilities', () => {
 				const result = calculateCursorPosition({
 					beforeValue: '',
 					beforeCursor: 0,
-					beforeSelection: 0,
 					afterValue: '+36',
 					currentCursor: 3,
 					isDeletion: false,
@@ -265,7 +249,6 @@ describe('Cursor Position Utilities', () => {
 				const result = calculateCursorPosition({
 					beforeValue: '+36',
 					beforeCursor: 3,
-					beforeSelection: 0,
 					afterValue: '',
 					currentCursor: 0,
 					isDeletion: true,
@@ -279,7 +262,6 @@ describe('Cursor Position Utilities', () => {
 				const result = calculateCursorPosition({
 					beforeValue: '+36 30',
 					beforeCursor: 0,
-					beforeSelection: 0,
 					afterValue: '1+36 30',
 					currentCursor: 1,
 					isDeletion: false,
@@ -293,7 +275,6 @@ describe('Cursor Position Utilities', () => {
 				const result = calculateCursorPosition({
 					beforeValue: '+',
 					beforeCursor: 1,
-					beforeSelection: 0,
 					afterValue: '+',
 					currentCursor: 1,
 					isDeletion: false,
@@ -307,7 +288,6 @@ describe('Cursor Position Utilities', () => {
 				const result = calculateCursorPosition({
 					beforeValue: '+36  30',
 					beforeCursor: 5,
-					beforeSelection: 0,
 					afterValue: '+36  301',
 					currentCursor: 8,
 					isDeletion: false,
@@ -328,7 +308,6 @@ describe('Cursor Position Utilities', () => {
 				const step1 = calculateCursorPosition({
 					beforeValue: value,
 					beforeCursor: cursor,
-					beforeSelection: 0,
 					afterValue: '+3',
 					currentCursor: 2,
 					isDeletion: false,
@@ -343,7 +322,6 @@ describe('Cursor Position Utilities', () => {
 				const step2 = calculateCursorPosition({
 					beforeValue: value,
 					beforeCursor: cursor,
-					beforeSelection: 0,
 					afterValue: '+36',
 					currentCursor: 3,
 					isDeletion: false,
@@ -358,7 +336,6 @@ describe('Cursor Position Utilities', () => {
 				const step3 = calculateCursorPosition({
 					beforeValue: value,
 					beforeCursor: cursor,
-					beforeSelection: 0,
 					afterValue: '+36 3',
 					currentCursor: 5,
 					isDeletion: false,
@@ -378,7 +355,6 @@ describe('Cursor Position Utilities', () => {
 				const step1 = calculateCursorPosition({
 					beforeValue: value,
 					beforeCursor: cursor,
-					beforeSelection: 0,
 					afterValue: '+36 30 12',
 					currentCursor: 9,
 					isDeletion: true,
@@ -393,7 +369,6 @@ describe('Cursor Position Utilities', () => {
 				const step2 = calculateCursorPosition({
 					beforeValue: value,
 					beforeCursor: cursor,
-					beforeSelection: 0,
 					afterValue: '+36 30 124',
 					currentCursor: 10,
 					isDeletion: false,
@@ -409,7 +384,6 @@ describe('Cursor Position Utilities', () => {
 				const result = calculateCursorPosition({
 					beforeValue: '+36 ',
 					beforeCursor: 4,
-					beforeSelection: 0,
 					afterValue: '+36 301234567',
 					currentCursor: 13,
 					isDeletion: false,
