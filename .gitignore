@@ -36,3 +36,4 @@ yarn-error.log*
 .playwright-mcp
 test-results
 number-inconsistencies.md
+CLAUDE.md

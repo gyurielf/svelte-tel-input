@@ -26,3 +26,5 @@
 
 **/.astro
 **/test-results
+
+.claude/

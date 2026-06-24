@@ -97,6 +97,14 @@ describe('parsePhoneInput US — spaces-only display', () => {
 	it('returns null for empty input', () => {
 		expect(parse('', 'HU').formattedNumber).toBeNull();
 	});
+
+	it("'11' — leading 1 preserved (calling-code leak)", () => {
+		expect(parse('11', 'US').formattedNumber).toBe('11');
+	});
+
+	it("'111' — leading 1 preserved (calling-code leak)", () => {
+		expect(parse('111', 'US').formattedNumber).toBe('111');
+	});
 });
 
 // ---------------------------------------------------------------------------
