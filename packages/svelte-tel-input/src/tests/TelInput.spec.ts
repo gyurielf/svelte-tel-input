@@ -1214,6 +1214,48 @@ describe('TelInput Component', () => {
 		);
 	});
 
+	describe('Calling-code leak — repeated leading digits are preserved', () => {
+		const leakMatrix = [
+			{ country: 'US', typed: '111' },
+			{ country: 'CA', typed: '111' },
+			{ country: 'RU', typed: '777' },
+			{ country: 'KZ', typed: '777' },
+			{ country: 'HU', typed: '363' },
+			{ country: 'DE', typed: '499' }
+		] as const;
+
+		it.each(leakMatrix)(
+			'country=$country typing "$typed" keeps every digit',
+			async ({ country, typed }) => {
+				const { getByTestId } = render(TelInput, {
+					props: { value: '', country }
+				});
+				const input = getByTestId('tel-input') as HTMLInputElement;
+
+				await fireUserEvent.type(input, typed);
+
+				// Display may add formatting spaces, but no digit may be dropped.
+				expect(input.value.replace(/\D/g, '')).toBe(typed);
+			}
+		);
+
+		it('US: prepopulated number → clear → typing 1,1,1 keeps every digit', async () => {
+			const { getByTestId } = render(TelInput, {
+				props: { value: '+12154567890', country: 'US' }
+			});
+			const input = getByTestId('tel-input') as HTMLInputElement;
+			expect(input.value).toBe('+1 215 456 7890');
+
+			await fireUserEvent.clear(input);
+			await fireUserEvent.type(input, '1');
+			expect(input.value).toBe('1');
+			await fireUserEvent.type(input, '1');
+			expect(input.value).toBe('11');
+			await fireUserEvent.type(input, '1');
+			expect(input.value).toBe('111');
+		});
+	});
+
 	describe('allowedCountries option', () => {
 		it('sets detailedValue.isValid=false and validationError=country_not_allowed when country is not allowed', async () => {
 			let detailedValue: Partial<DetailedValue> | null = null;

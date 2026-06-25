@@ -2,6 +2,16 @@
 	import { clickOutsideAction } from '../../utils/directives/clickOutsideAction.js';
 	import { isSelected } from '../../utils/helpers.js';
 	import { TelInput, countries } from 'svelte-tel-input';
+	import {
+		computePosition,
+		autoUpdate,
+		offset,
+		flip,
+		shift,
+		size,
+		type Placement
+	} from '@floating-ui/dom';
+	import { motion, AnimatePresence, MotionConfig } from '@humanspeak/svelte-motion';
 
 	import type {
 		DetailedValue,
@@ -68,6 +78,54 @@
 	let initLoading = $state(true);
 	let telInputRef: TelInput | undefined = $state();
 
+	let buttonEl = $state<HTMLButtonElement | undefined>(undefined);
+	let rootEl = $state<HTMLDivElement | undefined>(undefined);
+	let scrollListEl = $state<HTMLDivElement | undefined>(undefined);
+	let x = $state(0);
+	let y = $state(0);
+	let placement = $state<Placement>('bottom-start');
+
+	const ORIGIN_BY_PLACEMENT: Record<string, string> = {
+		bottom: 'top center',
+		'bottom-start': 'top left',
+		'bottom-end': 'top right',
+		top: 'bottom center',
+		'top-start': 'bottom left',
+		'top-end': 'bottom right'
+	};
+	const origin = $derived(ORIGIN_BY_PLACEMENT[placement] ?? 'top left');
+
+	$effect(() => {
+		if (!isOpen || !buttonEl || !rootEl) return;
+		const reference = buttonEl;
+		const floatingEl = rootEl.querySelector<HTMLElement>('[data-country-dropdown]');
+		if (!floatingEl) return;
+		const update = () => {
+			computePosition(reference, floatingEl, {
+				strategy: 'absolute',
+				placement: 'bottom-start',
+				middleware: [
+					offset(6),
+					flip({ padding: 8 }),
+					shift({ padding: 8 }),
+					size({
+						padding: 8,
+						apply({ availableHeight }) {
+							if (scrollListEl) {
+								scrollListEl.style.maxHeight = `${Math.min(availableHeight - 12, 288)}px`;
+							}
+						}
+					})
+				]
+			}).then(({ x: nx, y: ny, placement: np }) => {
+				x = nx;
+				y = ny;
+				placement = np;
+			});
+		};
+		return autoUpdate(reference, floatingEl, update);
+	});
+
 	export const checkValidity = () => telInputRef?.api.checkValidity();
 	export const reset = (options?: { country?: boolean }) => telInputRef?.api.reset(options);
 
@@ -96,6 +154,14 @@
 	const closeOnClickOutside = () => {
 		if (clickOutside) {
 			closeDropdown();
+		}
+	};
+
+	const handleKeydown = (e: KeyboardEvent) => {
+		if (e.key === 'Escape' && isOpen) {
+			e.preventDefault();
+			closeDropdown();
+			buttonEl?.focus();
 		}
 	};
 
@@ -141,20 +207,23 @@
 </script>
 
 <div
+	bind:this={rootEl}
+	onkeydown={handleKeydown}
 	class="flex relative rounded-lg {valid
 		? ``
 		: ` ring-pink-500 dark:ring-pink-500 ring-1 focus-within:ring-offset-1 focus-within:ring-offset-pink-500/50 focus-within:ring-1`}"
 >
 	<div class="flex" use:clickOutsideAction={closeOnClickOutside}>
 		<button
+			bind:this={buttonEl}
 			id="states-button"
 			data-dropdown-toggle="dropdown-states"
 			class="relative z-10 inline-flex shrink-0 items-center overflow-hidden whitespace-nowrap rounded-l-lg border border-gray-300 bg-gray-100 px-4 py-2.5 text-center text-sm font-medium text-gray-700 enabled:cursor-pointer enabled:hover:bg-gray-200 focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-white enabled:dark:hover:bg-gray-600"
 			type="button"
 			role="combobox"
 			aria-controls="dropdown-countries"
-			aria-expanded="false"
-			aria-haspopup="false"
+			aria-expanded={isOpen}
+			aria-haspopup="listbox"
 			onclick={toggleDropDown}
 			disabled={initLoading || disabled}
 		>
@@ -171,7 +240,9 @@
 				{/if}
 				<svg
 					aria-hidden="true"
-					class="ml-1 w-4 h-4 {isOpen ? 'rotate-180' : ''}"
+					class="ml-1 w-4 h-4 transition-transform duration-150 {isOpen
+						? 'rotate-180'
+						: ''}"
 					fill="currentColor"
 					viewBox="0 0 20 20"
 					xmlns="http://www.w3.org/2000/svg"
@@ -184,57 +255,70 @@
 				</svg>
 			{/if}
 		</button>
-		{#if isOpen}
-			<div
-				id="dropdown-countries"
-				class="absolute z-10 max-w-fit translate-y-11 overflow-hidden rounded border border-gray-200 bg-white shadow-lg dark:border-gray-600 dark:bg-gray-700"
-				data-popper-reference-hidden=""
-				data-popper-escaped=""
-				data-popper-placement="bottom"
-				aria-orientation="vertical"
-				aria-labelledby="country-button"
-				tabindex="-1"
-			>
-				<div
-					class="max-h-48 overflow-y-auto text-sm text-gray-700 dark:text-gray-200"
-					aria-labelledby="countries-button"
-					role="listbox"
-				>
-					<input
-						aria-autocomplete="list"
-						type="text"
-						class="sticky top-0 z-10 w-full border-b border-gray-200 bg-white px-4 py-2 text-gray-900 focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
-						bind:value={searchText}
-						placeholder={searchPlaceholder}
-					/>
-					{#each sortCountries(countries, searchText) as country (country.id)}
-						{@const isActive = isSelected(country.iso2, selectedCountry)}
-						<div id="country-{country.iso2}" role="option" aria-selected={isActive}>
-							<button
-								value={country.iso2}
-								type="button"
-								class="inline-flex w-full cursor-pointer overflow-hidden px-4 py-2 text-sm {isActive
-									? 'bg-gray-100 text-gray-900 dark:bg-gray-600 dark:text-white'
-									: 'text-gray-700 hover:bg-gray-100 active:bg-gray-200 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white dark:active:bg-gray-800'}"
-								onclick={(e) => {
-									handleSelect(country.iso2, e);
-								}}
-							>
-								<div class="inline-flex items-center text-left">
-									<span
-										class="flag flag-{country.iso2.toLowerCase()} shrink-0 mr-3"
-									></span>
-									<span class="mr-2">{country.name}</span>
-									<span class="text-gray-500 dark:text-gray-400"
-										>+{country.dialCode}</span
+		<MotionConfig reducedMotion="user">
+			<AnimatePresence mode="popLayout">
+				{#if isOpen}
+					<motion.div
+						key="country-dropdown"
+						data-country-dropdown
+						id="dropdown-countries"
+						class="z-10 max-w-fit overflow-hidden rounded border border-gray-200 bg-white shadow-lg dark:border-gray-600 dark:bg-gray-700"
+						style="position: absolute; left: {x}px; top: {y}px; transform-origin: {origin};"
+						initial={{ opacity: 0, scale: 0.96 }}
+						animate={{ opacity: 1, scale: 1 }}
+						exit={{ opacity: 0, scale: 0.96, transition: { duration: 0.12 } }}
+						transition={{ duration: 0.18, ease: [0.23, 1, 0.32, 1] }}
+						aria-orientation="vertical"
+						aria-labelledby="country-button"
+						tabindex="-1"
+					>
+						<div
+							bind:this={scrollListEl}
+							class="max-h-72 overflow-y-auto text-sm text-gray-700 dark:text-gray-200"
+							aria-labelledby="countries-button"
+							role="listbox"
+						>
+							<input
+								aria-autocomplete="list"
+								type="text"
+								class="sticky top-0 z-10 w-full border-b border-gray-200 bg-white px-4 py-2 text-gray-900 focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
+								bind:value={searchText}
+								placeholder={searchPlaceholder}
+							/>
+							{#each sortCountries(countries, searchText) as country (country.id)}
+								{@const isActive = isSelected(country.iso2, selectedCountry)}
+								<div
+									id="country-{country.iso2}"
+									role="option"
+									aria-selected={isActive}
+								>
+									<button
+										value={country.iso2}
+										type="button"
+										class="inline-flex w-full cursor-pointer overflow-hidden px-4 py-2 text-sm {isActive
+											? 'bg-gray-100 text-gray-900 dark:bg-gray-600 dark:text-white'
+											: 'text-gray-700 hover:bg-gray-100 active:bg-gray-200 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white dark:active:bg-gray-800'}"
+										onclick={(e) => {
+											handleSelect(country.iso2, e);
+										}}
 									>
+										<div class="inline-flex items-center text-left">
+											<span
+												class="flag flag-{country.iso2.toLowerCase()} shrink-0 mr-3"
+											></span>
+											<span class="mr-2">{country.name}</span>
+											<span class="text-gray-500 dark:text-gray-400"
+												>+{country.dialCode}</span
+											>
+										</div>
+									</button>
 								</div>
-							</button>
+							{/each}
 						</div>
-					{/each}
-				</div>
-			</div>
-		{/if}
+					</motion.div>
+				{/if}
+			</AnimatePresence>
+		</MotionConfig>
 	</div>
 
 	<TelInput
