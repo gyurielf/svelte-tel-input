@@ -2,10 +2,16 @@
 	import { onMount, untrack } from 'svelte';
 	import { ParseError } from 'libphonenumber-js/max/es6';
 	import { generatePlaceholder } from '$lib/utils/index.js';
-	import { parsePhoneInput } from '$lib/utils/helpers.js';
+	import { parsePhoneInput, toNationalFormat } from '$lib/utils/helpers.js';
 	import { telInputAction } from '$lib/utils/directives/telInputAction.js';
 	import { getCountryByIso2, guessCountryByPartialNumber } from '$lib/utils/countryHelpers.js';
-	import type { CountryCode, TelInputOptions, Props, ValidationError } from '$lib/types';
+	import type {
+		CountryCode,
+		TelInputOptions,
+		Props,
+		ValidationError,
+		PreParsed
+	} from '$lib/types';
 
 	const defaultOptions = {
 		autoPlaceholder: true,
@@ -145,13 +151,14 @@
 			if (
 				initialFormat === 'national' &&
 				details.formattedNumber &&
-				details.countryCallingCode
+				details.countryCallingCode &&
+				details.formattedNumber.startsWith(`+${details.countryCallingCode} `)
 			) {
-				const prefix = `+${details.countryCallingCode} `;
-				if (details.formattedNumber.startsWith(prefix)) {
-					const national = details.formattedNumber.slice(prefix.length);
-					return spaces ? national : national.replace(/\s/g, '');
-				}
+				return toNationalFormat(
+					details.formattedNumber,
+					details.countryCallingCode,
+					spaces
+				);
 			}
 			return spaces ? (details.formattedNumber ?? value) : value;
 		} catch {
@@ -185,11 +192,11 @@
 		...options
 	});
 
-	const handleInputAction = (value: string) => {
+	const handleInputAction = (value: string, preParsed?: PreParsed) => {
 		if (disabled || readonly) return;
 		// First user keystroke exits the "initial national format" display mode.
 		_showNationalFormat = false;
-		handleParsePhoneNumber(value, country, combinedOptions.validateOn !== 'blur');
+		handleParsePhoneNumber(value, country, combinedOptions.validateOn !== 'blur', preParsed);
 	};
 
 	const getValidationError = (
@@ -267,7 +274,8 @@
 	const handleParsePhoneNumber = (
 		rawInput: string | null,
 		currCountry: CountryCode | null = null,
-		shouldValidate = true
+		shouldValidate = true,
+		preParsed?: PreParsed
 	) => {
 		// Country-only change: reset state unless option says to keep valid.
 		if (rawInput === null && currCountry !== null) {
@@ -354,8 +362,14 @@
 				? numberHasCountry
 				: selectedCountry;
 
+		// Reuse the action's parse when it used the same country we resolved to;
+		// only the dial-code country-switch path needs a re-parse.
+		const canReuse =
+			preParsed !== undefined && (normalizerCountry?.iso2 ?? null) === preParsed.countryIso2;
 		try {
-			detailedValue = parsePhoneInput(rawInput, normalizerCountry);
+			detailedValue = canReuse
+				? preParsed.detail
+				: parsePhoneInput(rawInput, normalizerCountry);
 		} catch (err) {
 			if (err instanceof ParseError) {
 				detailedValue = {
@@ -394,17 +408,14 @@
 		if (
 			_showNationalFormat &&
 			detailedValue?.formattedNumber &&
-			detailedValue?.countryCallingCode
+			detailedValue?.countryCallingCode &&
+			detailedValue.formattedNumber.startsWith(`+${detailedValue.countryCallingCode} `)
 		) {
-			const _prefix = `+${detailedValue.countryCallingCode} `;
-			if (detailedValue.formattedNumber.startsWith(_prefix)) {
-				const _national = detailedValue.formattedNumber.slice(_prefix.length);
-				inputValue = combinedOptions.spaces ? _national : _national.replace(/\s/g, '');
-			} else {
-				inputValue = combinedOptions.spaces
-					? (detailedValue.formattedNumber ?? rawInput)
-					: rawInput;
-			}
+			inputValue = toNationalFormat(
+				detailedValue.formattedNumber,
+				detailedValue.countryCallingCode,
+				combinedOptions.spaces
+			);
 		} else {
 			inputValue = combinedOptions.spaces
 				? (detailedValue?.formattedNumber ?? rawInput)
@@ -447,14 +458,17 @@
 				if (
 					_showNationalFormat &&
 					detailedValue.formattedNumber &&
-					detailedValue.countryCallingCode
+					detailedValue.countryCallingCode &&
+					detailedValue.formattedNumber.startsWith(
+						`+${detailedValue.countryCallingCode} `
+					)
 				) {
-					const prefix = `+${detailedValue.countryCallingCode} `;
-					if (detailedValue.formattedNumber.startsWith(prefix)) {
-						const national = detailedValue.formattedNumber.slice(prefix.length);
-						inputValue = spaces ? national : national.replace(/\s/g, '');
-						return;
-					}
+					inputValue = toNationalFormat(
+						detailedValue.formattedNumber,
+						detailedValue.countryCallingCode,
+						spaces
+					);
+					return;
 				}
 				inputValue = spaces
 					? (detailedValue.formattedNumber ?? inputValue)

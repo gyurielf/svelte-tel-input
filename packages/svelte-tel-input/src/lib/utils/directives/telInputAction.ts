@@ -1,10 +1,10 @@
-import type { CountryCode } from '$lib/types/index.js';
+import type { CountryCode, PreParsed } from '$lib/types/index.js';
 import { getCountryByIso2 } from '$lib/utils/countryHelpers.js';
-import { parsePhoneInput } from '$lib/utils/helpers.js';
+import { parsePhoneInput, normalizeForLibphonenumber } from '$lib/utils/helpers.js';
 import { calculateCursorPosition } from '../cursorPosition.js';
 
 interface TelInputActionParams {
-	handler: (val: string) => void;
+	handler: (val: string, preParsed?: PreParsed) => void;
 	spaces: boolean;
 	country: CountryCode | null | undefined;
 	value: string;
@@ -17,21 +17,6 @@ interface InputState {
 }
 
 let inputState: InputState | null = null;
-
-const normalizeUserInput = (input: string): string => {
-	let value = '';
-	for (let i = 0; i < input.length; i++) {
-		const ch = input[i];
-		if (ch >= '0' && ch <= '9') {
-			value += ch;
-			continue;
-		}
-		if (ch === '+' && value.length === 0) {
-			value += ch;
-		}
-	}
-	return value;
-};
 
 const isFormattingChar = (ch?: string): boolean => {
 	if (!ch) return false;
@@ -135,7 +120,7 @@ const onInput = (event: InputEvent, params: TelInputActionParams, node: HTMLInpu
 	const userInput = node.value;
 	const currentCursor = node.selectionStart ?? 0;
 
-	const normalized = normalizeUserInput(userInput);
+	const normalized = normalizeForLibphonenumber(userInput);
 	const countryObj = params.country ? getCountryByIso2(params.country) : undefined;
 	const details = parsePhoneInput(normalized, countryObj);
 
@@ -163,8 +148,9 @@ const onInput = (event: InputEvent, params: TelInputActionParams, node: HTMLInpu
 	node.value = formattedInput;
 	node.setSelectionRange(newPosition, newPosition);
 
-	// Notify parent component
-	params.handler(formattedInput);
+	// Notify parent component, passing the already-computed parse so the
+	// component can reuse it instead of re-parsing the same input.
+	params.handler(formattedInput, { detail: details, countryIso2: params.country ?? null });
 
 	// Clear state
 	inputState = null;

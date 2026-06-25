@@ -42,6 +42,16 @@ export interface DetailedValue {
 }
 
 /**
+ * A parse result carried from the input action to the component, alongside the
+ * country it was parsed with, so the component can reuse it instead of parsing
+ * the same input a second time.
+ */
+export interface PreParsed {
+	detail: DetailedValue;
+	countryIso2: CountryCode | null;
+}
+
+/**
  * The reason the current phone number input is invalid.
  * - `'REQUIRED'` — field is empty and `required` is `true`
  * - `'COUNTRY_NOT_ALLOWED'` — the resolved country is not in `options.allowedCountries`, or `options.lockCountry` rejects an international number that resolves to a different country than the locked one

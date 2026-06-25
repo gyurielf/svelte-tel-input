@@ -19,12 +19,11 @@ export const generatePlaceholder = (
 	const examplePhoneNumber = getExampleNumber(country, examplePhoneNumbers);
 	if (examplePhoneNumber) {
 		if (format === 'national') {
-			const international = examplePhoneNumber.formatInternational().trim();
-			const prefix = `+${examplePhoneNumber.countryCallingCode} `;
-			const national = international.startsWith(prefix)
-				? international.slice(prefix.length)
-				: international;
-			return spaces ? national : national.replace(/\s/g, '');
+			return toNationalFormat(
+				examplePhoneNumber.formatInternational().trim(),
+				examplePhoneNumber.countryCallingCode,
+				spaces
+			);
 		}
 		return spaces ? examplePhoneNumber.formatInternational().trim() : examplePhoneNumber.number;
 	} else {
@@ -37,7 +36,7 @@ export const generatePlaceholder = (
 // Phone-number normalizer
 // ---------------------------------------------------------------------------
 
-const normalizeForLibphonenumber = (input: string): string => {
+export const normalizeForLibphonenumber = (input: string): string => {
 	let value = '';
 	for (let i = 0; i < input.length; i++) {
 		const ch = input[i];
@@ -94,6 +93,21 @@ const stripSpecialChars = (s: string): string =>
 		.replace(/\s{2,}/g, ' ')
 		.trim();
 
+const stripCallingCode = (internationalFormat: string, countryCallingCode: string): string =>
+	internationalFormat.slice(countryCallingCode.length + 1).trim();
+
+export const toNationalFormat = (
+	internationalFormat: string,
+	countryCallingCode: string,
+	spaces: boolean
+): string => {
+	const prefix = `+${countryCallingCode} `;
+	const national = internationalFormat.startsWith(prefix)
+		? internationalFormat.slice(prefix.length)
+		: internationalFormat;
+	return spaces ? national : national.replace(/\s/g, '');
+};
+
 export const parsePhoneInput = (input: string, country: Country | undefined): DetailedValue => {
 	const normalized = normalizeForLibphonenumber(input);
 	const defaultCountryIso2 = country?.iso2;
@@ -128,22 +142,30 @@ export const parsePhoneInput = (input: string, country: Country | undefined): De
 				defaultCountryIso2 as CountryCode
 			);
 			if (formatted === capped && country?.dialCode) {
-				if (phone && phone.nationalNumber !== capped) {
+				// Calling-code leak: libphonenumber consumed a leading digit that
+				// equals the country calling code as the code itself, so
+				// nationalNumber is shorter than what the user typed (e.g. US "11"
+				// → nationalNumber "1"). Those digits are national input, not a
+				// trunk prefix — fall through to the synthesis branch below so the
+				// typed digit is preserved instead of being sliced off.
+				const isCallingCodeLeak =
+					!!countryCallingCode &&
+					capped.startsWith(countryCallingCode) &&
+					phone?.nationalNumber === capped.slice(countryCallingCode.length);
+				if (phone && phone.nationalNumber !== capped && !isCallingCodeLeak) {
 					// Trunk-prefixed complete number (e.g. GB "07947…" → nationalNumber
 					// "7947…"). Synthesis would be invalid; use the actual international
 					// format which correctly omits the trunk prefix.
 					formattedNumber =
 						formatInternational && countryCallingCode
-							? formatInternational.slice(countryCallingCode.length + 1).trim()
+							? stripCallingCode(formatInternational, countryCallingCode)
 							: stripSpecialChars(capped);
 				} else {
 					// National significant digits (partial or complete, no trunk prefix).
 					// Synthesize an international string to get consistent spacing from
 					// the first digit, then strip "+{dialCode} ".
 					const intl = formatIncompletePhoneNumber(`+${country.dialCode}${capped}`);
-					formattedNumber = stripSpecialChars(
-						intl.slice(country.dialCode.length + 1).trim()
-					);
+					formattedNumber = stripSpecialChars(stripCallingCode(intl, country.dialCode));
 				}
 			} else {
 				formattedNumber = stripSpecialChars(formatted || capped);
@@ -173,7 +195,7 @@ export const parsePhoneInput = (input: string, country: Country | undefined): De
 		formatNational,
 		formatOriginal:
 			formatInternational && countryCallingCode
-				? formatInternational.slice(countryCallingCode.length + 1).trim()
+				? stripCallingCode(formatInternational, countryCallingCode)
 				: null,
 		formattedNumber,
 		isPossible: asYouType.isPossible(),
