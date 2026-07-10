@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { render } from '@testing-library/svelte';
+import { render, waitFor } from '@testing-library/svelte';
 import userEvent from '@testing-library/user-event';
 import TelInput from '$lib/components/input/TelInput.svelte';
 
@@ -53,8 +53,7 @@ describe('TelInput - Cursor Positioning Integration Tests', () => {
 			const input = getByTestId('tel-input') as HTMLInputElement;
 
 			// Wait for initial formatting
-			await new Promise((r) => setTimeout(r, 100));
-			expect(input.value).toBe('+1 215 456 7890');
+			await waitFor(() => expect(input.value).toBe('+1 215 456 7890'));
 
 			// Move cursor to end
 			await user.click(input);
@@ -69,8 +68,7 @@ describe('TelInput - Cursor Positioning Integration Tests', () => {
 			});
 			const input = getByTestId('tel-input') as HTMLInputElement;
 
-			await new Promise((r) => setTimeout(r, 100));
-			expect(input.value).toBe('215 456 7890');
+			await waitFor(() => expect(input.value).toBe('215 456 7890'));
 
 			// Position cursor after the area code: "215 |456 7890"
 			input.setSelectionRange(4, 4);
@@ -85,7 +83,7 @@ describe('TelInput - Cursor Positioning Integration Tests', () => {
 			});
 			const input = getByTestId('tel-input') as HTMLInputElement;
 
-			await new Promise((r) => setTimeout(r, 100));
+			await waitFor(() => expect(input.value).toBe('+1 215 456 7890'));
 			// Position cursor right after the space: "+1 |215-..."
 			input.setSelectionRange(3, 3);
 
@@ -117,8 +115,7 @@ describe('TelInput - Cursor Positioning Integration Tests', () => {
 			});
 			const input = getByTestId('tel-input') as HTMLInputElement;
 
-			await new Promise((r) => setTimeout(r, 100));
-			expect(input.value).toBe('215 456 7890');
+			await waitFor(() => expect(input.value).toBe('215 456 7890'));
 			await user.click(input);
 
 			// Position cursor before the first digit of the exchange ("215 |456 7890")
@@ -135,7 +132,7 @@ describe('TelInput - Cursor Positioning Integration Tests', () => {
 			});
 			const input = getByTestId('tel-input') as HTMLInputElement;
 
-			await new Promise((r) => setTimeout(r, 100));
+			await waitFor(() => expect(input.value).toBe('+1 215 456 7890'));
 			await user.click(input);
 			// Position cursor just after "+1" (before the space)
 			input.setSelectionRange(2, 2);
@@ -160,8 +157,7 @@ describe('TelInput - Cursor Positioning Integration Tests', () => {
 			});
 			const input = getByTestId('tel-input') as HTMLInputElement;
 
-			await new Promise((r) => setTimeout(r, 100));
-			expect(input.value).toBe('215 456 7890');
+			await waitFor(() => expect(input.value).toBe('215 456 7890'));
 			await user.click(input);
 
 			// Select area code digits
@@ -177,8 +173,7 @@ describe('TelInput - Cursor Positioning Integration Tests', () => {
 			});
 			const input = getByTestId('tel-input') as HTMLInputElement;
 
-			await new Promise((r) => setTimeout(r, 100));
-			expect(input.value).toBe('215 456 7890');
+			await waitFor(() => expect(input.value).toBe('215 456 7890'));
 			await user.click(input);
 
 			// Select first two area code digits
@@ -194,8 +189,7 @@ describe('TelInput - Cursor Positioning Integration Tests', () => {
 			});
 			const input = getByTestId('tel-input') as HTMLInputElement;
 
-			await new Promise((r) => setTimeout(r, 100));
-			expect(input.value).toBe('215 456 7890');
+			await waitFor(() => expect(input.value).toBe('215 456 7890'));
 			await user.click(input);
 
 			// Select the exchange digits
@@ -225,7 +219,7 @@ describe('TelInput - Cursor Positioning Integration Tests', () => {
 			});
 			const input = getByTestId('tel-input') as HTMLInputElement;
 
-			await new Promise((r) => setTimeout(r, 100));
+			await waitFor(() => expect(input.value).toBe('215 456 7890'));
 			await user.click(input);
 			// Select middle section
 			input.setSelectionRange(4, 7);
@@ -253,7 +247,7 @@ describe('TelInput - Cursor Positioning Integration Tests', () => {
 			});
 			const input = getByTestId('tel-input') as HTMLInputElement;
 
-			await new Promise((r) => setTimeout(r, 100));
+			await waitFor(() => expect(input.value).toBe('215 456 7890'));
 			// Move cursor to start
 			input.setSelectionRange(0, 0);
 			await user.type(input, '1');
@@ -268,7 +262,7 @@ describe('TelInput - Cursor Positioning Integration Tests', () => {
 			});
 			const input = getByTestId('tel-input') as HTMLInputElement;
 
-			await new Promise((r) => setTimeout(r, 100));
+			await waitFor(() => expect(input.value).toBe('215 456 7890'));
 			await user.click(input);
 			// Select all and delete
 			input.setSelectionRange(0, input.value.length);
@@ -282,8 +276,7 @@ describe('TelInput - Cursor Positioning Integration Tests', () => {
 			});
 			const input = getByTestId('tel-input') as HTMLInputElement;
 
-			await new Promise((r) => setTimeout(r, 100));
-			expect(input.value).toBe('+12154567890');
+			await waitFor(() => expect(input.value).toBe('+12154567890'));
 
 			await user.click(input);
 			input.setSelectionRange(input.value.length, input.value.length);

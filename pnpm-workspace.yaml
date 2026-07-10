@@ -9,6 +9,9 @@ allowBuilds:
 ignoredBuiltDependencies:
     - esbuild
 
+minimumReleaseAgeExclude:
+    - vite@8.1.4
+
 onlyBuiltDependencies:
     - '@tailwindcss/oxide'
     - esbuild

@@ -9,7 +9,7 @@ description: Callback props for reacting to TelInput state changes.
 
 | Callback | Signature | Fires when |
 |----------|-----------|------------|
-| `onValueChange` | `(value: string, details: DetailedValue \| null) => void` | The E.164 value or detailed value changes |
+| `onValueChange` | `(value: string, details: Partial<DetailedValue> \| null) => void` | The E.164 value or detailed value changes |
 | `onCountryChange` | `(country: CountryCode \| null) => void` | The country is auto-detected from a dial code |
 | `onValidityChange` | `(valid: boolean, error: ValidationError) => void` | The validity state changes |
 | `onError` | `(error: string) => void` | A parse error occurs |
@@ -22,7 +22,7 @@ description: Callback props for reacting to TelInput state changes.
   import { TelInput } from 'svelte-tel-input';
   import type { DetailedValue, CountryCode, ValidationError } from 'svelte-tel-input/types';
 
-  const handleValueChange = (value: string, details: DetailedValue | null) => {
+  const handleValueChange = (value: string, details: Partial<DetailedValue> | null) => {
     console.log('E.164:', value);
     console.log('Details:', details);
   };

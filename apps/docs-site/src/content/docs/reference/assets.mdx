@@ -21,12 +21,17 @@ An array of every supported country, sorted alphabetically by name. Each entry i
 
 ```typescript
 interface Country {
-  id: number;
-  iso2: CountryCode;      // e.g. 'HU'
-  name: string;           // e.g. 'Hungary'
-  dialCode: string;       // e.g. '36'
+  id: string;
+  label: string;
+  name: string;             // e.g. 'Hungary'
+  iso2: CountryCode;        // e.g. 'HU'
+  dialCode: string;         // e.g. '36'
+  priority: number;
+  areaCodes: string[] | null;
 }
 ```
+
+See [`Country`](/reference/types/#country) for the full field reference.
 
 **Example — building a country selector:**
 

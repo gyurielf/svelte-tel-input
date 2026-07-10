@@ -12,7 +12,7 @@ import { parse, normalizeToE164, pickCountries, getCountryByIso2 } from 'svelte-
 ## `parse()`
 
 ```typescript
-parse(raw: string, country?: CountryCode | null): Partial<DetailedValue>
+parse(raw: string, country?: CountryCode | null): DetailedValue
 ```
 
 Parses any raw phone number string and returns a [`DetailedValue`](/reference/types/#detailedvalue) with all formatted variants.

@@ -1,0 +1,53 @@
+---
+title: Bundle size
+description: Understand the libphonenumber-js metadata cost and opt into a smaller variant.
+---
+
+Most of what `svelte-tel-input` adds to your bundle is not its own code — it's
+the phone-number **metadata** from `libphonenumber-js`. By default the library
+uses the `max` metadata, which powers the most accurate validation.
+
+## The metadata tradeoff
+
+`libphonenumber-js` ships several metadata sets. Approximate gzipped sizes:
+
+| Metadata | Gzipped | Validation |
+|----------|---------|------------|
+| `max` (default) | ~40 KB | Most accurate — full per-country patterns |
+| `mobile` | ~24 KB | Mobile numbers only — **rejects landlines** |
+| `min` | ~20 KB | Slightly looser, but near-identical for real numbers |
+
+`max` is the default because accurate validation is the point of the library.
+But if bundle size matters more than the last sliver of accuracy, `min` is a
+strong option: across the library's real-number test fixture, `min` and `max`
+agreed on validity for all but one number (and there `min` was the *more*
+permissive of the two). `mobile` is only appropriate when you exclusively accept
+mobile numbers — it marks landline numbers invalid.
+
+## Opting into a smaller variant
+
+The library imports `libphonenumber-js/max`. Because the metadata is chosen at
+build time, you switch variants by **aliasing** that import in your bundler — no
+API change on the component.
+
+For Vite / SvelteKit, alias the `max` metadata modules to `min`:
+
+```js
+// vite.config.ts
+export default defineConfig({
+  resolve: {
+    alias: {
+      'libphonenumber-js/max/es6': 'libphonenumber-js/min/es6',
+      'libphonenumber-js/max': 'libphonenumber-js/min'
+    }
+  }
+});
+```
+
+Swap `min` for `mobile` if you only accept mobile numbers.
+
+:::caution
+Aliasing changes validation for your whole app, including any other code that
+imports `libphonenumber-js/max`. Verify your accepted numbers still validate as
+expected after switching.
+:::

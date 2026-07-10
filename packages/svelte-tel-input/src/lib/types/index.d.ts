@@ -95,7 +95,7 @@ export interface TelInputOptions {
 	/**
 	 * Restrict validation to a specific set of countries.
 	 * When provided, any resolved country that is not in this list will cause
-	 * the field to be marked invalid with `validationError = 'country_not_allowed'`.
+	 * the field to be marked invalid with `validationError = 'COUNTRY_NOT_ALLOWED'`.
 	 * Pass `undefined` (or omit) to allow all countries.
 	 */
 	allowedCountries?: CountryCode[];
