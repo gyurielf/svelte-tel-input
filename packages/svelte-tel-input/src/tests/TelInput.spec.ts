@@ -1309,6 +1309,51 @@ describe('TelInput Component', () => {
 				countryCode: 'US'
 			});
 		});
+
+		it('treats an empty field as valid even when the preselected country is not allowed', () => {
+			const { component } = render(TelInput, {
+				props: {
+					value: '',
+					country: 'US',
+					required: false,
+					options: { allowedCountries: ['GB'] }
+				}
+			});
+
+			expect(component.api.checkValidity()).toEqual({ valid: true, error: null });
+		});
+
+		it('reports REQUIRED (not COUNTRY_NOT_ALLOWED) on an empty required field with a disallowed country', () => {
+			const { component } = render(TelInput, {
+				props: {
+					value: '',
+					country: 'US',
+					required: true,
+					options: { allowedCountries: ['GB'] }
+				}
+			});
+
+			expect(component.api.checkValidity()).toEqual({ valid: false, error: 'REQUIRED' });
+		});
+
+		it('still reports COUNTRY_NOT_ALLOWED once a disallowed number is typed', async () => {
+			let validationError: ValidationError = null;
+			const { getByTestId } = render(TelInput, {
+				props: {
+					value: '',
+					country: null,
+					options: { allowedCountries: ['GB'] },
+					onValueChange: (_, dv) => {
+						validationError = dv?.validationError ?? null;
+					}
+				}
+			});
+			const input = getByTestId('tel-input') as HTMLInputElement;
+
+			await fireUserEvent.type(input, '+12154567890');
+
+			expect(validationError).toBe('COUNTRY_NOT_ALLOWED');
+		});
 	});
 
 	describe('isPhoneValid in detailedValue', () => {

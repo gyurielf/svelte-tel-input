@@ -65,8 +65,7 @@ interface DetailedValue {
   formatNational: string | null;
   uri: string | null;
   e164: string | null;
-  error?: string;
-  validationError?: ValidationError;
+  validationError: ValidationError;
 }
 ```
 
@@ -87,8 +86,7 @@ interface DetailedValue {
 | `formatOriginal` | `'30 123 4567'` | International without calling code prefix |
 | `uri` | `'tel:+36301234567'` | `tel:` URI for `<a href>` links |
 | `phoneNumber` | `'+36301234567'` | Same as `e164` |
-| `error` | `'TOO_SHORT'` | Parse error message |
-| `validationError` | `'TOO_SHORT'` | Granular [ValidationError](#validationerror) |
+| `validationError` | `'TOO_SHORT'` | Granular [ValidationError](#validationerror) when invalid, else `null`. Parse failures are also surfaced via the [`onError`](/reference/events/) callback. |
 
 ## `ValidationError`
 

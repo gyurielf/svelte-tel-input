@@ -81,6 +81,15 @@ export default defineConfig({
 					]
 				},
 				{
+					label: 'Guides',
+					items: [
+						{ label: 'Country picker', slug: 'guides/country-picker' },
+						{ label: 'Forms', slug: 'guides/forms' },
+						{ label: 'SSR & SSG', slug: 'guides/ssr' },
+						{ label: 'Bundle size', slug: 'guides/bundle-size' }
+					]
+				},
+				{
 					label: 'Reference',
 					items: [
 						{ label: 'Props', slug: 'reference/props' },

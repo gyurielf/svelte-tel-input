@@ -1,0 +1,87 @@
+---
+title: Country picker
+description: Pair TelInput with a headless country <select> using the shipped country data and flags.
+---
+
+`TelInput` is headless — it renders only an `<input>`. A country picker is the
+one piece of UI most integrations add alongside it. The package ships everything
+you need (`countries`, `pickCountries`, `countryUnicodeFlags`), so the picker is
+a few lines of your own markup rather than a bundled component.
+
+## Bind the picker to `country`
+
+Both `TelInput` and your `<select>` bind the same `country` value. Selecting a
+country reformats the input; typing an international `+` prefix updates the
+`<select>`.
+
+```svelte
+<script lang="ts">
+  import { TelInput } from 'svelte-tel-input';
+  import { countries, countryUnicodeFlags } from 'svelte-tel-input/assets';
+  import type { CountryCode } from 'svelte-tel-input/types';
+
+  let country: CountryCode | null = $state('US');
+  let value = $state('');
+</script>
+
+<select bind:value={country}>
+  {#each countries as c (c.iso2)}
+    <option value={c.iso2}>
+      {@html countryUnicodeFlags[c.iso2]} {c.name} (+{c.dialCode})
+    </option>
+  {/each}
+</select>
+
+<TelInput bind:country bind:value />
+```
+
+`countryUnicodeFlags` values are HTML entity strings, so render them with
+[`{@html}`](https://svelte.dev/docs/svelte/@html).
+
+## Restrict to a subset with `pickCountries`
+
+To show only a handful of countries, build the list with
+[`pickCountries()`](/reference/utilities/#pickcountries) and pair it with the
+[`allowedCountries`](/reference/options/) option so the same set is enforced on
+validation. `pickCountries` preserves the order you pass.
+
+```svelte
+<script lang="ts">
+  import { TelInput } from 'svelte-tel-input';
+  import { pickCountries } from 'svelte-tel-input';
+  import { countryUnicodeFlags } from 'svelte-tel-input/assets';
+  import type { CountryCode } from 'svelte-tel-input/types';
+
+  const allowed: CountryCode[] = ['US', 'GB', 'HU'];
+  const options = pickCountries(allowed);
+
+  let country: CountryCode | null = $state('US');
+  let value = $state('');
+</script>
+
+<select bind:value={country}>
+  {#each options as c (c.iso2)}
+    <option value={c.iso2}>
+      {@html countryUnicodeFlags[c.iso2]} {c.name} (+{c.dialCode})
+    </option>
+  {/each}
+</select>
+
+<TelInput bind:country bind:value options={{ allowedCountries: allowed }} />
+```
+
+A number from a country outside `allowedCountries` sets `validationError` to
+`'COUNTRY_NOT_ALLOWED'`.
+
+## CSS sprite flags (optional)
+
+For raster flag icons instead of emoji, import the shipped sprite stylesheet and
+apply the `flag flag-<iso2>` classes (lowercase ISO2):
+
+```svelte
+<script>
+  import 'svelte-tel-input/styles/flags.css';
+</script>
+
+<span class="flag flag-us"></span>
+```

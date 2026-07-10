@@ -137,9 +137,7 @@
 					value={options.validateOn ?? 'always'}
 					onchange={(e) => {
 						options.validateOn = (e.currentTarget as HTMLSelectElement).value as
-							| 'input'
-							| 'blur'
-							| 'always';
+							'input' | 'blur' | 'always';
 					}}
 				>
 					<option value="always">always</option>

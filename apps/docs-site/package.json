@@ -10,16 +10,16 @@
 		"test:e2e": "playwright test"
 	},
 	"dependencies": {
-		"@astrojs/starlight": "^0.41.0",
+		"@astrojs/starlight": "^0.41.3",
 		"@astrojs/starlight-tailwind": "^5.0.0",
-		"@astrojs/svelte": "^9.0.0",
+		"@astrojs/svelte": "^9.0.1",
 		"@floating-ui/dom": "^1.7.6",
-		"@humanspeak/svelte-motion": "^0.7.4",
-		"@tailwindcss/vite": "^4.3.1",
-		"astro": "~7.0.2",
+		"@humanspeak/svelte-motion": "^0.7.16",
+		"@tailwindcss/vite": "^4.3.2",
+		"astro": "~7.0.7",
 		"svelte": "^5.56.4",
 		"svelte-tel-input": "workspace:*",
-		"tailwindcss": "^4.3.1",
+		"tailwindcss": "^4.3.2",
 		"typescript": "^6.0.3"
 	},
 	"devDependencies": {

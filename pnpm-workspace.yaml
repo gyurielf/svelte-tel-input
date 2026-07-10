@@ -1,10 +1,18 @@
 packages:
-    - apps/*
-    - packages/*
+  - apps/*
+  - packages/*
+
+allowBuilds:
+  esbuild: true
+  sharp: true
 
 ignoredBuiltDependencies:
-    - esbuild
+  - esbuild
+
+minimumReleaseAgeExclude:
+  - vite@8.1.4
+  - '@humanspeak/svelte-motion@0.7.16'
 
 onlyBuiltDependencies:
-    - '@tailwindcss/oxide'
-    - esbuild
+  - '@tailwindcss/oxide'
+  - esbuild

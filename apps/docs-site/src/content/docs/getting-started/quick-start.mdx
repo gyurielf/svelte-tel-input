@@ -56,7 +56,7 @@ Bind `detailedValue` to get the full parsed breakdown — national number, calli
   let country: CountryCode | null = $state('US');
   let value = $state('');
   let valid = $state(true);
-  let detailedValue: DetailedValue | null = $state(null);
+  let detailedValue: Partial<DetailedValue> | null = $state(null);
 </script>
 
 <TelInput bind:country bind:value bind:valid bind:detailedValue />

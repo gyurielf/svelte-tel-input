@@ -1,0 +1,41 @@
+---
+title: SSR & SSG
+description: How TelInput renders on the server and controls its initial display format.
+---
+
+`TelInput` is SSR/SSG-safe. It renders a fully-formed `<input>` on the server
+and hydrates without mismatches — internal IDs are generated only after mount,
+and the initial display value is computed identically on server and client.
+
+## Initial display format
+
+The stored `value` is always E.164. What's *shown* on first render is controlled
+by [`initialFormat`](/reference/props/):
+
+```svelte
+<script lang="ts">
+  import { TelInput } from 'svelte-tel-input';
+  import type { CountryCode } from 'svelte-tel-input/types';
+  let value = $state('+12015550123');
+  let country: CountryCode | null = $state('US');
+</script>
+
+<!-- displays "+1 201 555 0123" (default) -->
+<TelInput bind:value bind:country initialFormat="international" />
+
+<!-- displays "201 555 0123" while value stays "+12015550123" -->
+<TelInput bind:value bind:country initialFormat="national" />
+```
+
+With `initialFormat="national"`, if you don't pass `country`, it is auto-detected
+from the E.164 `value` on the client after mount.
+
+`initialFormat` only affects the first render and externally-driven `value`
+changes; ongoing user typing behaviour is unchanged.
+
+## Placeholders
+
+When `options.autoPlaceholder` is on (the default), the placeholder for the
+selected country is generated during render, so it appears in server output too.
+Control its shape with [`placeholderFormat`](/reference/props/); it falls back to
+`initialFormat` when unset.

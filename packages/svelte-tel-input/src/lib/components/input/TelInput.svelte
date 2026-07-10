@@ -205,6 +205,8 @@
 		resolvedCountry: CountryCode | null | undefined,
 		currentCountry: CountryCode | null | undefined = country
 	): ValidationError => {
+		if (isEmpty) return required ? 'REQUIRED' : null;
+
 		if (
 			combinedOptions.lockCountry &&
 			currentCountry != null &&
@@ -218,7 +220,6 @@
 		if (allowed?.length && resolvedCountry != null && !allowed.includes(resolvedCountry)) {
 			return 'COUNTRY_NOT_ALLOWED';
 		}
-		if (isEmpty) return required ? 'REQUIRED' : null;
 		if (parseValid) return null;
 		// Use the granular error from detailedValue when available
 		return detailedValue?.validationError ?? 'INVALID';

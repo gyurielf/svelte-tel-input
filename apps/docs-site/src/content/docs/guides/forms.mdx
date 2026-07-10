@@ -1,0 +1,74 @@
+---
+title: Forms
+description: Submit an E.164 phone value in native forms and validate it server-side.
+---
+
+`value` is always stored as an E.164 string (e.g. `+12015550123`) regardless of
+how it's displayed, which is exactly what you want to submit and persist.
+
+## Native form submit
+
+`TelInput` renders a real `<input>`, so it participates in a native `<form>`.
+Give it a `name` and its E.164 `value` is submitted like any other field.
+
+```svelte
+<script lang="ts">
+  import { TelInput } from 'svelte-tel-input';
+  import type { CountryCode } from 'svelte-tel-input/types';
+
+  let country: CountryCode | null = $state('US');
+  let value = $state('');
+  let valid = $state(false);
+</script>
+
+<form method="POST">
+  <TelInput name="phone" bind:country bind:value bind:valid required />
+  <button type="submit" disabled={!valid}>Save</button>
+</form>
+```
+
+If you drive display and storage separately (for example, showing the national
+format while submitting E.164), keep the visible input unnamed and mirror the
+value into a hidden input:
+
+```svelte
+<TelInput bind:country bind:value bind:valid initialFormat="national" />
+<input type="hidden" name="phone" {value} />
+```
+
+## Server-side validation (SvelteKit action)
+
+Never trust client validity alone. Re-validate on the server with
+[`validateTelInput`](/reference/validators/) from the `svelte-tel-input/validators`
+subpath — it returns a `ValidationError` reason or `null`, with no bundle cost
+for clients that don't import it.
+
+```ts
+// +page.server.ts
+import { fail } from '@sveltejs/kit';
+import { validateTelInput } from 'svelte-tel-input/validators';
+import type { Actions } from './$types';
+
+export const actions: Actions = {
+  default: async ({ request }) => {
+    const data = await request.formData();
+    const phone = String(data.get('phone') ?? '');
+
+    const error = validateTelInput(phone, {
+      required: true,
+      allowedCountries: ['US', 'GB', 'HU']
+    });
+
+    if (error) {
+      return fail(400, { phone, error });
+    }
+
+    // `phone` is a valid E.164 string here — persist it.
+    return { success: true };
+  }
+};
+```
+
+`validateTelInput` is schema-library agnostic — see
+[Validators](/reference/validators/) for Zod, Valibot, and Yup examples that
+wrap the same function.
