@@ -81,6 +81,7 @@ export default [
 			],
 			'no-sparse-arrays': 'off',
 			'no-var': 'error',
+			'no-useless-assignment': 'off',
 			'n/prefer-node-protocol': 'error',
 			'object-shorthand': [
 				'error',
