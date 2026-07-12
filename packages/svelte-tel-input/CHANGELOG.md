@@ -1,5 +1,34 @@
 # svelte-tel-input
 
+## 4.3.2
+### Patch Changes
+
+
+
+- chore: improve bundling and dependency posture ([#278](https://github.com/gyurielf/svelte-tel-input/pull/278))
+  
+  - Add `"sideEffects": ["*.css"]` so bundlers can tree-shake modules that
+    consumers don't use (e.g. the unicode-flags data) instead of conservatively
+    retaining everything the assets barrel touches.
+  - Loosen the `libphonenumber-js` dependency to `^1.13.7` so consumers can dedupe
+    to a single copy and pick up patch fixes, instead of being pinned to an exact
+    version.
+
+
+- fix: an empty field no longer reports `COUNTRY_NOT_ALLOWED` ([#278](https://github.com/gyurielf/svelte-tel-input/pull/278))
+  
+  `getValidationError` now short-circuits on an empty value before evaluating the
+  `lockCountry` / `allowedCountries` constraints. Previously, a blank input with a
+  preselected country outside `allowedCountries` (or conflicting under
+  `lockCountry`) was flagged `COUNTRY_NOT_ALLOWED`, and a non-required blank field
+  was marked invalid. An empty field now resolves to `REQUIRED` (when `required`)
+  or valid.
+
+
+- docs: correct the JSDoc on `allowedCountries` to reference the real ([#278](https://github.com/gyurielf/svelte-tel-input/pull/278))
+  `validationError` value `'COUNTRY_NOT_ALLOWED'` (was the lowercase
+  `'country_not_allowed'`, which never matches).
+
 ## 4.3.1
 ### Patch Changes
 
