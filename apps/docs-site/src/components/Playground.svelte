@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onDestroy } from 'svelte';
+	import { fade } from 'svelte/transition';
 	import { motion, AnimatePresence, MotionConfig } from '@humanspeak/svelte-motion';
 	import AdvancedPhoneInput from './examples/AdvancedPhoneInput.svelte';
 	import type {
@@ -59,7 +60,6 @@
 	let measureEl = $state<HTMLDivElement | undefined>(undefined);
 	let panelHeight = $state<number | 'auto'>('auto');
 	let heightAnimating = $state(false);
-	let heightResetTimer: ReturnType<typeof setTimeout> | undefined;
 
 	$effect(() => {
 		const el = measureEl;
@@ -217,17 +217,6 @@
 				? 1
 				: -1;
 
-		const reduceMotion =
-			typeof window !== 'undefined' &&
-			window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-		if (!reduceMotion) {
-			heightAnimating = true;
-			clearTimeout(heightResetTimer);
-			heightResetTimer = setTimeout(() => {
-				heightAnimating = false;
-			}, 500);
-		}
-
 		activeTab = tab;
 		checkResult = null;
 		detailsOpen = false;
@@ -297,7 +286,6 @@
 	onDestroy(() => {
 		clearCopiedState();
 		clearUsageSuccess();
-		clearTimeout(heightResetTimer);
 	});
 </script>
 
@@ -339,6 +327,8 @@
 		<motion.div
 			animate={{ height: panelHeight }}
 			transition={{ type: 'spring', duration: 0.45, bounce: 0.15 }}
+			onAnimationStart={() => (heightAnimating = true)}
+			onAnimationComplete={() => (heightAnimating = false)}
 			class="relative"
 			style="overflow: {heightAnimating ? 'hidden' : 'visible'};"
 		>
@@ -627,6 +617,7 @@
 													<div
 														data-testid="usage-success-banner"
 														class="rounded-[0.8rem] border border-[rgba(74,222,128,0.28)] bg-[rgba(74,222,128,0.14)] px-3 py-2 text-sm font-medium text-[#166534] dark:text-[#86efac]"
+														transition:fade={{ duration: 150 }}
 													>
 														✓ {usageSuccessMessage}
 													</div>

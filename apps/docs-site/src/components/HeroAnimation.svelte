@@ -5,30 +5,61 @@
 	let idx = $state(0);
 	const verb = $derived(verbs[idx % verbs.length]);
 
-	const timer = setInterval(() => {
-		idx++;
-	}, 3000);
+	let reduceMotion = $state(false);
+
+	const CUBE_DURATION = 550;
+	const timer = setInterval(
+		() => {
+			idx++;
+		},
+		Math.max(3000, CUBE_DURATION * 2 + 500)
+	);
 
 	onDestroy(() => clearInterval(timer));
 
+	$effect(() => {
+		const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+		reduceMotion = mq.matches;
+		const listener = (e: MediaQueryListEvent) => (reduceMotion = e.matches);
+		mq.addEventListener('change', listener);
+		return () => mq.removeEventListener('change', listener);
+	});
+
+	// shape matches motionTokens.EASE_OUT
+	function easeOutCubic(t: number) {
+		return 1 - Math.pow(1 - t, 3);
+	}
+
 	// Custom 3D cube transitions
 	function cubeIn(node: HTMLElement, { duration = 550 }: { duration?: number } = {}) {
+		if (reduceMotion) {
+			return { duration: 150, css: (t: number) => `opacity: ${t};` };
+		}
 		return {
 			duration,
-			css: (t: number) => `
-				transform: translateZ(${-48 + t * 48}px) translateY(${-60 + t * 60}%) rotate3d(1, 0, 0, ${90 - t * 90}deg);
-				opacity: ${t};
-			`
+			css: (t: number) => {
+				const e = easeOutCubic(t);
+				return `
+					transform: translateZ(${-48 + e * 48}px) translateY(${-60 + e * 60}%) rotate3d(1, 0, 0, ${90 - e * 90}deg);
+					opacity: ${e};
+				`;
+			}
 		};
 	}
 
 	function cubeOut(node: HTMLElement, { duration = 550 }: { duration?: number } = {}) {
+		if (reduceMotion) {
+			return { duration: 150, css: (t: number) => `opacity: ${t};` };
+		}
 		return {
 			duration,
-			css: (t: number) => `
-				transform: translateZ(${-48 + t * 48}px) translateY(${(1 - t) * 60}%) rotate3d(1, 0, 0, ${(1 - t) * -90}deg);
-				opacity: ${t};
-			`
+			css: (t: number) => {
+				const e = easeOutCubic(t);
+				return `
+					transform: translateZ(${-48 + e * 48}px) translateY(${(1 - e) * 60}%) rotate3d(1, 0, 0, ${(1 - e) * -90}deg);
+					opacity: ${e};
+				`;
+			}
 		};
 	}
 </script>
@@ -262,7 +293,11 @@
 		font-weight: 600;
 		font-size: 1rem;
 		text-decoration: none;
-		transition: all 0.2s ease;
+		transition:
+			filter 0.2s var(--ease-motion-out, ease),
+			transform 0.2s var(--ease-motion-out, ease),
+			box-shadow 0.2s var(--ease-motion-out, ease),
+			background 0.2s var(--ease-motion-out, ease);
 	}
 
 	.btn-primary {

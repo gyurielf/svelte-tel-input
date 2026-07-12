@@ -74,3 +74,12 @@
 		</svg>
 	</span>
 </button>
+
+<style>
+	@media (prefers-reduced-motion: reduce) {
+		.theme-switch__icon {
+			transition-property: opacity;
+			transform: none !important;
+		}
+	}
+</style>
