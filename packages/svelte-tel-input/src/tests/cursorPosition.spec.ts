@@ -342,7 +342,6 @@ describe('Cursor Position Utilities', () => {
 					deletionDirection: null,
 					hasSelection: false
 				});
-				value = '+36 3';
 				cursor = step3;
 				expect(cursor).toBe(5);
 			});
@@ -375,7 +374,6 @@ describe('Cursor Position Utilities', () => {
 					deletionDirection: null,
 					hasSelection: false
 				});
-				value = '+36 30 124';
 				cursor = step2;
 				expect(cursor).toBe(10);
 			});
