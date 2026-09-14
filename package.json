@@ -53,26 +53,26 @@
 		"test:e2e": "pnpm --filter=./apps/docs-site test:e2e"
 	},
 	"devDependencies": {
-		"@changesets/cli": "^2.31.0",
+		"@changesets/cli": "^2.31.1",
 		"@changesets/get-github-info": "^0.8.0",
 		"@changesets/types": "^6.1.0",
 		"@eslint/js": "^10.0.1",
-		"@typescript-eslint/eslint-plugin": "^8.63.0",
-		"@typescript-eslint/parser": "^8.63.0",
+		"@typescript-eslint/eslint-plugin": "^8.70.0",
+		"@typescript-eslint/parser": "^8.70.0",
 		"dotenv": "^17.4.2",
-		"eslint": "^10.7.0",
+		"eslint": "^10.10.0",
 		"eslint-config-prettier": "^10.1.8",
 		"eslint-plugin-import": "^2.32.0",
-		"eslint-plugin-n": "^18.2.2",
-		"eslint-plugin-svelte": "^3.20.0",
-		"eslint-plugin-unicorn": "^71.1.0",
-		"globals": "^17.7.0",
+		"eslint-plugin-n": "^18.3.0",
+		"eslint-plugin-svelte": "^3.23.0",
+		"eslint-plugin-unicorn": "^74.0.0",
+		"globals": "^17.12.0",
 		"husky": "^9.1.7",
-		"prettier": "^3.9.4",
+		"prettier": "^3.9.6",
 		"prettier-plugin-svelte": "^4.1.1",
-		"typescript-eslint": "^8.63.0"
+		"typescript-eslint": "^8.70.0"
 	},
 	"type": "module",
 	"license": "MIT",
-	"packageManager": "pnpm@11.10.0+sha512.0b7f8b98060031904c017e3a41eb187a16d40eeb829b95c4f8cb03681761fc4ab53dd219115b9b447f4dce1a05a214764461e7d3703392a9f32f9511ce8c86c8"
+	"packageManager": "pnpm@12.4.1"
 }

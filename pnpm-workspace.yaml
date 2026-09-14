@@ -13,6 +13,7 @@ minimumReleaseAgeExclude:
   - vite@8.1.4
   - '@humanspeak/svelte-motion@0.7.16 || 0.7.18'
   - postcss@8.5.17
+  - zod@4.6.5
 
 onlyBuiltDependencies:
   - '@tailwindcss/oxide'
