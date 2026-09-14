@@ -1,5 +1,12 @@
 # svelte-tel-input
 
+## 4.3.3
+### Patch Changes
+
+
+
+- chore: update deps and llms.txt ([#281](https://github.com/gyurielf/svelte-tel-input/pull/281))
+
 ## 4.3.2
 ### Patch Changes
 
