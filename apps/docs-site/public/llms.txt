@@ -1,11 +1,14 @@
 # svelte-tel-input
 
-> A lightweight Svelte 5 telephone input component with international phone number formatting, parsing, and validation. Powered by libphonenumber-js.
+> A headless, unstyled Svelte 5 international phone-input library. Parses, formats, and validates phone numbers (powered by libphonenumber-js), stores values canonically in E.164, and ships no UI — consumers own the markup.
 
+- Version: 4.3.2 — check the npm page below for the latest
 - Requires Svelte 5 (uses runes: `$state`, `$derived`, `$effect`)
 - Install: `pnpm add svelte-tel-input`
 - npm: https://www.npmjs.com/package/svelte-tel-input
 - Source: https://github.com/gyurielf/svelte-tel-input
+- Docs: https://svelte-tel-input.vercel.app/
+- SSR/SSG safe: renders a fully-formed `<input>` on the server and hydrates without mismatches (IDs are generated only after mount; the initial display value is computed identically on server and client)
 
 ## Core concept
 
@@ -38,8 +41,10 @@
 | `el` | `HTMLInputElement` | — | Yes | Ref to the underlying `<input>`. |
 | `defaultCountry` | `CountryCode \| null` | `null` | No | Country restored by `api.reset()`. |
 | `initialFormat` | `'international' \| 'national'` | `'international'` | No | Display format on load and on external value changes. `'national'` hides the dial code in the input; `value` stays E.164. |
+| `placeholderFormat` | `'international' \| 'national'` | falls back to `initialFormat` | No | Format of the auto-generated placeholder (requires `autoPlaceholder: true`). Wins over `initialFormat` when explicitly set. |
 | `options` | `TelInputOptions` | `{}` | No | See options below. |
-| `id`, `name`, `class`, `disabled`, `readonly`, `required`, `placeholder`, `autocomplete` | standard HTML | | No | Forwarded to the inner `<input type="tel">`. |
+| `validateProps` | `boolean` | `false` | No | Runtime type-checking of incoming props; throws a `TypeError` on mismatch. Enable in development only. |
+| `id`, `name`, `class`, `disabled`, `readonly`, `required`, `placeholder`, `size`, `autocomplete` | standard HTML | | No | Forwarded to the inner `<input type="tel">`. |
 
 ## Options (`TelInputOptions`)
 
@@ -52,6 +57,8 @@ interface TelInputOptions {
   lockCountry?: boolean;              // default: false — prevent country auto-switch
 }
 ```
+
+`allowedCountries` marks a number invalid (`COUNTRY_NOT_ALLOWED`) but does **not** stop the `country` binding from changing. `lockCountry` prevents `country` itself from switching. Combine both to fully restrict a picker to a set of countries.
 
 ## Callback props (all optional)
 
@@ -82,13 +89,23 @@ onLoad?: () => void;
 
 ```typescript
 // Main package
-import { TelInput, countries, parse, normalizeToE164, pickCountries } from 'svelte-tel-input';
+import { TelInput, countries, parse, normalizeToE164, pickCountries, getCountryByIso2 } from 'svelte-tel-input';
 
 // Types
 import type { CountryCode, Country, DetailedValue, TelInputOptions, ValidationError, Props } from 'svelte-tel-input/types';
 
 // Schema validator (Zod / Valibot / Yup)
 import { validateTelInput } from 'svelte-tel-input/validators';
+
+// Static data assets
+import { countries, countryUnicodeFlags, examplePhoneNumbers } from 'svelte-tel-input/assets';
+
+// Utilities (same functions as the main package, plus generatePlaceholder)
+import { parse, normalizeToE164, pickCountries, getCountryByIso2, generatePlaceholder } from 'svelte-tel-input/utils';
+
+// Optional CSS sprite flags (for custom country pickers), zero bundle cost if unused
+import 'svelte-tel-input/styles/flags.css';
+// <span class="flag flag-us"></span>  (class is "flag flag-<iso2>", lowercase)
 ```
 
 ## `DetailedValue` shape
@@ -96,6 +113,7 @@ import { validateTelInput } from 'svelte-tel-input/validators';
 ```typescript
 interface DetailedValue {
   e164: string | null;               // "+36301234567"
+  phoneNumber: string | null;        // same as e164
   countryCode: CountryCode | null;   // "HU"
   countryCallingCode: string | null; // "36"
   nationalNumber: string | null;     // "301234567"
@@ -115,11 +133,13 @@ interface DetailedValue {
 
 `null` (valid) | `'TOO_SHORT'` | `'TOO_LONG'` | `'NOT_A_NUMBER'` | `'INVALID_COUNTRY'` | `'INVALID_LENGTH'` | `'INVALID'` | `'REQUIRED'` | `'COUNTRY_NOT_ALLOWED'`
 
+An empty field never resolves to `COUNTRY_NOT_ALLOWED`, even with `allowedCountries` or `lockCountry` set — it's `REQUIRED` (if `required`) or valid.
+
 ## Utility functions
 
 ```typescript
 // Parse any raw input
-parse(raw: string, country?: CountryCode | null): Partial<DetailedValue>
+parse(raw: string, country?: CountryCode | null): DetailedValue
 
 // Normalize to E.164 or null
 normalizeToE164(raw: string, country?: CountryCode | null): string | null
@@ -129,6 +149,30 @@ normalizeToE164('not a phone')      // null
 
 // Filtered country list in specified order
 pickCountries(codes: CountryCode[]): Country[]
+
+// O(1) lookup of a single Country by ISO2 code
+getCountryByIso2(iso2: CountryCode): Country | undefined
+
+// Generate a country-specific example placeholder (what autoPlaceholder uses internally)
+generatePlaceholder(country: CountryCode, options?: { spaces: boolean; format?: 'international' | 'national' }): string
+```
+
+## Assets (`svelte-tel-input/assets`)
+
+```typescript
+countries: Country[]                            // all supported countries, sorted by name
+countryUnicodeFlags: Record<CountryCode, string> // ISO2 -> flag emoji as HTML entities (for {@html})
+examplePhoneNumbers: Record<CountryCode, string> // ISO2 -> example national number (no dial code)
+
+interface Country {
+  id: string;
+  label: string;
+  name: string;             // e.g. "Hungary"
+  iso2: CountryCode;        // e.g. "HU"
+  dialCode: string;         // e.g. "36"
+  priority: number;
+  areaCodes: string[] | null;
+}
 ```
 
 ## Schema validation
@@ -152,6 +196,24 @@ validateTelInput(value, {
   country?: CountryCode | null,   // hint for numbers without '+'
 })
 ```
+
+## Bundle size
+
+Most of the size cost is `libphonenumber-js` metadata, not this library's own code. The default import is `libphonenumber-js/max/es6` (~40 KB gzipped, most accurate). Swap to a smaller metadata set via a bundler alias — no API change required:
+
+```js
+// vite.config.ts
+export default defineConfig({
+  resolve: {
+    alias: {
+      'libphonenumber-js/max/es6': 'libphonenumber-js/min/es6',
+      'libphonenumber-js/max': 'libphonenumber-js/min'
+    }
+  }
+});
+```
+
+`min` (~20 KB) agrees with `max` on validity for nearly all real numbers. `mobile` (~24 KB) rejects landlines — only alias to it if you exclusively accept mobile numbers.
 
 ## Common patterns
 
@@ -182,6 +244,13 @@ validateTelInput(value, {
 ```svelte
 <!-- Shows "215 456 7890" in the input; value stays "+12154567890" -->
 <TelInput bind:value bind:country initialFormat="national" />
+```
+
+### Placeholder format independent of display format
+
+```svelte
+<!-- Value shown in national format, but placeholder keeps the dial code -->
+<TelInput bind:value bind:country initialFormat="national" placeholderFormat="international" />
 ```
 
 ### Restricted countries
@@ -231,3 +300,56 @@ validateTelInput(value, {
   onValidityChange={(ok, err) => console.log(ok, err)}
 />
 ```
+
+### Native form + server-side validation
+
+```svelte
+<!-- Renders a real <input>, so it participates in a native <form> as-is -->
+<form method="POST">
+  <TelInput name="phone" bind:country bind:value bind:valid required />
+  <button type="submit" disabled={!valid}>Save</button>
+</form>
+
+<!-- Displaying a different format than what's submitted: leave the visible input
+     unnamed and mirror the E.164 value into a hidden field -->
+<TelInput bind:country bind:value bind:valid initialFormat="national" />
+<input type="hidden" name="phone" {value} />
+```
+
+```typescript
+// +page.server.ts — never trust client-side validity alone
+import { fail } from '@sveltejs/kit';
+import { validateTelInput } from 'svelte-tel-input/validators';
+
+export const actions = {
+  default: async ({ request }) => {
+    const data = await request.formData();
+    const phone = String(data.get('phone') ?? '');
+    const error = validateTelInput(phone, { required: true });
+    if (error) return fail(400, { phone, error });
+    // phone is a valid E.164 string here — persist it.
+    return { success: true };
+  }
+};
+```
+
+## Documentation
+
+Full guides and reference are on the docs site (https://svelte-tel-input.vercel.app/):
+
+- [Installation](https://svelte-tel-input.vercel.app/getting-started/installation/)
+- [Quick Start](https://svelte-tel-input.vercel.app/getting-started/quick-start/)
+- [Country picker guide](https://svelte-tel-input.vercel.app/guides/country-picker/)
+- [Forms guide](https://svelte-tel-input.vercel.app/guides/forms/)
+- [SSR & SSG guide](https://svelte-tel-input.vercel.app/guides/ssr/)
+- [Bundle size guide](https://svelte-tel-input.vercel.app/guides/bundle-size/)
+- [Props reference](https://svelte-tel-input.vercel.app/reference/props/)
+- [Options reference](https://svelte-tel-input.vercel.app/reference/options/)
+- [API methods reference](https://svelte-tel-input.vercel.app/reference/api/)
+- [Events reference](https://svelte-tel-input.vercel.app/reference/events/)
+- [Types reference](https://svelte-tel-input.vercel.app/reference/types/)
+- [Utilities reference](https://svelte-tel-input.vercel.app/reference/utilities/)
+- [Validators reference](https://svelte-tel-input.vercel.app/reference/validators/)
+- [Assets reference](https://svelte-tel-input.vercel.app/reference/assets/)
+- [Playground](https://svelte-tel-input.vercel.app/playground/)
+- [Changelog](https://github.com/gyurielf/svelte-tel-input/blob/main/packages/svelte-tel-input/CHANGELOG.md)
