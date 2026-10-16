@@ -53,13 +53,12 @@
 		"test:e2e": "pnpm --filter=./apps/docs-site test:e2e"
 	},
 	"devDependencies": {
-		"@changesets/cli": "^2.31.1",
-		"@changesets/get-github-info": "^0.8.0",
-		"@changesets/types": "^6.1.0",
+		"@changesets/cli": "^3.0.3",
+		"@changesets/get-github-info": "^1.0.1",
+		"@changesets/types": "^7.0.0",
 		"@eslint/js": "^10.0.1",
 		"@typescript-eslint/eslint-plugin": "^8.70.0",
 		"@typescript-eslint/parser": "^8.70.0",
-		"dotenv": "^18.0.8",
 		"eslint": "^10.10.0",
 		"eslint-config-prettier": "^10.1.8",
 		"eslint-plugin-import": "^2.32.0",
