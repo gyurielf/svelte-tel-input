@@ -15,6 +15,7 @@ jobs:
         permissions:
             contents: write # to create release (changesets/action)
             pull-requests: write # to create pull request (changesets/action)
+            id-token: write # to publish to npm via trusted publishing (changesets/action)
         name: Release
         runs-on: ubuntu-latest
         steps:
@@ -29,8 +30,7 @@ jobs:
               with:
                   node-version: 22.x
                   cache: pnpm
-                  # changesets/action@v2 no longer writes .npmrc from NPM_TOKEN
-                  registry-url: 'https://registry.npmjs.org'
+                  # no registry-url: npm auth uses trusted publishing (OIDC), not a token in .npmrc
 
             - name: Install dependencies
               run: pnpm install --no-frozen-lockfile
@@ -45,8 +45,6 @@ jobs:
                   # This expects you to have a script called release which does a build for your packages and calls changeset publish
                   version-script: pnpm ci:version
                   publish-script: pnpm ci:release
-              env:
-                  NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
             # TODO alert discord
             # - name: Send a Slack notification if a publish happens
