@@ -1,5 +1,12 @@
 # svelte-tel-input
 
+## 4.3.4
+### Patch Changes
+
+
+
+- update deps ([#283](https://github.com/gyurielf/svelte-tel-input/pull/283))
+
 ## 4.3.3
 ### Patch Changes
 
