@@ -1,11 +1,8 @@
-const { config } = require('dotenv');
-const { getInfo, getInfoFromPullRequest } = require('@changesets/get-github-info');
-
-config();
+import { getCommitInfo, getPullRequestInfo } from '@changesets/get-github-info';
 
 const changelogFunctions = {
 	getDependencyReleaseLine: async (changesets, dependenciesUpdated, options) => {
-		if (!options.repo) {
+		if (!options || !options.repo) {
 			throw new Error(
 				'Please provide a repo to this changelog generator like this:\n"changelog": ["@changesets/changelog-github", { "repo": "org/repo" }]'
 			);
@@ -16,11 +13,11 @@ const changelogFunctions = {
 			await Promise.all(
 				changesets.map(async (cs) => {
 					if (cs.commit) {
-						let { links } = await getInfo({
+						const info = await getCommitInfo({
 							repo: options.repo,
 							commit: cs.commit
 						});
-						return links.commit;
+						return info?.commit.markdownLink;
 					}
 				})
 			)
@@ -43,11 +40,11 @@ const changelogFunctions = {
 
 		let prFromSummary;
 		let commitFromSummary;
-		let usersFromSummary;
+		const usersFromSummary = [];
 
 		const replacedChangelog = changeset.summary
 			.replace(/^\s*(?:pr|pull|pull\s+request):\s*#?(\d+)/im, (_, pr) => {
-				let num = Number(pr);
+				const num = Number(pr);
 				if (!isNaN(num)) prFromSummary = num;
 				return '';
 			})
@@ -61,44 +58,30 @@ const changelogFunctions = {
 			})
 			.trim();
 
-		const [firstLine, ...futureLines] = replacedChangelog.split('\n').map((l) => l.trimRight());
+		const [firstLine, ...futureLines] = replacedChangelog.split('\n').map((l) => l.trimEnd());
 
-		const links = await (async () => {
+		const pullLink = await (async () => {
 			if (prFromSummary !== undefined) {
-				let { links } = await getInfoFromPullRequest({
+				const info = await getPullRequestInfo({
 					repo: options.repo,
 					pull: prFromSummary
 				});
-				if (commitFromSummary) {
-					links = {
-						...links,
-						commit: `[\`${commitFromSummary}\`](https://github.com/${options.repo}/commit/${commitFromSummary})`
-					};
-				}
-				return links;
+				return info?.pull.markdownLink;
 			}
 			const commitToFetchFrom = commitFromSummary || changeset.commit;
 			if (commitToFetchFrom) {
-				let { links } = await getInfo({
+				const info = await getCommitInfo({
 					repo: options.repo,
 					commit: commitToFetchFrom
 				});
-				return links;
+				return info?.pull?.markdownLink;
 			}
-			return {
-				commit: null,
-				pull: null,
-				user: null
-			};
 		})();
 
-		const suffix = [
-			links.pull === null ? '' : ` (${links.pull})`
-			//links.commit === null ? '' : ` (${links.commit})`
-		].join('');
+		const suffix = pullLink ? ` (${pullLink})` : '';
 
 		return `\n\n- ${firstLine}${suffix}\n${futureLines.map((l) => `  ${l}`).join('\n')}`;
 	}
 };
 
-module.exports = changelogFunctions;
+export default changelogFunctions;
